@@ -14,7 +14,6 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         /* --- DESIGN SYSTEM --- */
@@ -52,14 +51,14 @@
         @media(min-width: 1024px) { .login-side-visual { display: block; } }
         .carousel-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease; }
         .carousel-img.active { opacity: 0.8; }
-        .login-panel { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--brand-primary); color: white; position: relative; }
-        .login-box { width: 100%; max-width: 320px; padding: 0 20px; text-align: center; }
+        .login-panel { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--brand-primary); color: white; position: relative; padding: 20px; }
+        .login-box { width: 100%; max-width: 320px; text-align: center; }
         .login-logo { max-width: 180px; margin-bottom: 40px; display: block; margin-left: auto; margin-right: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
         .inp-login { width: 100%; height: 50px; padding: 0 16px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; margin-bottom: 15px; background: rgba(255,255,255,0.05); color: white; font-family: inherit; font-size: 14px; transition: all 0.3s; }
         .inp-login:focus { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.8); }
         .btn-login { width: 100%; height: 50px; border-radius: 8px; background: white; color: var(--brand-primary); border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: all 0.3s; margin-bottom: 10px; }
         .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .toggle-theme-login { position: absolute; top: 30px; right: 30px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
         /* APP LAYOUT */
         .app-layout { max-width: 1600px; margin: 0 auto; padding: 24px; display: none; opacity: 0; animation: fadeIn 0.8s forwards; }
@@ -71,18 +70,16 @@
         .btn-icon { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--bg-input); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .btn-icon:hover { background: var(--brand-primary); color: white; }
 
-        .grid-main { display: grid; grid-template-columns: 480px 1fr; gap: 24px; align-items: start; transition: all 0.4s ease; }
-        @media(max-width: 1200px) { .grid-main { grid-template-columns: 1fr; } }
+        /* GRIDS & CARDS */
+        .grid-main { display: grid; grid-template-columns: 450px 1fr; gap: 24px; align-items: start; transition: all 0.4s ease; }
         .card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 30px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); transition: all 0.4s ease; margin-bottom: 24px; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; flex-wrap: wrap; gap: 10px; }
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-title); text-transform: uppercase; letter-spacing: 1px; }
 
         .card.card-fullscreen { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; align-content: center; }
         .card.card-fullscreen .card-header { grid-column: span 2; margin-bottom: 0; border: none; }
         .card.card-fullscreen .gallery-box { height: 100%; max-height: 80vh; grid-row: span 2; }
-        .card.card-fullscreen .sim-controls { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
-        @media(max-width: 1000px) { .card.card-fullscreen { grid-template-columns: 1fr; } }
-
+        
         /* CONTROLS */
         .control-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
         .control-input { width: 100%; height: 46px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 600; font-size: 13px; font-family: inherit; transition: 0.2s; }
@@ -90,14 +87,13 @@
         .price-hero { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); padding: 24px; border-radius: 16px; text-align: center; margin: 24px 0; color: white; position: relative; overflow: hidden; box-shadow: 0 10px 20px -5px rgba(31, 51, 36, 0.3); }
         .price-main { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; position: relative; z-index: 2; }
 
-        /* CORREÇÃO DO LAYOUT (Evita que o lado direito estoure a tela) */
-        main { min-width: 0; overflow: hidden; }
+        main { min-width: 0; overflow: hidden; } /* Evita estouro de layout no main */
 
         /* TABLE */
         .table-container { width: 100%; overflow-x: auto; border-radius: 16px; border: 1px solid var(--border-color); background: var(--bg-card); min-height: 250px; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: max-content; font-size: 12px; }
-        th { background: var(--bg-input); color: var(--text-secondary); padding: 12px 10px; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 700; text-transform: uppercase; font-size: 11px; white-space: nowrap; position: sticky; top: 0; z-index: 10; }
-        td { padding: 10px; border-bottom: 1px solid var(--border-color); text-align: center; color: var(--text-main); vertical-align: middle; white-space: nowrap; }
+        th { background: var(--bg-input); color: var(--text-secondary); padding: 14px 10px; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 700; text-transform: uppercase; font-size: 11px; white-space: nowrap; position: sticky; top: 0; z-index: 10; }
+        td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); text-align: center; color: var(--text-main); vertical-align: middle; white-space: nowrap; }
         tr:nth-child(even) td { background-color: rgba(128, 128, 128, 0.03); }
         tr:hover td { opacity: 0.9; }
         tr.livre td { background-color: var(--st-livre-bg); color: var(--st-livre-txt); font-weight: 600; }
@@ -105,7 +101,7 @@
         tr.vendido td { background-color: var(--st-vend-bg); color: var(--st-vend-txt); opacity: 0.6; text-decoration: line-through; }
 
         /* MAP */
-        .visual-map-container { display: flex; flex-direction: column; align-items: center; padding: 20px; background: var(--bg-input); border-radius: 16px; border: 1px solid var(--border-color); }
+        .visual-map-container { display: flex; flex-direction: column; align-items: center; padding: 20px; background: var(--bg-input); border-radius: 16px; border: 1px solid var(--border-color); overflow-x: auto; }
         .map-header { display: flex; justify-content: space-between; width: 100%; max-width: 240px; margin-bottom: 10px; color: var(--text-muted); font-size: 9px; font-weight: 800; letter-spacing: 1px; padding-left: 25px; }
         .map-header span { flex: 1; text-align: center; }
         .map-floor { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
@@ -118,13 +114,47 @@
         .unit-box.vendido { border-color: var(--st-vend-txt); background: var(--st-vend-bg); opacity: 0.6; }
         .unit-ghost { width: 48px; height: 42px; visibility: hidden; }
         .unit-spacer { width: 24px; }
-        .map-legend { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+        .map-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: var(--text-secondary); }
         .dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
         .btn-action-sell { width: 30px; height: 30px; border-radius: 50%; background: white; border: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); transition: 0.2s; }
         .btn-action-sell:hover { background: var(--brand-primary); color: white; border-color: var(--brand-primary); }
 
-        @media print { .no-print { display: none !important; } .app-layout { display: block; opacity: 1; } }
+        /* --- RESPONSIVIDADE (CELULARES E TABLETS) --- */
+        .dashboard-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 20px; }
+        .sim-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .flex-row-mobile { display: flex; align-items: center; gap: 10px; }
+
+        @media(max-width: 1200px) { 
+            .grid-main { grid-template-columns: 1fr; } 
+        }
+
+        @media(max-width: 768px) {
+            .app-layout { padding: 10px; }
+            .card { padding: 15px; }
+            .header { padding: 15px; flex-direction: column; gap: 15px; border-radius: 12px; }
+            
+            /* Ajuste Painel Gestor (Quebra em colunas) */
+            .dashboard-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .dashboard-grid > div:nth-child(5) { grid-column: span 2; } /* O dólar fica no meio embaixo */
+            
+            /* Ajuste Simulador Inputs */
+            .sim-grid-3 { grid-template-columns: 1fr; } /* Inputs empilhados */
+            
+            /* Ajuste Reajuste Global */
+            .flex-row-mobile { flex-wrap: wrap; justify-content: center; }
+            
+            /* Tabela Header responsivo */
+            .card-header { flex-direction: column; align-items: stretch; text-align: center; }
+            .card-header > div { justify-content: center; width: 100%; flex-wrap: wrap; }
+            
+            /* Mapa Espelho - reduz para não estourar */
+            .unit-box { width: 42px; height: 36px; }
+            .unit-spacer { width: 15px; }
+            .map-header { padding-left: 15px; }
+        }
+
+        @media print { .no-print { display: none !important; } .app-layout { display: block; opacity: 1; padding: 0; } .card { box-shadow: none; border: none; } }
     </style>
 </head>
 <body>
@@ -143,7 +173,7 @@
             
             <div id="formVisitor">
                 <input type="text" id="visitorName" class="inp-login" placeholder="Seu Nome Completo">
-                <button onclick="auth.loginVisitor()" class="btn-login" style="margin-bottom: 10px;">Entrar como Visitante</button>
+                <button onclick="auth.loginVisitor()" class="btn-login" style="margin-bottom: 10px; width: 100%;">Entrar como Visitante</button>
                 <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
                     <button onclick="auth.toggleMode()" style="background:transparent; border:none; color:rgba(255,255,255,0.6); cursor: pointer; font-size: 11px;">Área Admin (Senha)</button>
                 </div>
@@ -152,7 +182,7 @@
             <div id="formAdmin" class="hidden">
                 <input type="text" id="adminUser" class="inp-login" placeholder="E-mail (Firebase)">
                 <input type="password" id="adminPass" class="inp-login" placeholder="Senha">
-                <button onclick="auth.loginAdmin()" class="btn-login">Entrar</button>
+                <button onclick="auth.loginAdmin()" class="btn-login" style="width: 100%;">Entrar</button>
                 <button onclick="auth.toggleMode()" style="background:none; border:none; color:white; margin-top: 15px; cursor: pointer; opacity: 0.7;">Voltar</button>
             </div>
             <p id="loginError" style="color:#FCA5A5; display:none; margin-top:15px; font-size:12px; background:rgba(0,0,0,0.2); padding:8px; border-radius:6px;"></p>
@@ -164,23 +194,23 @@
     <header id="mainHeader" class="header no-print">
         <img id="logoHeader" src="MADRID LOGO MUSGO-01-01.png" alt="Madrid" class="header-logo">
         <div class="user-pill">
-            <span id="userBadge" style="font-weight:700; color:var(--text-main); font-size:12px;">Visitante</span>
+            <span id="userBadge" style="font-weight:700; color:var(--text-main); font-size:12px; text-transform: uppercase;">Visitante</span>
             <button onclick="ui.toggleTheme()" class="btn-icon" style="margin-left:10px;"><i class="fas fa-moon" id="iconApp"></i></button>
-            <button onclick="auth.logout()" class="btn-icon" style="margin-left:10px;"><i class="fas fa-sign-out-alt"></i></button>
+            <button onclick="auth.logout()" class="btn-icon"><i class="fas fa-sign-out-alt"></i></button>
         </div>
     </header>
 
     <div class="grid-main">
         <aside>
             <div id="simulatorCard" class="card">
-                <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
-                    <span style="font-weight:800; color:var(--brand-primary); font-size: 14px;"><i class="fas fa-calculator"></i> SIMULADOR</span>
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-calculator"></i> SIMULADOR</span>
                     <button onclick="ui.toggleFullscreen()" class="btn-icon" title="Modo Foco"><i class="fas fa-expand" id="iconFullscreen"></i></button>
                 </div>
                 
                 <div class="sim-content-wrapper" style="display:contents;">
                     <div class="gallery-box" style="position: relative; height: 180px; border-radius: 16px; overflow: hidden; margin-bottom: 20px; background: var(--bg-input); border: 1px solid var(--border-color);">
-                        <img id="unitImage" src="PLANTA_3_SUITES.jpeg" style="width: 100%; height: 100%; object-fit: contain; padding: 10px;">
+                        <img id="unitImage" src="PLANTA_3_SUITES.jpg.png" style="width: 100%; height: 100%; object-fit: contain; padding: 10px;" alt="Planta">
                         <span id="unitTypeLabel" style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 10px; border-radius: 20px; font-size: 10px;">Planta do Andar</span>
                     </div>
 
@@ -213,17 +243,26 @@
                         </div>
 
                         <div class="price-hero">
-                            <div style="font-size:10px; opacity:0.8; text-transform:uppercase;">Valor de Tabela</div>
+                            <div style="font-size:10px; opacity:0.8; text-transform:uppercase; letter-spacing: 1px;">Valor de Tabela</div>
                             <div id="displayTotal" class="price-main">R$ 0,00</div>
                         </div>
 
-                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
-                            <input type="number" id="inpSinal" value="10" class="control-input" oninput="simulator.calculate()" placeholder="Sinal %">
-                            <input type="number" id="inpMensal" value="20" class="control-input" disabled>
-                            <input type="number" id="inpBalao" value="0" class="control-input" disabled>
+                        <div class="sim-grid-3">
+                            <div>
+                                <label class="control-label" style="font-size: 9px;">Sinal (%)</label>
+                                <input type="number" id="inpSinal" value="10" class="control-input" oninput="simulator.calculate()" placeholder="Sinal %">
+                            </div>
+                            <div>
+                                <label class="control-label" style="font-size: 9px;">Mensais (%)</label>
+                                <input type="number" id="inpMensal" value="20" class="control-input" disabled>
+                            </div>
+                            <div>
+                                <label class="control-label" style="font-size: 9px;">Balões (%)</label>
+                                <input type="number" id="inpBalao" value="0" class="control-input" disabled>
+                            </div>
                         </div>
 
-                        <div id="calcResults" class="hidden" style="margin-top:15px; background:var(--bg-input); padding:15px; border-radius:12px; border:1px solid var(--border-color);">
+                        <div id="calcResults" class="hidden" style="background:var(--bg-input); padding:15px; border-radius:12px; border:1px solid var(--border-color);">
                             <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px; color:var(--text-secondary);">
                                 <span>Sinal (3x)</span><strong style="color:var(--text-main);" id="resSinal">...</strong>
                             </div>
@@ -238,7 +277,7 @@
                             </div>
                         </div>
 
-                        <button onclick="simulator.sendWhatsApp()" style="width:100%; height:45px; margin-top:15px; background:#25D366; color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <button onclick="simulator.sendWhatsApp()" style="width:100%; height:45px; margin-top:15px; background:#25D366; color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; font-size: 13px;">
                             <i class="fab fa-whatsapp"></i> Enviar Proposta
                         </button>
                     </div>
@@ -246,10 +285,10 @@
             </div>
 
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <span style="font-weight:800; color:var(--brand-primary); font-size: 14px;"><i class="fas fa-building"></i> ESPELHO DE VENDAS</span>
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-building"></i> ESPELHO DE VENDAS</span>
                     
-                    <button onclick="app.downloadEspelhoPDF()" class="admin-only hidden" style="padding:6px 12px; background:var(--text-main); color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:11px; display:flex; align-items:center; gap:5px;">
+                    <button onclick="app.downloadEspelhoPDF()" class="admin-only hidden" style="padding:8px 12px; background:var(--text-main); color:var(--bg-card); border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:11px; display:flex; align-items:center; gap:5px;">
                         <i class="fas fa-file-pdf"></i> Baixar PDF
                     </button>
                 </div>
@@ -259,7 +298,7 @@
                 </div>
 
                 <div class="visual-map-container">
-                    <div class="building-roof" style="width:220px; height:8px; background:var(--brand-gold); border-radius:4px 4px 0 0; opacity:0.8; margin-bottom:10px;"></div>
+                    <div class="building-roof" style="width:100%; max-width: 220px; height:8px; background:var(--brand-gold); border-radius:4px 4px 0 0; opacity:0.8; margin-bottom:10px;"></div>
                     
                     <div class="map-header">
                         <div style="width:25px;"></div>
@@ -286,49 +325,53 @@
 
         <main>
             <div id="adminPanel" class="card admin-only hidden no-print">
-                <div style="font-weight:800; color:var(--brand-primary); margin-bottom:15px; font-size: 14px;"><i class="fas fa-chart-pie"></i> DASHBOARD GESTOR</div>
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-chart-pie"></i> DASHBOARD GESTOR</span>
+                </div>
                 
-                <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:15px; margin-bottom:20px; text-align:center;">
-                    <div style="background:var(--bg-input); padding:10px; border-radius:8px;">
-                        <div style="font-size:10px; font-weight:700; color:var(--text-muted);">VGV TOTAL</div>
+                <div class="dashboard-grid">
+                    <div style="background:var(--bg-input); padding:15px 10px; border-radius:12px; border: 1px solid var(--border-color);">
+                        <div style="font-size:9px; font-weight:700; color:var(--text-muted); margin-bottom: 5px;">VGV TOTAL</div>
                         <div id="kpiTotal" style="font-size:14px; font-weight:800; color:var(--text-main);">...</div>
                     </div>
-                    <div style="background:var(--bg-input); padding:10px; border-radius:8px;">
-                        <div style="font-size:10px; font-weight:700; color:var(--text-muted);">VENDIDO</div>
+                    <div style="background:var(--bg-input); padding:15px 10px; border-radius:12px; border: 1px solid var(--border-color);">
+                        <div style="font-size:9px; font-weight:700; color:var(--text-muted); margin-bottom: 5px;">VENDIDO</div>
                         <div id="kpiVend" style="font-size:14px; font-weight:800; color:#EF4444;">...</div>
                     </div>
                     
-                    <div style="background:var(--bg-input); padding:10px; border-radius:8px; border:1px solid #10B981;">
-                        <div style="font-size:10px; font-weight:700; color:var(--text-muted);">DISPONÍVEIS</div>
-                        <div id="kpiLivre" style="font-size:14px; font-weight:800; color:#10B981;">...</div>
+                    <div style="background:var(--st-livre-bg); padding:15px 10px; border-radius:12px; border:1px solid var(--st-livre-txt);">
+                        <div style="font-size:9px; font-weight:800; color:var(--st-livre-txt); margin-bottom: 5px;">DISPONÍVEIS</div>
+                        <div id="kpiLivre" style="font-size:16px; font-weight:800; color:var(--st-livre-txt);">...</div>
                     </div>
                     
-                    <div style="background:var(--bg-input); padding:10px; border-radius:8px;">
-                        <div style="font-size:10px; font-weight:700; color:var(--text-muted);">INCC-DI</div>
-                        <div id="valINCC" style="font-size:14px; font-weight:800;">...</div>
+                    <div style="background:var(--bg-input); padding:15px 10px; border-radius:12px; border: 1px solid var(--border-color);">
+                        <div style="font-size:9px; font-weight:700; color:var(--text-muted); margin-bottom: 5px;">INCC-DI</div>
+                        <div id="valINCC" style="font-size:14px; font-weight:800; color:var(--text-main);">...</div>
                     </div>
-                    <div style="background:var(--bg-input); padding:10px; border-radius:8px;">
-                        <div style="font-size:10px; font-weight:700; color:var(--text-muted);">DÓLAR</div>
-                        <div id="valDolar" style="font-size:14px; font-weight:800;">...</div>
+                    <div style="background:var(--bg-input); padding:15px 10px; border-radius:12px; border: 1px solid var(--border-color);">
+                        <div style="font-size:9px; font-weight:700; color:var(--text-muted); margin-bottom: 5px;">DÓLAR</div>
+                        <div id="valDolar" style="font-size:14px; font-weight:800; color:var(--text-main);">...</div>
                     </div>
                 </div>
                 
-                <div style="display:flex; align-items:center; gap:10px; background:var(--bg-input); padding:15px; border-radius:8px;">
-                    <span style="font-size:12px; font-weight:600;">Reajuste Global (%):</span>
-                    <input type="number" id="globalAdjust" value="0" step="0.1" class="control-input" style="width:80px; height:35px;">
-                    <button onclick="app.applyGlobalAdjustment()" style="padding:0 15px; height:35px; background:var(--brand-primary); color:white; border:none; border-radius:8px; cursor:pointer;"><i class="fas fa-check"></i> OK</button>
-                    <button onclick="db.reset()" style="margin-left:auto; height:35px; padding:0 15px; background:#EF4444; color:white; border:none; border-radius:8px; cursor:pointer; font-size:11px; font-weight:700;">RESETAR ESPELHO</button>
+                <div class="flex-row-mobile" style="background:var(--bg-input); padding:15px; border-radius:12px; border:1px solid var(--border-color); justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform: uppercase;">Reajuste Global (%):</span>
+                        <input type="number" id="globalAdjust" value="0" step="0.1" class="control-input" style="width:70px; height:35px; text-align: center;">
+                        <button onclick="app.applyGlobalAdjustment()" style="padding:0 15px; height:35px; background:var(--brand-primary); color:white; border:none; border-radius:8px; cursor:pointer; font-weight: 700;"><i class="fas fa-check"></i></button>
+                    </div>
+                    <button onclick="db.reset()" style="height:35px; padding:0 15px; background:transparent; color:#EF4444; border:1px solid #EF4444; border-radius:8px; cursor:pointer; font-size:10px; font-weight:700;">RESETAR ESPELHO</button>
                 </div>
             </div>
 
             <div class="card">
-                <div style="display:flex; justify-content:space-between; margin-bottom:15px; align-items:center;">
-                    <span style="font-weight:800; color:var(--brand-primary); font-size:14px;"><i class="fas fa-list-ul"></i> TABELA OFICIAL</span>
-                    <div style="display:flex; gap:10px;">
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-list-ul"></i> TABELA OFICIAL</span>
+                    <div style="display:flex; gap:10px; align-items: center;">
                         <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only hidden" style="width:140px; height:35px;">
                             <option value="disponivel">Disponíveis</option><option value="vendido">Vendidos</option><option value="todos">Todos</option>
                         </select>
-                        <button onclick="app.downloadTablePDF()" style="height:35px; padding:0 15px; background:var(--text-main); color:var(--bg-card); border:none; border-radius:8px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                        <button onclick="app.downloadTablePDF()" style="height:35px; padding:0 15px; background:var(--text-main); color:var(--bg-card); border:none; border-radius:8px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px; font-size: 11px;">
                             <i class="fas fa-file-pdf"></i> PDF Tabela
                         </button>
                     </div>
@@ -867,6 +910,9 @@
             if(document.getElementById('visitorName').value) {
                 state.isAdmin = false; state.user = document.getElementById('visitorName').value; auth.initApp();
             } else alert("Nome obrigatório");
+        },
+        loginTestMode: () => {
+            state.isAdmin = true; state.user = "Gestor (Modo Teste)"; auth.initApp();
         },
         toggleMode: () => {
             document.getElementById('formAdmin').classList.toggle('hidden');
