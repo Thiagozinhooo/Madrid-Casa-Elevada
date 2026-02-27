@@ -40,7 +40,7 @@
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; font-size: 13px; line-height: 1.6; transition: 0.3s; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; font-size: 13px; line-height: 1.6; background-image: radial-gradient(at 0% 0%, rgba(197, 160, 101, 0.05) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(31, 51, 36, 0.05) 0px, transparent 50%); background-attachment: fixed; transition: background-color 0.4s ease, color 0.4s ease; }
 
         /* UTILITÁRIOS */
         .hidden { display: none !important; }
@@ -83,17 +83,21 @@
         .card.card-fullscreen .sim-controls { display: flex; flex-direction: column; justify-content: center; gap: 20px; }
         @media(max-width: 1000px) { .card.card-fullscreen { grid-template-columns: 1fr; } }
 
-        /* CONTROLS & TABLE */
+        /* CONTROLS */
         .control-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
         .control-input { width: 100%; height: 46px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 600; font-size: 13px; font-family: inherit; transition: 0.2s; }
         .control-input:focus { border-color: var(--brand-gold); }
         .price-hero { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); padding: 24px; border-radius: 16px; text-align: center; margin: 24px 0; color: white; position: relative; overflow: hidden; box-shadow: 0 10px 20px -5px rgba(31, 51, 36, 0.3); }
         .price-main { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; position: relative; z-index: 2; }
 
-        .table-container { overflow-x: auto; border-radius: 16px; border: 1px solid var(--border-color); background: var(--bg-card); min-height: 250px; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1000px; font-size: 13px; }
-        th { background: var(--bg-input); color: var(--text-secondary); padding: 16px; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 700; text-transform: uppercase; font-size: 11px; white-space: nowrap; position: sticky; top: 0; z-index: 10; backdrop-filter: blur(5px); }
-        td { padding: 14px; border-bottom: 1px solid var(--border-color); text-align: center; color: var(--text-main); vertical-align: middle; }
+        /* CORREÇÃO DO LAYOUT (Evita que o lado direito estoure a tela) */
+        main { min-width: 0; overflow: hidden; }
+
+        /* TABLE */
+        .table-container { width: 100%; overflow-x: auto; border-radius: 16px; border: 1px solid var(--border-color); background: var(--bg-card); min-height: 250px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: max-content; font-size: 12px; }
+        th { background: var(--bg-input); color: var(--text-secondary); padding: 12px 10px; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 700; text-transform: uppercase; font-size: 11px; white-space: nowrap; position: sticky; top: 0; z-index: 10; }
+        td { padding: 10px; border-bottom: 1px solid var(--border-color); text-align: center; color: var(--text-main); vertical-align: middle; white-space: nowrap; }
         tr:nth-child(even) td { background-color: rgba(128, 128, 128, 0.03); }
         tr:hover td { opacity: 0.9; }
         tr.livre td { background-color: var(--st-livre-bg); color: var(--st-livre-txt); font-weight: 600; }
@@ -214,7 +218,7 @@
                         </div>
 
                         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
-                            <input type="number" id="inpSinal" value="10" class="control-input" placeholder="Sinal %" oninput="simulator.calculate()">
+                            <input type="number" id="inpSinal" value="10" class="control-input" oninput="simulator.calculate()" placeholder="Sinal %">
                             <input type="number" id="inpMensal" value="20" class="control-input" disabled>
                             <input type="number" id="inpBalao" value="0" class="control-input" disabled>
                         </div>
@@ -293,10 +297,12 @@
                         <div style="font-size:10px; font-weight:700; color:var(--text-muted);">VENDIDO</div>
                         <div id="kpiVend" style="font-size:14px; font-weight:800; color:#EF4444;">...</div>
                     </div>
+                    
                     <div style="background:var(--bg-input); padding:10px; border-radius:8px; border:1px solid #10B981;">
                         <div style="font-size:10px; font-weight:700; color:var(--text-muted);">DISPONÍVEIS</div>
                         <div id="kpiLivre" style="font-size:14px; font-weight:800; color:#10B981;">...</div>
                     </div>
+                    
                     <div style="background:var(--bg-input); padding:10px; border-radius:8px;">
                         <div style="font-size:10px; font-weight:700; color:var(--text-muted);">INCC-DI</div>
                         <div id="valINCC" style="font-size:14px; font-weight:800;">...</div>
@@ -589,11 +595,12 @@
                 let st = state.statusMap[u] || 'livre';
                 let finalPrice = d.valor * (1 + state.globalAdjust/100);
                 
-                // KPIs
+                // KPIs calculados independentemente do filtro da tabela
                 totalVGV += finalPrice;
                 if(st === 'vendido') totalVend += finalPrice;
                 if(st === 'livre') countLivre++;
 
+                // Lógica de Filtro da Tabela
                 if((filter=='disponivel' && st=='vendido') || (filter=='vendido' && st!='vendido')) return;
 
                 let tipo = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
@@ -626,6 +633,7 @@
             html += `</tbody>`;
             tb.innerHTML = html;
 
+            // Atualização dos KPIs do Dashboard
             if(state.isAdmin) {
                 if(document.getElementById('kpiTotal')) document.getElementById('kpiTotal').innerText = app.formatMoney(totalVGV);
                 if(document.getElementById('kpiVend')) document.getElementById('kpiVend').innerText = app.formatMoney(totalVend);
@@ -717,30 +725,34 @@
             doc.save('Tabela_Madrid_Oficial.pdf');
         },
 
-        // --- PDF DO ESPELHO DE VENDAS ---
+        // --- NOVO PDF DO ESPELHO DE VENDAS ---
         downloadEspelhoPDF: () => {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4'); 
+            const doc = new jsPDF('p', 'mm', 'a4'); // Retrato para caber o prédio
             const brandPrimary = [31, 51, 36];
             
+            // Logo e Cabeçalho
             try { 
-                doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 40, 15); 
+                doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 45, 16); 
             } catch(e) {
                 doc.setFontSize(22); doc.setTextColor(...brandPrimary); doc.text("MADRID", 14, 20);
             }
-            doc.setFont("helvetica", "bold"); doc.setFontSize(14); doc.setTextColor(...brandPrimary);
+            doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
             doc.text("ESPELHO DE VENDAS", 196, 18, { align: 'right' });
-            doc.setFontSize(10); doc.setFont("helvetica", "normal");
-            doc.text(new Date().toLocaleDateString('pt-BR'), 196, 23, { align: 'right' });
+            doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.setTextColor(100);
+            doc.text(new Date().toLocaleDateString('pt-BR'), 196, 24, { align: 'right' });
 
+            // Preparar Dados da Tabela (removido a coluna do corredor)
             let body = [];
             for (let f = 13; f >= 1; f--) {
-                let floorLabel = `${f < 10 ? '0'+f : f}º Pavto.`;
+                let floorLabel = `${f < 10 ? '0'+f : f}° Pavto.`;
+                
                 if (f > 1) {
                     let a03 = `${f}03`; let ar03 = DB_REAL[a03] ? DB_REAL[a03].areaTotal.toFixed(2) + 'm²' : '';
                     let a02 = `${f}02`; let ar02 = DB_REAL[a02] ? DB_REAL[a02].areaTotal.toFixed(2) + 'm²' : '';
                     let a01 = `${f}01`; let ar01 = DB_REAL[a01] ? DB_REAL[a01].areaTotal.toFixed(2) + 'm²' : '';
                     let a04 = `${f}04`; let ar04 = DB_REAL[a04] ? DB_REAL[a04].areaTotal.toFixed(2) + 'm²' : '';
+                    
                     body.push([
                         floorLabel,
                         `Apto ${a03}\n${ar03}`,
@@ -749,8 +761,10 @@
                         `Apto ${a04}\n${ar04}`
                     ]);
                 } else {
+                    // Térreo (102 e 101)
                     let a102 = `102`; let ar102 = DB_REAL[a102] ? DB_REAL[a102].areaTotal.toFixed(2) + 'm²' : '';
                     let a101 = `101`; let ar101 = DB_REAL[a101] ? DB_REAL[a101].areaTotal.toFixed(2) + 'm²' : '';
+                    
                     body.push([
                         floorLabel,
                         { content: `Apto ${a102}\n${ar102}`, colSpan: 2 },
@@ -759,57 +773,81 @@
                 }
             }
 
+            // Gerar Tabela (Visual do PDF)
             doc.autoTable({
                 head: [["PAVIMENTO", "FINAL 03", "FINAL 02", "FINAL 01", "FINAL 04"]],
                 body: body,
                 startY: 32,
                 theme: 'grid',
-                styles: { fontSize: 8, cellPadding: 3, halign: 'center', valign: 'middle', lineColor: [200, 200, 200], lineWidth: 0.1, fontStyle: 'bold' },
-                headStyles: { fillColor: brandPrimary, textColor: 255 },
+                styles: { 
+                    fontSize: 9, 
+                    cellPadding: 4, 
+                    halign: 'center', 
+                    valign: 'middle', 
+                    lineColor: [255, 255, 255], // Bordas brancas entre as células (estilo blocos)
+                    lineWidth: 0.5, 
+                    fontStyle: 'bold' 
+                },
+                headStyles: { 
+                    fillColor: brandPrimary, 
+                    textColor: 255,
+                    fontSize: 10
+                },
                 didParseCell: function(data) {
                     if (data.section === 'body') {
+                        // Estilo da coluna de Pavimentos
                         if (data.column.index === 0) {
-                            data.cell.styles.fillColor = [245, 245, 245];
+                            data.cell.styles.fillColor = [240, 240, 240];
                             data.cell.styles.textColor = [50, 50, 50];
                             return;
                         }
                         
+                        // Pintar as células baseando no status Firebase
                         let raw = data.cell.raw.content ? data.cell.raw.content : data.cell.raw;
                         let aptMatch = raw.match(/Apto (\d+)/);
                         if(aptMatch) {
                             let apt = aptMatch[1];
                             let st = state.statusMap[apt] || 'livre';
+                            
                             if (st === 'livre') {
-                                data.cell.styles.fillColor = [220, 252, 231]; data.cell.styles.textColor = [20, 83, 45];
+                                data.cell.styles.fillColor = [220, 252, 231]; // Verde claro
+                                data.cell.styles.textColor = [20, 83, 45];    // Verde escuro
                             } else if (st === 'reservado') {
-                                data.cell.styles.fillColor = [254, 249, 195]; data.cell.styles.textColor = [133, 77, 14];
+                                data.cell.styles.fillColor = [254, 249, 195]; // Amarelo
+                                data.cell.styles.textColor = [133, 77, 14];   // Marrom
                             } else if (st === 'vendido') {
-                                data.cell.styles.fillColor = [254, 226, 226]; data.cell.styles.textColor = [153, 27, 27];
+                                data.cell.styles.fillColor = [254, 226, 226]; // Vermelho
+                                data.cell.styles.textColor = [153, 27, 27];   // Vermelho escuro
                             }
                         }
                     }
                 }
             });
 
-            let finalY = doc.lastAutoTable.finalY + 8;
+            let finalY = doc.lastAutoTable.finalY + 2;
             
-            doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(...brandPrimary);
-            doc.text("AVENIDA JK", 105, finalY, { align: 'center' });
+            // Tarja Avenida JK
+            doc.setFillColor(230, 230, 230);
+            doc.rect(14, finalY, 182, 8, 'F');
+            doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(100);
+            doc.text("AVENIDA JK", 105, finalY + 5.5, { align: 'center' });
 
-            finalY += 12;
+            finalY += 15;
 
+            // Legenda Inferior
             doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(50);
             doc.text("LEGENDA:", 14, finalY + 4);
             
-            doc.setFont("helvetica", "normal"); doc.setFontSize(9);
+            doc.setFont("helvetica", "bold"); doc.setFontSize(9);
+            
             doc.setFillColor(220, 252, 231); doc.rect(36, finalY, 5, 5, 'F');
-            doc.setTextColor(60); doc.text("DISPONÍVEL", 43, finalY + 4);
+            doc.setTextColor(20, 83, 45); doc.text("DISPONÍVEL", 43, finalY + 4);
             
             doc.setFillColor(254, 249, 195); doc.rect(70, finalY, 5, 5, 'F');
-            doc.text("RESERVADO", 77, finalY + 4);
+            doc.setTextColor(133, 77, 14); doc.text("RESERVADO", 77, finalY + 4);
 
             doc.setFillColor(254, 226, 226); doc.rect(106, finalY, 5, 5, 'F');
-            doc.text("VENDIDO", 113, finalY + 4);
+            doc.setTextColor(153, 27, 27); doc.text("VENDIDO", 113, finalY + 4);
 
             doc.save('Espelho_Vendas_Madrid.pdf');
         }
@@ -843,11 +881,12 @@
             
             const adm = document.querySelectorAll('.admin-only');
             if(state.isAdmin) {
+                // Remove a classe hidden e garante a exibição
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminMapHint').classList.remove('hidden');
                 adm.forEach(e => {
                     e.classList.remove('hidden'); 
-                    e.style.display = 'flex'; 
+                    e.style.display = 'flex'; // ou block dependendo do elemento
                 });
             } else {
                 document.getElementById('adminPanel').classList.add('hidden');
