@@ -24,11 +24,12 @@
             --brand-secondary: #2E4A35; 
             --brand-gold: #C5A065;
             
-            --bg-body: #F3F4F6; /* Cinza muito sutil e moderno */
+            --bg-body: #F3F4F6; 
             --bg-card: #FFFFFF; 
             --bg-input: #F9FAFB; 
             --bg-hover: #F3F4F6;
             --border-color: #E5E7EB; 
+            --glass-bg: rgba(255, 255, 255, 0.95);
             
             --text-main: #111827; 
             --text-secondary: #4B5563; 
@@ -46,12 +47,12 @@
 
         [data-theme="dark"] {
             --bg-body: #0F172A; --bg-card: #1E293B; --bg-input: #0F172A; --bg-hover: #334155;
-            --border-color: #334155; 
+            --border-color: #334155; --glass-bg: rgba(30, 41, 59, 0.95);
             --text-main: #F9FAFB; --text-secondary: #9CA3AF; --text-muted: #6B7280; 
             --st-livre-bg: rgba(5, 150, 105, 0.15); --st-livre-txt: #34D399; 
             --st-res-bg: rgba(217, 119, 6, 0.15); --st-res-txt: #FBBF24; 
             --st-vend-bg: rgba(220, 38, 38, 0.15); --st-vend-txt: #F87171; 
-            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
@@ -79,7 +80,7 @@
         #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
         .login-side-visual { flex: 1.5; background: #000; display: none; position: relative; overflow: hidden; }
         @media(min-width: 1024px) { .login-side-visual { display: block; } }
-        .carousel-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease; filter: brightness(0.7); }
+        .carousel-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease; filter: brightness(0.8); }
         .carousel-img.active { opacity: 1; }
         
         .login-panel { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--brand-primary); color: white; padding: 30px; z-index: 2; }
@@ -99,53 +100,51 @@
         @keyframes fadeIn { to { opacity: 1; } }
         
         /* CABEÇALHO FLUTUANTE */
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; margin-bottom: 25px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-card); position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); }
-        .header-logo { height: 32px; width: auto; object-fit: contain; }
+        .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 25px; margin-bottom: 25px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); }
+        .header-logo { height: 35px; width: auto; object-fit: contain; }
         
-        .user-controls { display: flex; align-items: center; gap: 8px; }
-        /* Impede que emails longos quebrem o layout */
-        .user-badge { font-weight: 600; color: var(--text-secondary); font-size: 12px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border-color); padding-right: 10px; }
-        .btn-icon { width: 32px; height: 32px; border-radius: 50%; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 14px; }
-        .btn-icon:hover { background: var(--bg-hover); color: var(--brand-primary); }
+        .user-controls { display: flex; align-items: center; gap: 10px; background: var(--bg-card); padding: 5px 5px 5px 15px; border-radius: 50px; border: 1px solid var(--border-color); }
+        .user-badge { font-weight: 700; color: var(--text-secondary); font-size: 12px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border-color); padding-right: 10px; }
+        .btn-icon { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 13px; }
+        .btn-icon:hover { background: var(--brand-primary); color: white; }
 
-        /* ESTRUTURA PRINCIPAL - O SEGREDO DO ENQUADRAMENTO (minmax 0) */
-        .grid-main { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 25px; align-items: start; }
+        /* GRIDS MAIN */
+        .grid-main { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 25px; align-items: start; }
         
-        .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 25px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); margin-bottom: 25px; }
+        .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 25px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); margin-bottom: 25px; }
         
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
-        .card-title { font-size: 12px; font-weight: 700; color: var(--text-title); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
-        .card-title i { color: var(--brand-gold); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--bg-hover); flex-wrap: wrap; gap: 10px; }
+        .card-title { font-size: 13px; font-weight: 800; color: var(--text-title); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .card-title i { color: var(--brand-gold); font-size: 15px; }
 
         .card.card-fullscreen { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; margin: 0; padding: 30px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-content: center; }
 
-        /* CONTROLS DO SIMULADOR */
+        /* CONTROLS (Simulador) */
         .control-label { display: block; font-size: 10px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .control-input { width: 100%; height: 42px; padding: 0 12px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 500; font-size: 13px; font-family: inherit; transition: 0.2s; appearance: none; }
+        .control-input { width: 100%; height: 44px; padding: 0 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 600; font-size: 13px; font-family: inherit; transition: 0.2s; appearance: none; }
         .control-input:focus { border-color: var(--brand-gold); background: var(--bg-card); outline: none; box-shadow: 0 0 0 3px rgba(197, 160, 101, 0.1); }
         .control-input:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .price-hero { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); padding: 20px; border-radius: var(--radius-btn); text-align: center; margin: 20px 0; color: white; box-shadow: var(--shadow-card); }
-        .price-main { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-top: 4px; }
+        .price-hero { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); padding: 20px; border-radius: var(--radius-md); text-align: center; margin: 20px 0; color: white; box-shadow: var(--shadow-sm); }
+        .price-main { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin-top: 5px; }
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
 
-        .calc-results-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); margin-top: 15px; }
+        .calc-results-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 15px; }
         .res-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: var(--text-secondary); align-items: center; }
         .res-row strong { color: var(--text-main); font-weight: 600; }
-        .res-total { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-color); font-size: 13px; }
-        .res-total span, .res-total strong { color: var(--brand-gold); font-weight: 700; }
+        .res-total { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-color); font-size: 14px; }
+        .res-total span, .res-total strong { color: var(--brand-gold); font-weight: 800; }
 
-        .btn-primary { width: 100%; height: 44px; margin-top: 15px; background: #10B981; color: white; border: none; border-radius: var(--radius-btn); font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; transition: all 0.3s; }
+        .btn-primary { width: 100%; height: 46px; margin-top: 15px; background: #10B981; color: white; border: none; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; transition: all 0.3s; }
         .btn-primary:hover { background: #059669; }
         
-        /* BOTÃO DE AÇÃO MENOR */
-        .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-btn); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-outline:hover { background: var(--bg-hover); }
 
-        /* DASHBOARD GESTOR - NOVO LAYOUT HOMOGÊNEO */
+        /* DASHBOARD GESTOR */
         .dashboard-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
-        .kpi-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
+        .kpi-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: center; }
         .kpi-title { font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         .kpi-val { font-size: 15px; font-weight: 700; color: var(--text-main); }
         
@@ -153,11 +152,11 @@
         .kpi-livre .kpi-title, .kpi-livre .kpi-val { color: var(--st-livre-txt); }
         .kpi-vendido .kpi-val { color: var(--st-vend-txt); }
 
-        .dashboard-controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: center; background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
+        .dashboard-controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: center; background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
 
-        /* TABELA - TRAVADA NO CONTAINER */
+        /* TABELA */
         main { min-width: 0; width: 100%; display: block; } 
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
+        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px; font-size: 12px; }
         th { background: var(--bg-input); color: var(--text-secondary); padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; font-size: 10px; position: sticky; top: 0; z-index: 10; }
         td { padding: 12px 15px; border-bottom: 1px solid var(--bg-hover); text-align: left; color: var(--text-main); vertical-align: middle; white-space: nowrap; }
@@ -185,7 +184,7 @@
         
         .unit-box { width: 48px; height: 42px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; position: relative; }
         .unit-box:hover { transform: translateY(-2px); z-index: 10; box-shadow: var(--shadow-card); border-color: var(--text-muted); }
-        .unit-num { font-size: 11px; font-weight: 600; }
+        .unit-num { font-size: 12px; font-weight: 600; }
         
         .unit-box.livre { background: var(--st-livre-bg); border-color: transparent; color: var(--st-livre-txt); }
         .unit-box.reservado { background: var(--st-res-bg); border-color: transparent; color: var(--st-res-txt); }
@@ -208,18 +207,18 @@
             
             /* Ajuste Cabeçalho App */
             .header { padding: 10px 15px; margin-bottom: 20px; }
-            .user-badge { max-width: 100px; } /* Encurta e-mail no mobile */
+            .user-badge { max-width: 100px; }
             
             /* Tabela Ajuste Responsivo */
             .card-header { flex-direction: column; align-items: flex-start; }
             .card-header > div { width: 100%; justify-content: flex-start; margin-top: 12px; }
             
-            /* Dashboard Gestor vira 2 colunas */
+            /* KPIs */
             .dashboard-kpis { grid-template-columns: 1fr 1fr; }
             .dashboard-kpis > div:nth-child(1) { grid-column: span 2; } 
             
             /* Toolbar Gestor */
-            .dashboard-controls { grid-template-columns: 1fr; gap: 10px; }
+            .dashboard-controls { display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
             .dashboard-controls > div { display: flex; justify-content: space-between; align-items: center;}
             
             /* Simulador - Empilha os inputs */
@@ -262,7 +261,7 @@
                 <button onclick="auth.loginAdmin()" class="btn-login">Entrar no Painel</button>
                 <button onclick="auth.toggleMode()" style="background:none; border:none; color:rgba(255,255,255,0.6); margin-top: 15px; cursor: pointer; font-size: 12px;">Voltar</button>
             </div>
-            <p id="loginError" style="color:#FCA5A5; display:none; margin-top:10px; font-size:11px; background:rgba(220, 38, 38, 0.2); padding:10px; border-radius:8px;"></p>
+            <p id="loginError" style="color:#FCA5A5; display:none; margin-top:10px; font-size:11px; background:rgba(220, 38, 38, 0.2); padding:8px; border-radius:6px; border: 1px solid rgba(220,38,38,0.3);"></p>
         </div>
     </div>
 </div>
@@ -286,9 +285,9 @@
                 </div>
                 
                 <div class="sim-content-wrapper" style="display:contents;">
-                    <div class="gallery-box" style="position: relative; height: 180px; border-radius: var(--radius-btn); overflow: hidden; margin-bottom: 20px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">
+                    <div class="gallery-box" style="position: relative; height: 180px; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 20px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">
                         <img id="unitImage" src="PLANTA_3_SUITES.jpg.png" style="max-width: 100%; max-height: 100%; object-fit: contain; padding: 10px;" alt="Planta">
-                        <span id="unitTypeLabel" style="position: absolute; bottom: 10px; left: 10px; background: var(--glass-bg); backdrop-filter: blur(5px); color: var(--text-main); padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 600; border: 1px solid var(--border-color);">Planta do Andar</span>
+                        <span id="unitTypeLabel" style="position: absolute; bottom: 10px; left: 10px; background: var(--glass-bg); backdrop-filter: blur(5px); color: var(--text-main); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid var(--border-color);">Planta do Andar</span>
                     </div>
 
                     <div class="sim-controls">
@@ -307,11 +306,11 @@
                         
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Unidade</label>
-                            <select id="selUnidade" class="control-input" onchange="simulator.selectUnit()" style="font-weight: 600; color: var(--brand-primary);"></select>
+                            <select id="selUnidade" class="control-input" onchange="simulator.selectUnit()" style="font-weight: 700; color: var(--brand-primary);"></select>
                         </div>
 
                         <div style="margin-bottom:20px;">
-                            <label class="control-label">Plano de Pagamento</label>
+                            <label class="control-label">Plano</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
                                 <option value="mensal_20" id="optMensal">...Carregando</option>
                                 <option value="balao_20">Sinal + Balões (20%)</option>
@@ -320,7 +319,7 @@
                         </div>
 
                         <div class="price-hero">
-                            <div style="font-size:10px; opacity:0.8; text-transform:uppercase; letter-spacing: 1px; font-weight: 600;">Valor de Tabela</div>
+                            <div style="font-size:10px; opacity:0.8; text-transform:uppercase; letter-spacing: 1px; font-weight: 700;">Valor de Tabela</div>
                             <div id="displayTotal" class="price-main">R$ 0,00</div>
                         </div>
 
@@ -363,7 +362,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title"><i class="fas fa-building"></i> Espelho</span>
+                    <span class="card-title"><i class="fas fa-building"></i> Mapa</span>
                     <button onclick="app.downloadEspelhoPDF()" class="admin-only hidden btn-outline">
                         <i class="fas fa-file-pdf" style="color: #DC2626;"></i> Baixar PDF
                     </button>
@@ -409,6 +408,7 @@
                     <div class="kpi-box kpi-vendido">
                         <div class="kpi-title">Vendido</div>
                         <div id="kpiVend" class="kpi-val">...</div>
+                        <div id="logVenda" style="font-size: 9px; line-height: 1.2; font-weight: 600; color: var(--text-muted); margin-top: 5px;"></div>
                     </div>
                     <div class="kpi-box kpi-livre">
                         <div class="kpi-title">Disponíveis</div>
@@ -425,9 +425,16 @@
                         <span style="font-size:10px; font-weight:700; color:var(--text-secondary); text-transform: uppercase;">Dólar:</span>
                         <strong id="valDolar" style="margin-left:5px; font-size: 13px;">...</strong>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                         <input type="number" id="globalAdjust" value="0" step="0.1" class="control-input" style="width:70px; height:34px; text-align: center; padding:0 5px;" placeholder="%">
-                        <button onclick="app.applyGlobalAdjustment()" class="btn-outline" style="height:34px; background:var(--bg-card);">Reajustar Tabela</button>
+                        
+                        <button onclick="app.applyGlobalAdjustment()" class="btn-outline" style="height:34px; background:var(--bg-card);">Aplicar Reajuste</button>
+                        
+                        <button onclick="app.undoGlobalAdjustment()" class="btn-icon" style="width:34px; height:34px; border: 1px solid var(--border-color); background: var(--bg-card);" title="Desfazer reajuste anterior">
+                            <i class="fas fa-undo"></i>
+                        </button>
+                        
+                        <span id="logReajuste" style="font-size: 9px; color: var(--text-muted); font-weight: 600; margin-left: 5px;"></span>
                     </div>
                 </div>
             </div>
@@ -440,7 +447,7 @@
                             <option value="disponivel">Ocultar Vendidos</option><option value="todos">Mostrar Todos</option><option value="vendido">Apenas Vendidos</option>
                         </select>
                         <button onclick="app.downloadTablePDF()" class="btn-outline">
-                            <i class="fas fa-file-pdf"></i> PDF
+                            <i class="fas fa-file-pdf"></i> PDF Tabela
                         </button>
                     </div>
                 </div>
@@ -520,7 +527,9 @@
     };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-    let state = { isAdmin: false, user: '', statusMap: {}, globalAdjust: 0 };
+    
+    // Adicionado variável "previousAdjust" para o botão desfazer
+    let state = { isAdmin: false, user: '', statusMap: {}, globalAdjust: 0, previousAdjust: 0, lastPriceUpdate: null, lastSaleUpdate: null };
     
     // --- 3. LÓGICA DO SIMULADOR ---
     const simulator = {
@@ -663,7 +672,7 @@
                     let st101 = state.statusMap[101] || 'livre';
                     let act102 = state.isAdmin ? `app.toggleStatus(102)` : `app.selectApt(102)`;
                     let act101 = state.isAdmin ? `app.toggleStatus(101)` : `app.selectApt(101)`;
-                    row.innerHTML += `<div class="unit-box ${st102}" style="width:calc(96px + 8px);" onclick="${act102}"><span class="unit-num">102</span></div><div class="unit-spacer"></div><div class="unit-box ${st101}" style="width:calc(96px + 8px);" onclick="${act101}"><span class="unit-num">101</span></div>`;
+                    row.innerHTML += `<div class="unit-box ${st102}" style="width:120px;" onclick="${act102}"><span class="unit-num">102</span></div><div class="unit-spacer"></div><div class="unit-box ${st101}" style="width:120px;" onclick="${act101}"><span class="unit-num">101</span></div>`;
                 }
                 c.appendChild(row);
             }
@@ -749,11 +758,31 @@
                 if(document.getElementById('kpiTotal')) document.getElementById('kpiTotal').innerText = app.formatMoney(totalVGV);
                 if(document.getElementById('kpiVend')) document.getElementById('kpiVend').innerText = app.formatMoney(totalVend);
                 if(document.getElementById('kpiLivre')) document.getElementById('kpiLivre').innerText = countLivre;
+                
+                if(document.getElementById('logVenda')) {
+                    document.getElementById('logVenda').innerText = state.lastSaleUpdate ? `Última venda: ${state.lastSaleUpdate}` : 'Nenhuma venda registrada';
+                }
+                if(document.getElementById('logReajuste')) {
+                    document.getElementById('logReajuste').innerText = state.lastPriceUpdate ? `Atualizado em: ${state.lastPriceUpdate}` : '';
+                }
             }
         },
+        
+        // --- FUNÇÕES DE REAJUSTE COM "DESFAZER" ---
         applyGlobalAdjustment: () => {
             const val = parseFloat(document.getElementById('globalAdjust').value)||0;
-            db.updateAdjust(val);
+            const prevVal = state.globalAdjust; // Salva o valor atual antes de alterar
+            db.updateAdjust(val, prevVal);
+        },
+        undoGlobalAdjustment: () => {
+            if (state.previousAdjust !== undefined) {
+                if(confirm(`Deseja desfazer a última alteração e voltar a tabela para o reajuste de ${state.previousAdjust}%?`)) {
+                    document.getElementById('globalAdjust').value = state.previousAdjust;
+                    db.updateAdjust(state.previousAdjust, state.previousAdjust); 
+                }
+            } else {
+                alert("Nenhum reajuste anterior encontrado.");
+            }
         },
         
         downloadTablePDF: () => {
@@ -959,19 +988,29 @@
                 if(data) {
                     state.statusMap = data.statusMap || {};
                     state.globalAdjust = data.globalAdjust || 0;
+                    state.previousAdjust = data.previousAdjust || 0;
+                    state.lastPriceUpdate = data.lastPriceUpdate || null;
+                    state.lastSaleUpdate = data.lastSaleUpdate || null;
                 }
                 app.renderAll();
             });
         },
         updateStatus: (apt, next) => {
             database.ref('madrid_data/statusMap/' + apt).set(next);
+            if(next === 'vendido') {
+                const now = new Date().toLocaleString('pt-BR');
+                database.ref('madrid_data/lastSaleUpdate').set(now);
+            }
         },
-        updateAdjust: (val) => {
+        updateAdjust: (val, prevVal) => {
+            const now = new Date().toLocaleString('pt-BR');
             database.ref('madrid_data/globalAdjust').set(val);
+            database.ref('madrid_data/previousAdjust').set(prevVal);
+            database.ref('madrid_data/lastPriceUpdate').set(now);
         },
         reset: () => {
             if(confirm('Tem a certeza que deseja resetar todo o espelho?')) {
-                database.ref('madrid_data').set({ statusMap:{}, globalAdjust:0 });
+                database.ref('madrid_data').set({ statusMap:{}, globalAdjust:0, previousAdjust:0, lastPriceUpdate: null, lastSaleUpdate: null });
             }
         }
     };
