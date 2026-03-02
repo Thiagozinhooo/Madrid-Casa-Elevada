@@ -67,7 +67,7 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* CUSTOM SCROLLBAR (Fina e Minimalista) */
+        /* CUSTOM SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
@@ -95,8 +95,8 @@
 
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
-        /* APP LAYOUT - CORREÇÃO DE ENQUADRAMENTO */
-        .app-layout { max-width: 1440px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.5s forwards; }
+        /* APP LAYOUT */
+        .app-layout { max-width: 1500px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.5s forwards; }
         @keyframes fadeIn { to { opacity: 1; } }
         
         /* CABEÇALHO FLUTUANTE */
@@ -119,6 +119,39 @@
 
         .card.card-fullscreen { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; margin: 0; padding: 30px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-content: center; }
 
+        /* --- NOVO PAINEL DE GESTÃO (Premium Dark) --- */
+        .premium-admin-card { background: linear-gradient(135deg, #132017 0%, var(--brand-primary) 100%); color: white; border: none; box-shadow: 0 12px 24px -8px rgba(31,51,36,0.5); padding: 25px; border-radius: var(--radius-card); margin-bottom: 25px; position: relative; overflow: hidden; }
+        .premium-admin-card::before { content: ''; position: absolute; top: 0; right: 0; width: 200px; height: 200px; background: radial-gradient(circle, rgba(197,160,101,0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+        .premium-admin-card .card-header { border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .premium-admin-card .card-title { color: white; }
+        
+        .admin-kpi-main { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 15px; text-align: center; margin-bottom: 12px; }
+        .admin-kpi-main span { font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.6); font-weight: 700; letter-spacing: 1px; }
+        .admin-kpi-main #kpiTotal { font-size: 24px; font-weight: 800; color: var(--brand-gold); margin-top: 4px; }
+        
+        .admin-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .admin-kpi-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 12px; display: flex; flex-direction: column; justify-content: center; }
+        .admin-kpi-box span { font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.6); font-weight: 700; margin-bottom: 4px; }
+        .admin-kpi-box strong { font-size: 16px; font-weight: 800; }
+        .admin-kpi-box small { font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 6px; line-height: 1.2; }
+        
+        .admin-controls-panel { background: rgba(0,0,0,0.25); padding: 15px; border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.05); }
+        .admin-rates { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .admin-rates strong { color: white; font-size: 12px; }
+        
+        .admin-reajuste { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+        .admin-reajuste input { width: 70px; height: 36px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: white; text-align: center; font-weight: 700; font-size: 13px; font-family: inherit; }
+        .admin-reajuste input:focus { border-color: var(--brand-gold); outline: none; background: rgba(255,255,255,0.15); }
+        .admin-reajuste input::placeholder { color: rgba(255,255,255,0.3); }
+        .admin-reajuste .btn-apply { flex: 1; height: 36px; background: var(--brand-gold); color: white; border: none; border-radius: 6px; font-weight: 700; font-size: 11px; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .admin-reajuste .btn-apply:hover { background: #dfbe87; transform: translateY(-1px); }
+        .admin-reajuste .btn-undo { width: 36px; height: 36px; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .admin-reajuste .btn-undo:hover { background: rgba(255,255,255,0.15); border-color: white; }
+        
+        .admin-log { font-size: 10px; color: rgba(255,255,255,0.5); text-align: center; margin-bottom: 12px; font-weight: 600; min-height: 15px; }
+        .btn-reset { width: 100%; height: 32px; background: transparent; color: #FCA5A5; border: 1px dashed rgba(252,165,165,0.3); border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.2s; letter-spacing: 0.5px; }
+        .btn-reset:hover { background: rgba(220,38,38,0.1); border-color: #FCA5A5; }
+
         /* CONTROLS (Simulador) */
         .control-label { display: block; font-size: 10px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
         .control-input { width: 100%; height: 44px; padding: 0 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 600; font-size: 13px; font-family: inherit; transition: 0.2s; appearance: none; }
@@ -139,21 +172,8 @@
         .btn-primary { width: 100%; height: 46px; margin-top: 15px; background: #10B981; color: white; border: none; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; transition: all 0.3s; }
         .btn-primary:hover { background: #059669; }
         
-        /* BOTÃO DE AÇÃO MENOR */
         .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-outline:hover { background: var(--bg-hover); }
-
-        /* DASHBOARD GESTOR */
-        .dashboard-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
-        .kpi-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: center; }
-        .kpi-title { font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .kpi-val { font-size: 15px; font-weight: 700; color: var(--text-main); }
-        
-        .kpi-livre { background: var(--st-livre-bg); border-color: transparent; }
-        .kpi-livre .kpi-title, .kpi-livre .kpi-val { color: var(--st-livre-txt); }
-        .kpi-vendido .kpi-val { color: var(--st-vend-txt); }
-
-        .dashboard-controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: center; background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
 
         /* TABELA */
         main { min-width: 0; width: 100%; display: block; } 
@@ -198,7 +218,7 @@
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;}
         .dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
 
-        /* --- RESPONSIVIDADE PRECISA --- */
+        /* --- RESPONSIVIDADE --- */
         @media(max-width: 1100px) { 
             .grid-main { grid-template-columns: 1fr; } 
             .card-fullscreen { grid-template-columns: 1fr; display: block; padding: 15px; }
@@ -208,23 +228,12 @@
             .app-layout { padding: 15px; }
             .card { padding: 20px; margin-bottom: 20px; }
             
-            /* Ajuste Cabeçalho App */
             .header { padding: 10px 15px; margin-bottom: 20px; }
             .user-badge { max-width: 100px; } 
             
-            /* Tabela Ajuste Responsivo */
             .card-header { flex-direction: column; align-items: flex-start; }
-            .card-header > div { width: 100%; justify-content: flex-start; margin-top: 12px; }
+            .card-header > div, .card-header > button { width: 100%; justify-content: flex-start; margin-top: 12px; }
             
-            /* KPIs */
-            .dashboard-kpis { grid-template-columns: 1fr 1fr; }
-            .dashboard-kpis > div:nth-child(1) { grid-column: span 2; } 
-            
-            /* Toolbar Gestor */
-            .dashboard-controls { display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
-            .dashboard-controls > div { display: flex; justify-content: space-between; align-items: center;}
-            
-            /* Simulador - Empilha os inputs */
             .sim-grid-3 { grid-template-columns: 1fr; gap: 10px; } 
         }
 
@@ -281,6 +290,43 @@
 
     <div class="grid-main">
         <aside>
+            <div id="adminPanel" class="card premium-admin-card admin-only hidden no-print">
+                <div class="card-header">
+                    <span class="card-title"><i class="fas fa-chart-pie" style="color: var(--brand-gold);"></i> Painel de Gestão</span>
+                </div>
+                
+                <div class="admin-kpi-main">
+                    <span>VGV Global</span>
+                    <div id="kpiTotal">...</div>
+                </div>
+                
+                <div class="admin-kpi-grid">
+                    <div class="admin-kpi-box">
+                        <span>Vendido</span>
+                        <strong id="kpiVend" style="color: #FCA5A5;">...</strong>
+                        <small id="logVenda">...</small>
+                    </div>
+                    <div class="admin-kpi-box">
+                        <span>Disponíveis</span>
+                        <strong id="kpiLivre" style="color: #6EE7B7; font-size: 20px;">...</strong>
+                    </div>
+                </div>
+
+                <div class="admin-controls-panel">
+                    <div class="admin-rates">
+                        <div>INCC-DI: <strong id="valINCC">...</strong></div>
+                        <div>Dólar: <strong id="valDolar">...</strong></div>
+                    </div>
+                    <div class="admin-reajuste">
+                        <input type="number" id="globalAdjust" step="0.1" placeholder="%">
+                        <button onclick="app.applyGlobalAdjustment()" class="btn-apply">Aplicar</button>
+                        <button onclick="app.undoGlobalAdjustment()" class="btn-undo" title="Desfazer Reajuste"><i class="fas fa-undo"></i></button>
+                    </div>
+                    <div id="logReajuste" class="admin-log">...</div>
+                    <button onclick="db.reset()" class="btn-reset">Resetar Espelho Original</button>
+                </div>
+            </div>
+
             <div id="simulatorCard" class="card">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-calculator"></i> Simulador</span>
@@ -380,7 +426,8 @@
                         <div class="building-roof"></div>
                         
                         <div class="map-header">
-                            <div class="floor-indicator" style="opacity: 0;"></div> <div class="group-label">3 SUÍTES</div>
+                            <div class="floor-indicator" style="opacity: 0;"></div>
+                            <div class="group-label">3 SUÍTES</div>
                             <div class="unit-spacer"></div>
                             <div class="group-label">1 SUÍTE</div>
                         </div>
@@ -398,53 +445,7 @@
         </aside>
 
         <main>
-            <div id="adminPanel" class="card admin-only hidden no-print">
-                <div class="card-header">
-                    <span class="card-title"><i class="fas fa-chart-pie"></i> Painel de Gestão</span>
-                </div>
-                
-                <div class="dashboard-kpis">
-                    <div class="kpi-box">
-                        <div class="kpi-title">VGV Global</div>
-                        <div id="kpiTotal" class="kpi-val">...</div>
-                    </div>
-                    <div class="kpi-box kpi-vendido">
-                        <div class="kpi-title">Vendido</div>
-                        <div id="kpiVend" class="kpi-val">...</div>
-                        <div id="logVenda" style="font-size: 9px; line-height: 1.2; font-weight: 600; color: var(--text-muted); margin-top: 5px;"></div>
-                    </div>
-                    <div class="kpi-box kpi-livre">
-                        <div class="kpi-title">Disponíveis</div>
-                        <div id="kpiLivre" class="kpi-val" style="font-size: 20px;">...</div>
-                    </div>
-                </div>
-
-                <div class="dashboard-controls">
-                    <div>
-                        <span style="font-size:10px; font-weight:700; color:var(--text-secondary); text-transform: uppercase;">INCC-DI:</span>
-                        <strong id="valINCC" style="margin-left:5px; font-size: 13px;">...</strong>
-                    </div>
-                    <div>
-                        <span style="font-size:10px; font-weight:700; color:var(--text-secondary); text-transform: uppercase;">Dólar:</span>
-                        <strong id="valDolar" style="margin-left:5px; font-size: 13px;">...</strong>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <input type="number" id="globalAdjust" value="" step="0.1" class="control-input" style="width:70px; height:34px; text-align: center; padding:0 5px;" placeholder="%">
-                        
-                        <button onclick="app.applyGlobalAdjustment()" class="btn-outline" style="height:34px; background:var(--bg-card); color:var(--brand-primary); border-color:var(--brand-primary);" title="Aplica o reajuste sobre a tabela atual">
-                            Aplicar
-                        </button>
-                        
-                        <button onclick="app.undoGlobalAdjustment()" class="btn-icon" style="width:34px; height:34px; border: 1px solid var(--border-color); background: var(--bg-card);" title="Desfazer último reajuste e voltar à tabela anterior">
-                            <i class="fas fa-undo"></i>
-                        </button>
-                        
-                        <span id="logReajuste" style="font-size: 9px; color: var(--text-muted); font-weight: 600; margin-left: 5px;"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
+            <div class="card" style="padding-top: 25px;">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-list-ul"></i> Tabela Oficial</span>
                     <div style="display:flex; gap:10px; align-items: center; flex-wrap: wrap;">
@@ -466,7 +467,7 @@
 </div>
 
 <script>
-    // 1. DADOS ESTÁTICOS (TABELA ZERO - NUNCA ALTERAR AQUI MANUALMENTE)
+    // 1. DADOS ESTÁTICOS
     const DB_REAL = {
         1304: { area: 108.22, areaTotal: 114.69, esc: '49', areaEsc: 6.47, vagas: '27A/27B', pav: 'SUB', valor: 1162993.37 },
         1303: { area: 125.20, areaTotal: 133.12, esc: '3', areaEsc: 7.92, vagas: '49A/49B', pav: 'TER', valor: 1364121.93 },
@@ -533,13 +534,12 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     
-    // Novo State com suporte a Juros Compostos (Multiplicador Acumulado)
     let state = { 
         isAdmin: false, 
         user: '', 
         statusMap: {}, 
-        globalMultiplier: 1,    // Multiplicador acumulado atual
-        previousMultiplier: 1,  // Memória do passo anterior para Desfazer
+        globalMultiplier: 1,
+        previousMultiplier: 1,
         lastPriceUpdate: null, 
         lastSaleUpdate: null 
     };
@@ -575,7 +575,7 @@
                 if(!state.isAdmin && st === 'vendido') return;
 
                 if(!first) first = u;
-                let price = d.valor * state.globalMultiplier; // Calcula baseado no acumulado
+                let price = d.valor * state.globalMultiplier;
                 s.innerHTML += `<option value="${u}">Apto ${u} (${t}) - ${app.formatMoney(price)}</option>`;
             });
             if(first) { s.value = first; simulator.selectUnit(); }
@@ -605,7 +605,7 @@
         calculate: () => {
             const u = document.getElementById('selUnidade').value;
             if(!u) return;
-            let price = DB_REAL[u].valor * state.globalMultiplier; // Valor Acumulado
+            let price = DB_REAL[u].valor * state.globalMultiplier;
             document.getElementById('displayTotal').innerText = app.formatMoney(price);
             
             let pSinal = parseFloat(document.getElementById('inpSinal').value)||0;
@@ -726,7 +726,7 @@
             Object.keys(DB_REAL).sort((a,b)=>b-a).forEach(u => {
                 let d = DB_REAL[u];
                 let st = state.statusMap[u] || 'livre';
-                let finalPrice = d.valor * state.globalMultiplier; // Calcula Juros Compostos
+                let finalPrice = d.valor * state.globalMultiplier;
                 
                 totalVGV += finalPrice;
                 if(st === 'vendido') totalVend += finalPrice;
@@ -780,7 +780,6 @@
             }
         },
         
-        // --- FUNÇÃO DE JUROS COMPOSTOS ---
         applyGlobalAdjustment: () => {
             const valInput = document.getElementById('globalAdjust').value;
             if(!valInput) return alert("Digite um valor de reajuste (ex: 0.72)");
@@ -788,24 +787,16 @@
             const val = parseFloat(valInput);
             if(isNaN(val) || val === 0) return;
 
-            // Transforma % em multiplicador. Ex: 0.72 -> 1.0072
             const factor = 1 + (val / 100);
-            
-            // Multiplica o acumulado atual pelo novo fator
             const newMultiplier = state.globalMultiplier * factor;
 
-            // Salva no banco (o novo multiplicador, o antigo para desfazer, e o log)
             db.updateAdjust(newMultiplier, state.globalMultiplier, val);
-            
-            // Zera a caixinha
             document.getElementById('globalAdjust').value = '';
         },
         
-        // --- FUNÇÃO PARA DESFAZER REAJUSTE ---
         undoGlobalAdjustment: () => {
             if (state.previousMultiplier && state.previousMultiplier !== state.globalMultiplier) {
                 if(confirm(`Tem certeza que deseja desfazer o último reajuste e voltar a tabela para os preços anteriores?`)) {
-                    // Restaura o multiplicador anterior e diz que foi desfeito
                     db.updateAdjust(state.previousMultiplier, state.previousMultiplier, "Desfeito");
                 }
             } else {
@@ -851,7 +842,7 @@
                 if (filter === 'disponivel' && st === 'vendido') return;
                 if (filter === 'vendido' && st !== 'vendido') return;
 
-                let price = d.valor * state.globalMultiplier; // Atualizado para o cálculo de Juros Compostos
+                let price = d.valor * state.globalMultiplier;
                 let vEntrada = (price * (pSinal/100)) / 3;
                 let vMensal = (price * (pMensal/100)) / m;
                 let vBalao = (price * (pBalao/100)) / 3;
@@ -920,10 +911,19 @@
             }
 
             doc.autoTable({
-                head: [["PAVIMENTO", "FINAL 03", "FINAL 02", "FINAL 01", "FINAL 04"]],
+                head: [["PAVIMENTO", "3 SUÍTES", "", "1 SUÍTE", ""]],
                 body: body, startY: 32, theme: 'grid',
                 styles: { fontSize: 9, cellPadding: 4, halign: 'center', valign: 'middle', lineColor: [255, 255, 255], lineWidth: 0.5, fontStyle: 'bold' },
                 headStyles: { fillColor: brandPrimary, textColor: 255, fontSize: 10 },
+                willDrawCell: function (data) {
+                    // Mescla o cabeçalho "3 SUÍTES" e "1 SUÍTE" no PDF
+                    if (data.section === 'head') {
+                        if (data.column.index === 1) { data.cell.colSpan = 2; data.cell.styles.halign = 'center'; }
+                        if (data.column.index === 2) { return false; }
+                        if (data.column.index === 3) { data.cell.colSpan = 2; data.cell.styles.halign = 'center'; }
+                        if (data.column.index === 4) { return false; }
+                    }
+                },
                 didParseCell: function(data) {
                     if (data.section === 'body') {
                         if (data.column.index === 0) {
@@ -994,7 +994,7 @@
             if(state.isAdmin) {
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminMapHint').classList.remove('hidden');
-                adm.forEach(e => { e.classList.remove('hidden'); e.style.display = 'flex'; });
+                adm.forEach(e => { e.classList.remove('hidden'); e.style.display = 'block'; });
             } else {
                 document.getElementById('adminPanel').classList.add('hidden');
                 document.getElementById('adminMapHint').classList.add('hidden');
@@ -1011,7 +1011,6 @@
                 const data = snap.val();
                 if(data) {
                     state.statusMap = data.statusMap || {};
-                    // Carrega os dados atualizados de multiplicadores
                     state.globalMultiplier = data.globalMultiplier || 1;
                     state.previousMultiplier = data.previousMultiplier || 1;
                     state.lastPriceUpdate = data.lastPriceUpdate || null;
