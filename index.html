@@ -2,10 +2,12 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Madrid Casa Elevada | Gestão Premium</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -16,176 +18,251 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <style>
-        /* --- DESIGN SYSTEM --- */
+        /* --- DESIGN SYSTEM MINIMALISTA E PREMIUM --- */
         :root {
-            --brand-primary: #1F3324; --brand-secondary: #2E4A35; --brand-gold: #C5A065;
-            --bg-body: #F0F2F5; --bg-card: #FFFFFF; --bg-input: #F8FAFC; --bg-hover: #F1F5F9;
-            --border-color: #E2E8F0; --glass-bg: rgba(255, 255, 255, 0.95);
-            --text-main: #1E293B; --text-secondary: #64748B; --text-muted: #94A3B8; --text-title: #1F3324;
+            --brand-primary: #1F3324; 
+            --brand-secondary: #2E4A35; 
+            --brand-gold: #C5A065;
             
-            /* Status Cores */
-            --st-livre-bg: #dcfce7; --st-livre-txt: #14532d;
-            --st-res-bg: #fef9c3; --st-res-txt: #854d0e;
-            --st-vend-bg: #fee2e2; --st-vend-txt: #991b1b;
+            --bg-body: #F3F4F6; /* Cinza muito sutil e moderno */
+            --bg-card: #FFFFFF; 
+            --bg-input: #F9FAFB; 
+            --bg-hover: #F3F4F6;
+            --border-color: #E5E7EB; 
+            
+            --text-main: #111827; 
+            --text-secondary: #4B5563; 
+            --text-muted: #9CA3AF; 
+            
+            --st-livre-bg: #ECFDF5; --st-livre-txt: #059669; 
+            --st-res-bg: #FFFBEB; --st-res-txt: #D97706; 
+            --st-vend-bg: #FEF2F2; --st-vend-txt: #DC2626; 
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --radius-card: 12px;
+            --radius-btn: 8px;
         }
 
         [data-theme="dark"] {
-            --bg-body: #0B1120; --bg-card: #1E293B; --bg-input: #334155; --bg-hover: #334155;
-            --border-color: #334155; --glass-bg: rgba(30, 41, 59, 0.95);
-            --text-main: #F1F5F9; --text-secondary: #CBD5E1; --text-muted: #94A3B8; --text-title: #FFFFFF;
-            --st-livre-bg: rgba(22, 163, 74, 0.2); --st-livre-txt: #4ade80;
-            --st-res-bg: rgba(202, 138, 4, 0.2); --st-res-txt: #facc15;
-            --st-vend-bg: rgba(220, 38, 38, 0.2); --st-vend-txt: #f87171;
+            --bg-body: #0F172A; --bg-card: #1E293B; --bg-input: #0F172A; --bg-hover: #334155;
+            --border-color: #334155; 
+            --text-main: #F9FAFB; --text-secondary: #9CA3AF; --text-muted: #6B7280; 
+            --st-livre-bg: rgba(5, 150, 105, 0.15); --st-livre-txt: #34D399; 
+            --st-res-bg: rgba(217, 119, 6, 0.15); --st-res-txt: #FBBF24; 
+            --st-vend-bg: rgba(220, 38, 38, 0.15); --st-vend-txt: #F87171; 
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; padding: 0; font-size: 13px; line-height: 1.6; background-image: radial-gradient(at 0% 0%, rgba(197, 160, 101, 0.05) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(31, 51, 36, 0.05) 0px, transparent 50%); background-attachment: fixed; transition: background-color 0.4s ease, color 0.4s ease; }
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--bg-body); color: var(--text-main); 
+            margin: 0; padding: 0; 
+            font-size: 13px; 
+            line-height: 1.5; 
+            overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
-        /* UTILITÁRIOS */
+        /* CUSTOM SCROLLBAR (Fina e Minimalista) */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
         .hidden { display: none !important; }
         .admin-only { display: none; } 
 
-        /* LOGIN */
-        #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--bg-body); }
-        .login-side-visual { flex: 1.4; background: #000; display: none; position: relative; overflow: hidden; }
+        /* TELA DE LOGIN */
+        #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
+        .login-side-visual { flex: 1.5; background: #000; display: none; position: relative; overflow: hidden; }
         @media(min-width: 1024px) { .login-side-visual { display: block; } }
-        .carousel-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease; }
-        .carousel-img.active { opacity: 0.8; }
-        .login-panel { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--brand-primary); color: white; position: relative; padding: 20px; }
-        .login-box { width: 100%; max-width: 320px; text-align: center; }
-        .login-logo { max-width: 180px; margin-bottom: 40px; display: block; margin-left: auto; margin-right: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
-        .inp-login { width: 100%; height: 50px; padding: 0 16px; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; margin-bottom: 15px; background: rgba(255,255,255,0.05); color: white; font-family: inherit; font-size: 14px; transition: all 0.3s; }
-        .inp-login:focus { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.8); }
-        .btn-login { width: 100%; height: 50px; border-radius: 8px; background: white; color: var(--brand-primary); border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: all 0.3s; margin-bottom: 10px; }
-        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
-
-        /* APP LAYOUT */
-        .app-layout { max-width: 1600px; margin: 0 auto; padding: 24px; display: none; opacity: 0; animation: fadeIn 0.8s forwards; }
-        @keyframes fadeIn { to { opacity: 1; } }
-        .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 30px; margin-bottom: 24px; background: var(--glass-bg); backdrop-filter: blur(20px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); position: sticky; top: 20px; z-index: 100; box-shadow: var(--shadow-card); transition: top 0.3s; }
-        .header.hidden-nav { top: -100px; }
-        .header-logo { height: 40px; width: auto; }
-        .user-pill { display: flex; align-items: center; gap: 12px; background: var(--bg-card); padding: 6px 6px 6px 16px; border-radius: 30px; border: 1px solid var(--border-color); }
-        .btn-icon { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--bg-input); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
-        .btn-icon:hover { background: var(--brand-primary); color: white; }
-
-        /* GRIDS & CARDS */
-        .grid-main { display: grid; grid-template-columns: 450px 1fr; gap: 24px; align-items: start; transition: all 0.4s ease; }
-        .card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 30px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); transition: all 0.4s ease; margin-bottom: 24px; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; flex-wrap: wrap; gap: 10px; }
-        .card-title { font-size: 14px; font-weight: 800; color: var(--text-title); text-transform: uppercase; letter-spacing: 1px; }
-
-        .card.card-fullscreen { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; align-content: center; }
-        .card.card-fullscreen .card-header { grid-column: span 2; margin-bottom: 0; border: none; }
-        .card.card-fullscreen .gallery-box { height: 100%; max-height: 80vh; grid-row: span 2; }
+        .carousel-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.5s ease; filter: brightness(0.7); }
+        .carousel-img.active { opacity: 1; }
         
-        /* CONTROLS */
-        .control-label { display: block; font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .control-input { width: 100%; height: 46px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 600; font-size: 13px; font-family: inherit; transition: 0.2s; }
-        .control-input:focus { border-color: var(--brand-gold); }
-        .price-hero { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); padding: 24px; border-radius: 16px; text-align: center; margin: 24px 0; color: white; position: relative; overflow: hidden; box-shadow: 0 10px 20px -5px rgba(31, 51, 36, 0.3); }
-        .price-main { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; position: relative; z-index: 2; }
+        .login-panel { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: var(--brand-primary); color: white; padding: 30px; z-index: 2; }
+        .login-box { width: 100%; max-width: 320px; text-align: center; }
+        .login-logo { max-width: 180px; margin-bottom: 40px; display: block; margin-left: auto; margin-right: auto; }
+        
+        .inp-login { width: 100%; height: 46px; padding: 0 15px; border: 1px solid rgba(255,255,255,0.2); border-radius: var(--radius-btn); margin-bottom: 15px; background: rgba(255,255,255,0.05); color: white; font-family: inherit; font-size: 13px; transition: all 0.3s; }
+        .inp-login:focus { background: rgba(255,255,255,0.1); border-color: var(--brand-gold); }
+        
+        .btn-login { width: 100%; height: 46px; border-radius: var(--radius-btn); background: var(--brand-gold); color: #fff; border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: all 0.3s; margin-bottom: 10px; }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(197, 160, 101, 0.3); }
 
-        main { min-width: 0; overflow: hidden; } /* Evita estouro de layout no main */
+        .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
-        /* TABLE */
-        .table-container { width: 100%; overflow-x: auto; border-radius: 16px; border: 1px solid var(--border-color); background: var(--bg-card); min-height: 250px; }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: max-content; font-size: 12px; }
-        th { background: var(--bg-input); color: var(--text-secondary); padding: 14px 10px; text-align: center; border-bottom: 2px solid var(--border-color); font-weight: 700; text-transform: uppercase; font-size: 11px; white-space: nowrap; position: sticky; top: 0; z-index: 10; }
-        td { padding: 12px 10px; border-bottom: 1px solid var(--border-color); text-align: center; color: var(--text-main); vertical-align: middle; white-space: nowrap; }
-        tr:nth-child(even) td { background-color: rgba(128, 128, 128, 0.03); }
-        tr:hover td { opacity: 0.9; }
-        tr.livre td { background-color: var(--st-livre-bg); color: var(--st-livre-txt); font-weight: 600; }
-        tr.reservado td { background-color: var(--st-res-bg); color: var(--st-res-txt); font-weight: 600; }
-        tr.vendido td { background-color: var(--st-vend-bg); color: var(--st-vend-txt); opacity: 0.6; text-decoration: line-through; }
+        /* APP LAYOUT - CORREÇÃO DE ENQUADRAMENTO */
+        .app-layout { max-width: 1440px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.5s forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        
+        /* CABEÇALHO FLUTUANTE */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; margin-bottom: 25px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-card); position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); }
+        .header-logo { height: 32px; width: auto; object-fit: contain; }
+        
+        .user-controls { display: flex; align-items: center; gap: 8px; }
+        /* Impede que emails longos quebrem o layout */
+        .user-badge { font-weight: 600; color: var(--text-secondary); font-size: 12px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border-color); padding-right: 10px; }
+        .btn-icon { width: 32px; height: 32px; border-radius: 50%; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 14px; }
+        .btn-icon:hover { background: var(--bg-hover); color: var(--brand-primary); }
 
-        /* MAP */
-        .visual-map-container { display: flex; flex-direction: column; align-items: center; padding: 20px; background: var(--bg-input); border-radius: 16px; border: 1px solid var(--border-color); overflow-x: auto; }
-        .map-header { display: flex; justify-content: space-between; width: 100%; max-width: 240px; margin-bottom: 10px; color: var(--text-muted); font-size: 9px; font-weight: 800; letter-spacing: 1px; padding-left: 25px; }
-        .map-header span { flex: 1; text-align: center; }
-        .map-floor { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-        .floor-indicator { font-size: 10px; font-weight: 800; color: var(--text-muted); width: 25px; text-align: right; }
-        .unit-box { width: 48px; height: 42px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; position: relative; }
-        .unit-box:hover { transform: scale(1.15); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-color: var(--text-main); }
-        .unit-num { font-size: 11px; font-weight: 800; color: var(--text-main); }
-        .unit-box.livre { border-color: var(--st-livre-txt); background: var(--st-livre-bg); }
-        .unit-box.reservado { border-color: var(--st-res-txt); background: var(--st-res-bg); }
-        .unit-box.vendido { border-color: var(--st-vend-txt); background: var(--st-vend-bg); opacity: 0.6; }
-        .unit-ghost { width: 48px; height: 42px; visibility: hidden; }
-        .unit-spacer { width: 24px; }
-        .map-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
-        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: var(--text-secondary); }
-        .dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
-        .btn-action-sell { width: 30px; height: 30px; border-radius: 50%; background: white; border: 1px solid rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); transition: 0.2s; }
+        /* ESTRUTURA PRINCIPAL - O SEGREDO DO ENQUADRAMENTO (minmax 0) */
+        .grid-main { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 25px; align-items: start; }
+        
+        .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 25px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); margin-bottom: 25px; }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; gap: 10px; }
+        .card-title { font-size: 12px; font-weight: 700; color: var(--text-title); text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+        .card-title i { color: var(--brand-gold); }
+
+        .card.card-fullscreen { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; margin: 0; padding: 30px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-content: center; }
+
+        /* CONTROLS DO SIMULADOR */
+        .control-label { display: block; font-size: 10px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .control-input { width: 100%; height: 42px; padding: 0 12px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 500; font-size: 13px; font-family: inherit; transition: 0.2s; appearance: none; }
+        .control-input:focus { border-color: var(--brand-gold); background: var(--bg-card); outline: none; box-shadow: 0 0 0 3px rgba(197, 160, 101, 0.1); }
+        .control-input:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .price-hero { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); padding: 20px; border-radius: var(--radius-btn); text-align: center; margin: 20px 0; color: white; box-shadow: var(--shadow-card); }
+        .price-main { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; margin-top: 4px; }
+        
+        .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+
+        .calc-results-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); margin-top: 15px; }
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: var(--text-secondary); align-items: center; }
+        .res-row strong { color: var(--text-main); font-weight: 600; }
+        .res-total { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-color); font-size: 13px; }
+        .res-total span, .res-total strong { color: var(--brand-gold); font-weight: 700; }
+
+        .btn-primary { width: 100%; height: 44px; margin-top: 15px; background: #10B981; color: white; border: none; border-radius: var(--radius-btn); font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; transition: all 0.3s; }
+        .btn-primary:hover { background: #059669; }
+        
+        /* BOTÃO DE AÇÃO MENOR */
+        .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-btn); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .btn-outline:hover { background: var(--bg-hover); }
+
+        /* DASHBOARD GESTOR - NOVO LAYOUT HOMOGÊNEO */
+        .dashboard-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
+        .kpi-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
+        .kpi-title { font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .kpi-val { font-size: 15px; font-weight: 700; color: var(--text-main); }
+        
+        .kpi-livre { background: var(--st-livre-bg); border-color: transparent; }
+        .kpi-livre .kpi-title, .kpi-livre .kpi-val { color: var(--st-livre-txt); }
+        .kpi-vendido .kpi-val { color: var(--st-vend-txt); }
+
+        .dashboard-controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: center; background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
+
+        /* TABELA - TRAVADA NO CONTAINER */
+        main { min-width: 0; width: 100%; display: block; } 
+        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px; font-size: 12px; }
+        th { background: var(--bg-input); color: var(--text-secondary); padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; font-size: 10px; position: sticky; top: 0; z-index: 10; }
+        td { padding: 12px 15px; border-bottom: 1px solid var(--bg-hover); text-align: left; color: var(--text-main); vertical-align: middle; white-space: nowrap; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: var(--bg-hover); }
+        
+        .badge { padding: 4px 10px; border-radius: 4px; font-size: 10px; font-weight: 600; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px;}
+        tr.livre .badge { background: var(--st-livre-bg); color: var(--st-livre-txt); }
+        tr.reservado .badge { background: var(--st-res-bg); color: var(--st-res-txt); }
+        tr.vendido .badge { background: var(--st-vend-bg); color: var(--st-vend-txt); }
+        tr.vendido td { opacity: 0.6; text-decoration: line-through; }
+        tr.vendido .badge { text-decoration: none; opacity: 1; }
+        
+        .btn-action-sell { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.2s; font-size: 11px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: white; border-color: var(--brand-primary); }
 
-        /* --- RESPONSIVIDADE (CELULARES E TABLETS) --- */
-        .dashboard-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 20px; }
-        .sim-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .flex-row-mobile { display: flex; align-items: center; gap: 10px; }
+        /* MAPA ESPELHO */
+        .map-container-inner { overflow-x: auto; padding-bottom: 10px; display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .building-roof { width: 100%; max-width: 250px; height: 6px; background: var(--brand-gold); border-radius: 10px 10px 0 0; margin-bottom: 12px; }
+        .map-header { display: flex; justify-content: space-between; width: 100%; max-width: 280px; margin-bottom: 15px; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: 1px; padding-left: 30px; }
+        .map-header span { flex: 1; text-align: center; }
+        
+        .map-floor { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; justify-content: center; width: 100%; max-width: 320px; }
+        .floor-indicator { font-size: 11px; font-weight: 600; color: var(--text-muted); width: 30px; text-align: right; }
+        
+        .unit-box { width: 48px; height: 42px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; position: relative; }
+        .unit-box:hover { transform: translateY(-2px); z-index: 10; box-shadow: var(--shadow-card); border-color: var(--text-muted); }
+        .unit-num { font-size: 11px; font-weight: 600; }
+        
+        .unit-box.livre { background: var(--st-livre-bg); border-color: transparent; color: var(--st-livre-txt); }
+        .unit-box.reservado { background: var(--st-res-bg); border-color: transparent; color: var(--st-res-txt); }
+        .unit-box.vendido { background: var(--st-vend-bg); border-color: transparent; color: var(--st-vend-txt); opacity: 0.7; }
+        .unit-spacer { width: 24px; }
+        
+        .map-legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); width: 100%; }
+        .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;}
+        .dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
 
-        @media(max-width: 1200px) { 
+        /* --- RESPONSIVIDADE PRECISA --- */
+        @media(max-width: 1100px) { 
             .grid-main { grid-template-columns: 1fr; } 
+            .card-fullscreen { grid-template-columns: 1fr; display: block; padding: 15px; }
         }
 
         @media(max-width: 768px) {
-            .app-layout { padding: 10px; }
-            .card { padding: 15px; }
-            .header { padding: 15px; flex-direction: column; gap: 15px; border-radius: 12px; }
+            .app-layout { padding: 15px; }
+            .card { padding: 20px; margin-bottom: 20px; }
             
-            /* Ajuste Painel Gestor (Quebra em colunas) */
-            .dashboard-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .dashboard-grid > div:nth-child(5) { grid-column: span 2; } /* O dólar fica no meio embaixo */
+            /* Ajuste Cabeçalho App */
+            .header { padding: 10px 15px; margin-bottom: 20px; }
+            .user-badge { max-width: 100px; } /* Encurta e-mail no mobile */
             
-            /* Ajuste Simulador Inputs */
-            .sim-grid-3 { grid-template-columns: 1fr; } /* Inputs empilhados */
+            /* Tabela Ajuste Responsivo */
+            .card-header { flex-direction: column; align-items: flex-start; }
+            .card-header > div { width: 100%; justify-content: flex-start; margin-top: 12px; }
             
-            /* Ajuste Reajuste Global */
-            .flex-row-mobile { flex-wrap: wrap; justify-content: center; }
+            /* Dashboard Gestor vira 2 colunas */
+            .dashboard-kpis { grid-template-columns: 1fr 1fr; }
+            .dashboard-kpis > div:nth-child(1) { grid-column: span 2; } 
             
-            /* Tabela Header responsivo */
-            .card-header { flex-direction: column; align-items: stretch; text-align: center; }
-            .card-header > div { justify-content: center; width: 100%; flex-wrap: wrap; }
+            /* Toolbar Gestor */
+            .dashboard-controls { grid-template-columns: 1fr; gap: 10px; }
+            .dashboard-controls > div { display: flex; justify-content: space-between; align-items: center;}
             
-            /* Mapa Espelho - reduz para não estourar */
-            .unit-box { width: 42px; height: 36px; }
-            .unit-spacer { width: 15px; }
-            .map-header { padding-left: 15px; }
+            /* Simulador - Empilha os inputs */
+            .sim-grid-3 { grid-template-columns: 1fr; gap: 10px; } 
         }
 
-        @media print { .no-print { display: none !important; } .app-layout { display: block; opacity: 1; padding: 0; } .card { box-shadow: none; border: none; } }
+        @media print { 
+            .no-print { display: none !important; } 
+            body { background: white; }
+            .app-layout { display: block; opacity: 1; padding: 0; max-width: 100%; } 
+            .card { box-shadow: none; border: none; padding: 0; margin: 0; } 
+        }
     </style>
 </head>
 <body>
 
 <div id="loginOverlay">
     <div class="login-side-visual">
-        <img src="IMG 01 - BANHEIRO SUITE.png" class="carousel-img active">
-        <img src="IMG 02 - BANHEIRO SUITE.png" class="carousel-img">
-        <img src="IMG 15 - BANHEIRO SUITE.png" class="carousel-img">
+        <img src="IMG 01 - BANHEIRO SUITE.png" class="carousel-img active" alt="Madrid">
+        <img src="IMG 02 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
+        <img src="IMG 15 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
     </div>
     
     <div class="login-panel">
         <button onclick="ui.toggleTheme()" class="toggle-theme-login"><i class="fas fa-moon" id="iconLogin"></i></button>
         <div class="login-box">
-            <img src="MADRID LOGO BRANCA-01.png" alt="Madrid" class="login-logo">
+            <img src="MADRID LOGO BRANCA-01.png" alt="Madrid Casa Elevada" class="login-logo">
             
             <div id="formVisitor">
                 <input type="text" id="visitorName" class="inp-login" placeholder="Seu Nome Completo">
-                <button onclick="auth.loginVisitor()" class="btn-login" style="margin-bottom: 10px; width: 100%;">Entrar como Visitante</button>
-                <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
-                    <button onclick="auth.toggleMode()" style="background:transparent; border:none; color:rgba(255,255,255,0.6); cursor: pointer; font-size: 11px;">Área Admin (Senha)</button>
+                <button onclick="auth.loginVisitor()" class="btn-login">Acessar Simulador</button>
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <button onclick="auth.toggleMode()" style="background:transparent; border:none; color:rgba(255,255,255,0.5); cursor: pointer; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Acesso da Gestão</button>
                 </div>
             </div>
             
             <div id="formAdmin" class="hidden">
-                <input type="text" id="adminUser" class="inp-login" placeholder="E-mail (Firebase)">
+                <input type="text" id="adminUser" class="inp-login" placeholder="E-mail Corporativo">
                 <input type="password" id="adminPass" class="inp-login" placeholder="Senha">
-                <button onclick="auth.loginAdmin()" class="btn-login" style="width: 100%;">Entrar</button>
-                <button onclick="auth.toggleMode()" style="background:none; border:none; color:white; margin-top: 15px; cursor: pointer; opacity: 0.7;">Voltar</button>
+                <button onclick="auth.loginAdmin()" class="btn-login">Entrar no Painel</button>
+                <button onclick="auth.toggleMode()" style="background:none; border:none; color:rgba(255,255,255,0.6); margin-top: 15px; cursor: pointer; font-size: 12px;">Voltar</button>
             </div>
-            <p id="loginError" style="color:#FCA5A5; display:none; margin-top:15px; font-size:12px; background:rgba(0,0,0,0.2); padding:8px; border-radius:6px;"></p>
+            <p id="loginError" style="color:#FCA5A5; display:none; margin-top:10px; font-size:11px; background:rgba(220, 38, 38, 0.2); padding:10px; border-radius:8px;"></p>
         </div>
     </div>
 </div>
@@ -193,10 +270,10 @@
 <div id="app" class="app-layout">
     <header id="mainHeader" class="header no-print">
         <img id="logoHeader" src="MADRID LOGO MUSGO-01-01.png" alt="Madrid" class="header-logo">
-        <div class="user-pill">
-            <span id="userBadge" style="font-weight:700; color:var(--text-main); font-size:12px; text-transform: uppercase;">Visitante</span>
-            <button onclick="ui.toggleTheme()" class="btn-icon" style="margin-left:10px;"><i class="fas fa-moon" id="iconApp"></i></button>
-            <button onclick="auth.logout()" class="btn-icon"><i class="fas fa-sign-out-alt"></i></button>
+        <div class="user-controls">
+            <span id="userBadge" class="user-badge" title="Usuário Logado">Visitante</span>
+            <button onclick="ui.toggleTheme()" class="btn-icon" title="Modo Escuro"><i class="fas fa-moon" id="iconApp"></i></button>
+            <button onclick="auth.logout()" class="btn-icon" title="Sair"><i class="fas fa-sign-out-alt"></i></button>
         </div>
     </header>
 
@@ -204,18 +281,18 @@
         <aside>
             <div id="simulatorCard" class="card">
                 <div class="card-header">
-                    <span class="card-title"><i class="fas fa-calculator"></i> SIMULADOR</span>
-                    <button onclick="ui.toggleFullscreen()" class="btn-icon" title="Modo Foco"><i class="fas fa-expand" id="iconFullscreen"></i></button>
+                    <span class="card-title"><i class="fas fa-calculator"></i> Simulador</span>
+                    <button onclick="ui.toggleFullscreen()" class="btn-icon" style="border: 1px solid var(--border-color); width: 28px; height: 28px;" title="Tela Cheia"><i class="fas fa-expand" id="iconFullscreen"></i></button>
                 </div>
                 
                 <div class="sim-content-wrapper" style="display:contents;">
-                    <div class="gallery-box" style="position: relative; height: 180px; border-radius: 16px; overflow: hidden; margin-bottom: 20px; background: var(--bg-input); border: 1px solid var(--border-color);">
-                        <img id="unitImage" src="PLANTA_3_SUITES.jpg.png" style="width: 100%; height: 100%; object-fit: contain; padding: 10px;" alt="Planta">
-                        <span id="unitTypeLabel" style="position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.6); color: white; padding: 4px 10px; border-radius: 20px; font-size: 10px;">Planta do Andar</span>
+                    <div class="gallery-box" style="position: relative; height: 180px; border-radius: var(--radius-btn); overflow: hidden; margin-bottom: 20px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">
+                        <img id="unitImage" src="PLANTA_3_SUITES.jpg.png" style="max-width: 100%; max-height: 100%; object-fit: contain; padding: 10px;" alt="Planta">
+                        <span id="unitTypeLabel" style="position: absolute; bottom: 10px; left: 10px; background: var(--glass-bg); backdrop-filter: blur(5px); color: var(--text-main); padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 600; border: 1px solid var(--border-color);">Planta do Andar</span>
                     </div>
 
                     <div class="sim-controls">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
                             <div>
                                 <label class="control-label">Andar</label>
                                 <select id="selAndar" class="control-input" onchange="simulator.updateUnitList()"></select>
@@ -228,57 +305,57 @@
                             </div>
                         </div>
                         
-                        <div style="margin-bottom:12px;">
+                        <div style="margin-bottom:15px;">
                             <label class="control-label">Unidade</label>
-                            <select id="selUnidade" class="control-input" onchange="simulator.selectUnit()"></select>
+                            <select id="selUnidade" class="control-input" onchange="simulator.selectUnit()" style="font-weight: 600; color: var(--brand-primary);"></select>
                         </div>
 
                         <div style="margin-bottom:20px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
                                 <option value="mensal_20" id="optMensal">...Carregando</option>
-                                <option value="balao_20">Entrada + Balões (20%)</option>
+                                <option value="balao_20">Sinal + Balões (20%)</option>
                                 <option value="misto_completo">Sinal (10%) + Mensais (10%) + Balões (10%)</option>
                             </select>
                         </div>
 
                         <div class="price-hero">
-                            <div style="font-size:10px; opacity:0.8; text-transform:uppercase; letter-spacing: 1px;">Valor de Tabela</div>
+                            <div style="font-size:10px; opacity:0.8; text-transform:uppercase; letter-spacing: 1px; font-weight: 600;">Valor de Tabela</div>
                             <div id="displayTotal" class="price-main">R$ 0,00</div>
                         </div>
 
                         <div class="sim-grid-3">
                             <div>
-                                <label class="control-label" style="font-size: 9px;">Sinal (%)</label>
-                                <input type="number" id="inpSinal" value="10" class="control-input" oninput="simulator.calculate()" placeholder="Sinal %">
+                                <label class="control-label">Sinal (%)</label>
+                                <input type="number" id="inpSinal" value="10" class="control-input" oninput="simulator.calculate()" placeholder="%">
                             </div>
                             <div>
-                                <label class="control-label" style="font-size: 9px;">Mensais (%)</label>
+                                <label class="control-label">Mensais (%)</label>
                                 <input type="number" id="inpMensal" value="20" class="control-input" disabled>
                             </div>
                             <div>
-                                <label class="control-label" style="font-size: 9px;">Balões (%)</label>
+                                <label class="control-label">Balões (%)</label>
                                 <input type="number" id="inpBalao" value="0" class="control-input" disabled>
                             </div>
                         </div>
 
-                        <div id="calcResults" class="hidden" style="background:var(--bg-input); padding:15px; border-radius:12px; border:1px solid var(--border-color);">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px; color:var(--text-secondary);">
-                                <span>Sinal (3x)</span><strong style="color:var(--text-main);" id="resSinal">...</strong>
+                        <div id="calcResults" class="calc-results-box hidden">
+                            <div class="res-row">
+                                <span>Ato/Sinal (3x)</span><strong id="resSinal">...</strong>
                             </div>
-                            <div id="rowMensal" style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px; color:var(--text-secondary);">
-                                <span>Mensais (<span id="txtMeses">16</span>x)</span><strong style="color:var(--text-main);" id="resMensal">...</strong>
+                            <div id="rowMensal" class="res-row">
+                                <span>Mensais (<span id="txtMeses">16</span>x)</span><strong id="resMensal">...</strong>
                             </div>
-                            <div id="rowBalao" style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px; color:var(--text-secondary);">
-                                <span>Balões (3x)</span><strong style="color:var(--text-main);" id="resBalao">...</strong>
+                            <div id="rowBalao" class="res-row">
+                                <span>Balões (3x)</span><strong id="resBalao">...</strong>
                             </div>
-                            <div style="display:flex; justify-content:space-between; margin-top:8px; padding-top:8px; border-top:1px dashed var(--border-color); font-size:13px;">
-                                <span style="color:var(--brand-gold); font-weight:700;">Saldo Chaves</span><strong style="color:var(--brand-gold);" id="resChaves">...</strong>
+                            <div class="res-total">
+                                <span>Chaves</span><strong id="resChaves">...</strong>
                             </div>
                         </div>
 
-                        <button onclick="simulator.sendWhatsApp()" style="width:100%; height:45px; margin-top:15px; background:#25D366; color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; font-size: 13px;">
-                            <i class="fab fa-whatsapp"></i> Enviar Proposta
+                        <button onclick="simulator.sendWhatsApp()" class="btn-primary">
+                            <i class="fab fa-whatsapp" style="font-size: 16px;"></i> Enviar Proposta
                         </button>
                     </div>
                 </div>
@@ -286,39 +363,34 @@
 
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title"><i class="fas fa-building"></i> ESPELHO DE VENDAS</span>
-                    
-                    <button onclick="app.downloadEspelhoPDF()" class="admin-only hidden" style="padding:8px 12px; background:var(--text-main); color:var(--bg-card); border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:11px; display:flex; align-items:center; gap:5px;">
-                        <i class="fas fa-file-pdf"></i> Baixar PDF
+                    <span class="card-title"><i class="fas fa-building"></i> Espelho</span>
+                    <button onclick="app.downloadEspelhoPDF()" class="admin-only hidden btn-outline">
+                        <i class="fas fa-file-pdf" style="color: #DC2626;"></i> Baixar PDF
                     </button>
                 </div>
                 
-                <div id="adminMapHint" class="hidden" style="text-align:center; font-size:10px; color:var(--text-muted); margin-bottom:10px;">
-                    <i class="fas fa-edit"></i> Clique nos apartamentos para alterar o status
+                <div id="adminMapHint" class="hidden" style="text-align:center; font-size:10px; color:var(--text-secondary); margin-bottom:15px; background: var(--bg-input); padding: 8px; border-radius: 6px; font-weight: 600;">
+                    <i class="fas fa-mouse-pointer" style="margin-right: 5px;"></i> Clique nas unidades para alterar o status
                 </div>
 
                 <div class="visual-map-container">
-                    <div class="building-roof" style="width:100%; max-width: 220px; height:8px; background:var(--brand-gold); border-radius:4px 4px 0 0; opacity:0.8; margin-bottom:10px;"></div>
-                    
-                    <div class="map-header">
-                        <div style="width:25px;"></div>
-                        <div style="display:flex; gap:8px; justify-content:center;">
-                            <span>FINAL 03</span>
-                            <span>FINAL 02</span>
-                            <div class="unit-spacer"></div>
-                            <span>FINAL 01</span>
-                            <span>FINAL 04</span>
+                    <div class="map-container-inner">
+                        <div class="building-roof"></div>
+                        <div class="map-header">
+                            <div style="width:30px;"></div>
+                            <div style="display:flex; gap:8px; justify-content:center;">
+                                <span>F-03</span><span>F-02</span><div class="unit-spacer"></div><span>F-01</span><span>F-04</span>
+                            </div>
                         </div>
+                        <div id="buildingFacade" style="display:flex; flex-direction:column; gap:8px;"></div>
+                        <div style="font-size:10px; font-weight:700; color:var(--text-muted); margin-top:20px; letter-spacing:2px; background: var(--bg-hover); padding: 4px 15px; border-radius: 4px;">AVENIDA JK</div>
                     </div>
-
-                    <div id="buildingFacade" style="display:flex; flex-direction:column; gap:6px;"></div>
                     
-                    <div style="font-size:10px; font-weight:800; color:var(--text-muted); margin-top:15px; letter-spacing:2px;">AVENIDA JK</div>
-                </div>
-                <div class="map-legend">
-                    <div class="legend-item"><span class="dot" style="background:var(--st-livre-bg);"></span> Livre</div>
-                    <div class="legend-item"><span class="dot" style="background:var(--st-res-bg);"></span> Reservado</div>
-                    <div class="legend-item"><span class="dot" style="background:var(--st-vend-bg);"></span> Vendido</div>
+                    <div class="map-legend">
+                        <div class="legend-item"><span class="dot" style="background:var(--st-livre-bg);"></span> Livre</div>
+                        <div class="legend-item"><span class="dot" style="background:var(--st-res-bg);"></span> Reservado</div>
+                        <div class="legend-item"><span class="dot" style="background:var(--st-vend-bg);"></span> Vendido</div>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -326,57 +398,54 @@
         <main>
             <div id="adminPanel" class="card admin-only hidden no-print">
                 <div class="card-header">
-                    <span class="card-title"><i class="fas fa-chart-pie"></i> DASHBOARD GESTOR</span>
+                    <span class="card-title"><i class="fas fa-chart-pie"></i> Painel de Gestão</span>
                 </div>
                 
-                <div class="dashboard-grid">
-                    <div style="background:var(--bg-input); padding:15px 10px; border-radius:12px; border: 1px solid var(--border-color);">
-                        <div style="font-size:9px; font-weight:700; color:var(--text-muted); margin-bottom: 5px;">VGV TOTAL</div>
-                        <div id="kpiTotal" style="font-size:14px; font-weight:800; color:var(--text-main);">...</div>
+                <div class="dashboard-kpis">
+                    <div class="kpi-box">
+                        <div class="kpi-title">VGV Global</div>
+                        <div id="kpiTotal" class="kpi-val">...</div>
                     </div>
-                    <div style="background:var(--bg-input); padding:15px 10px; border-radius:12px; border: 1px solid var(--border-color);">
-                        <div style="font-size:9px; font-weight:700; color:var(--text-muted); margin-bottom: 5px;">VENDIDO</div>
-                        <div id="kpiVend" style="font-size:14px; font-weight:800; color:#EF4444;">...</div>
+                    <div class="kpi-box kpi-vendido">
+                        <div class="kpi-title">Vendido</div>
+                        <div id="kpiVend" class="kpi-val">...</div>
                     </div>
-                    
-                    <div style="background:var(--st-livre-bg); padding:15px 10px; border-radius:12px; border:1px solid var(--st-livre-txt);">
-                        <div style="font-size:9px; font-weight:800; color:var(--st-livre-txt); margin-bottom: 5px;">DISPONÍVEIS</div>
-                        <div id="kpiLivre" style="font-size:16px; font-weight:800; color:var(--st-livre-txt);">...</div>
-                    </div>
-                    
-                    <div style="background:var(--bg-input); padding:15px 10px; border-radius:12px; border: 1px solid var(--border-color);">
-                        <div style="font-size:9px; font-weight:700; color:var(--text-muted); margin-bottom: 5px;">INCC-DI</div>
-                        <div id="valINCC" style="font-size:14px; font-weight:800; color:var(--text-main);">...</div>
-                    </div>
-                    <div style="background:var(--bg-input); padding:15px 10px; border-radius:12px; border: 1px solid var(--border-color);">
-                        <div style="font-size:9px; font-weight:700; color:var(--text-muted); margin-bottom: 5px;">DÓLAR</div>
-                        <div id="valDolar" style="font-size:14px; font-weight:800; color:var(--text-main);">...</div>
+                    <div class="kpi-box kpi-livre">
+                        <div class="kpi-title">Disponíveis</div>
+                        <div id="kpiLivre" class="kpi-val" style="font-size: 20px;">...</div>
                     </div>
                 </div>
-                
-                <div class="flex-row-mobile" style="background:var(--bg-input); padding:15px; border-radius:12px; border:1px solid var(--border-color); justify-content: space-between;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size:11px; font-weight:700; color:var(--text-secondary); text-transform: uppercase;">Reajuste Global (%):</span>
-                        <input type="number" id="globalAdjust" value="0" step="0.1" class="control-input" style="width:70px; height:35px; text-align: center;">
-                        <button onclick="app.applyGlobalAdjustment()" style="padding:0 15px; height:35px; background:var(--brand-primary); color:white; border:none; border-radius:8px; cursor:pointer; font-weight: 700;"><i class="fas fa-check"></i></button>
+
+                <div class="dashboard-controls">
+                    <div>
+                        <span style="font-size:10px; font-weight:700; color:var(--text-secondary); text-transform: uppercase;">INCC-DI:</span>
+                        <strong id="valINCC" style="margin-left:5px; font-size: 13px;">...</strong>
                     </div>
-                    <button onclick="db.reset()" style="height:35px; padding:0 15px; background:transparent; color:#EF4444; border:1px solid #EF4444; border-radius:8px; cursor:pointer; font-size:10px; font-weight:700;">RESETAR ESPELHO</button>
+                    <div>
+                        <span style="font-size:10px; font-weight:700; color:var(--text-secondary); text-transform: uppercase;">Dólar:</span>
+                        <strong id="valDolar" style="margin-left:5px; font-size: 13px;">...</strong>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="number" id="globalAdjust" value="0" step="0.1" class="control-input" style="width:70px; height:34px; text-align: center; padding:0 5px;" placeholder="%">
+                        <button onclick="app.applyGlobalAdjustment()" class="btn-outline" style="height:34px; background:var(--bg-card);">Reajustar Tabela</button>
+                    </div>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title"><i class="fas fa-list-ul"></i> TABELA OFICIAL</span>
-                    <div style="display:flex; gap:10px; align-items: center;">
-                        <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only hidden" style="width:140px; height:35px;">
-                            <option value="disponivel">Disponíveis</option><option value="vendido">Vendidos</option><option value="todos">Todos</option>
+                    <span class="card-title"><i class="fas fa-list-ul"></i> Tabela Oficial</span>
+                    <div style="display:flex; gap:10px; align-items: center; flex-wrap: wrap;">
+                        <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only hidden" style="width:auto; height:36px; padding: 0 10px;">
+                            <option value="disponivel">Ocultar Vendidos</option><option value="todos">Mostrar Todos</option><option value="vendido">Apenas Vendidos</option>
                         </select>
-                        <button onclick="app.downloadTablePDF()" style="height:35px; padding:0 15px; background:var(--text-main); color:var(--bg-card); border:none; border-radius:8px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px; font-size: 11px;">
-                            <i class="fas fa-file-pdf"></i> PDF Tabela
+                        <button onclick="app.downloadTablePDF()" class="btn-outline">
+                            <i class="fas fa-file-pdf"></i> PDF
                         </button>
                     </div>
                 </div>
-                <div class="table-container">
+                
+                <div class="table-wrapper">
                     <table id="salesTable"></table>
                 </div>
             </div>
@@ -497,7 +566,6 @@
             const t = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
             
             document.getElementById('unitTypeLabel').innerText = `Planta ${t} - ${d.area}m²`;
-            // Alterado para um nome genérico
             document.getElementById('unitImage').src = t === '3 Suítes' ? 'PLANTA_3_SUITES.jpg.png' : 'PLANTA_1_SUITE.png';
             simulator.calculate();
         },
@@ -544,7 +612,7 @@
             const u = document.getElementById('selUnidade').value;
             if(!u) return;
             const val = document.getElementById('displayTotal').innerText;
-            window.open(`https://wa.me/?text=Olá! Gostaria de proposta para o Apto ${u}. Valor: ${val}`, '_blank');
+            window.open(`https://wa.me/?text=Olá! Gostaria de proposta para a unidade ${u} do Madrid. Valor: ${val}`, '_blank');
         }
     };
 
@@ -588,15 +656,14 @@
                         let apt = f*100+u;
                         let st = state.statusMap[apt] || 'livre';
                         let clickAction = state.isAdmin ? `app.toggleStatus(${apt})` : `app.selectApt(${apt})`;
-                        let cursorClass = state.isAdmin ? 'cursor-edit' : '';
-                        row.innerHTML+=`<div class="unit-box ${st} ${cursorClass}" onclick="${clickAction}"><span class="unit-num">${apt}</span></div>`;
+                        row.innerHTML+=`<div class="unit-box ${st}" onclick="${clickAction}"><span class="unit-num">${apt}</span></div>`;
                     });
                 } else {
                     let st102 = state.statusMap[102] || 'livre';
                     let st101 = state.statusMap[101] || 'livre';
                     let act102 = state.isAdmin ? `app.toggleStatus(102)` : `app.selectApt(102)`;
                     let act101 = state.isAdmin ? `app.toggleStatus(101)` : `app.selectApt(101)`;
-                    row.innerHTML += `<div class="unit-box ${st102}" style="width:104px;" onclick="${act102}"><span class="unit-num">102</span></div><div class="unit-spacer"></div><div class="unit-box ${st101}" style="width:104px;" onclick="${act101}"><span class="unit-num">101</span></div>`;
+                    row.innerHTML += `<div class="unit-box ${st102}" style="width:calc(96px + 8px);" onclick="${act102}"><span class="unit-num">102</span></div><div class="unit-spacer"></div><div class="unit-box ${st101}" style="width:calc(96px + 8px);" onclick="${act101}"><span class="unit-num">101</span></div>`;
                 }
                 c.appendChild(row);
             }
@@ -624,11 +691,13 @@
             const showB = plan === 'balao_20' || plan === 'misto_completo';
 
             let html = `<thead><tr>
-                <th>Apto</th><th>Tipo</th><th>Área Pvt</th><th>Total</th><th>Esc.</th><th>Vagas</th>
-                <th>Sinal (3x)</th>
+                <th>Unidade</th><th>Tipologia</th><th>Área</th><th>Total</th><th>Esc.</th><th>Vagas</th>
+                <th>Sinal/Ato</th>
                 ${showM ? `<th>Mensais (${m}x)</th>` : ''}
                 ${showB ? `<th>Balão (3x)</th>` : ''}
-                <th>Saldo</th><th>Total</th>${state.isAdmin ? '<th>Ação</th>' : ''}
+                <th>Financiamento</th><th>VGV (Tabela)</th>
+                <th>Status</th>
+                ${state.isAdmin ? '<th>Ação</th>' : ''}
             </tr></thead><tbody>`;
 
             let totalVGV = 0, totalVend = 0, countLivre = 0;
@@ -638,12 +707,10 @@
                 let st = state.statusMap[u] || 'livre';
                 let finalPrice = d.valor * (1 + state.globalAdjust/100);
                 
-                // KPIs calculados independentemente do filtro da tabela
                 totalVGV += finalPrice;
                 if(st === 'vendido') totalVend += finalPrice;
                 if(st === 'livre') countLivre++;
 
-                // Lógica de Filtro da Tabela
                 if((filter=='disponivel' && st=='vendido') || (filter=='vendido' && st!='vendido')) return;
 
                 let tipo = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
@@ -656,27 +723,28 @@
                 let vBalao = (finalPrice * (pBalao/100)) / 3;
                 let vChaves = finalPrice * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
-                let btn = state.isAdmin ? `<td><div onclick="app.toggleStatus(${u})" class="btn-action-sell"><i class="fas fa-sync-alt"></i></div></td>` : '';
-                
+                let btn = state.isAdmin ? `<td><button onclick="app.toggleStatus(${u})" class="btn-action-sell"><i class="fas fa-sync-alt"></i></button></td>` : '';
+                let stLabel = st === 'livre' ? 'Disponível' : (st === 'reservado' ? 'Reservado' : 'Vendido');
+
                 html += `<tr class="${st}">
-                    <td style="font-weight:700;">${u}</td>
+                    <td style="font-weight:800;">${u}</td>
                     <td>${tipo}</td>
                     <td>${d.area}m²</td>
-                    <td>${d.areaTotal}m²</td>
+                    <td style="color:var(--text-muted);">${d.areaTotal}m²</td>
                     <td>${d.esc}</td>
-                    <td style="font-size:10px;">${d.vagas}</td>
-                    <td>${app.formatMoney(vSinal)}</td>
+                    <td>${d.vagas}</td>
+                    <td style="font-weight:600;">${app.formatMoney(vSinal)}</td>
                     ${showM ? `<td>${app.formatMoney(vMensal)}</td>` : ''}
                     ${showB ? `<td>${app.formatMoney(vBalao)}</td>` : ''}
-                    <td>${app.formatMoney(vChaves)}</td>
-                    <td style="font-weight:700">${app.formatMoney(finalPrice)}</td>
+                    <td style="font-weight:600; color:var(--brand-gold);">${app.formatMoney(vChaves)}</td>
+                    <td style="font-weight:800">${app.formatMoney(finalPrice)}</td>
+                    <td><span class="badge">${stLabel}</span></td>
                     ${btn}
                 </tr>`;
             });
             html += `</tbody>`;
             tb.innerHTML = html;
 
-            // Atualização dos KPIs do Dashboard
             if(state.isAdmin) {
                 if(document.getElementById('kpiTotal')) document.getElementById('kpiTotal').innerText = app.formatMoney(totalVGV);
                 if(document.getElementById('kpiVend')) document.getElementById('kpiVend').innerText = app.formatMoney(totalVend);
@@ -688,17 +756,14 @@
             db.updateAdjust(val);
         },
         
-        // --- PDF DA TABELA DE VENDAS ---
         downloadTablePDF: () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('l', 'mm', 'a4');
             const brandPrimary = [31, 51, 36];
             
-            const logo = 'MADRID LOGO MUSGO-01-01.png'; 
-            try { doc.addImage(logo, 'PNG', 14, 10, 45, 18); } catch (e) {
+            try { doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 45, 18); } catch (e) {
                 doc.setFontSize(22); doc.setTextColor(...brandPrimary); doc.text("MADRID", 14, 20);
             }
-
             doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(...brandPrimary);
             doc.text("PREVISÃO DE ENTREGA", 282, 18, { align: 'right' });
             doc.setFont("helvetica", "normal"); doc.text("Julho/2027", 282, 23, { align: 'right' });
@@ -726,7 +791,6 @@
             Object.keys(DB_REAL).sort((a,b)=>b-a).forEach(u => {
                 let d = DB_REAL[u];
                 let st = state.statusMap[u] || 'livre';
-
                 if (filter === 'disponivel' && st === 'vendido') return;
                 if (filter === 'vendido' && st !== 'vendido') return;
 
@@ -745,7 +809,6 @@
 
                 if (pMensal > 0) row.push(app.formatMoney(vMensal));
                 if (pBalao > 0) row.push(app.formatMoney(vBalao));
-                
                 row.push(app.formatMoney(vChaves));
                 tableBody.push(row);
             });
@@ -768,13 +831,11 @@
             doc.save('Tabela_Madrid_Oficial.pdf');
         },
 
-        // --- NOVO PDF DO ESPELHO DE VENDAS ---
         downloadEspelhoPDF: () => {
             const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4'); // Retrato para caber o prédio
+            const doc = new jsPDF('p', 'mm', 'a4');
             const brandPrimary = [31, 51, 36];
             
-            // Logo e Cabeçalho
             try { 
                 doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 45, 16); 
             } catch(e) {
@@ -785,82 +846,43 @@
             doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.setTextColor(100);
             doc.text(new Date().toLocaleDateString('pt-BR'), 196, 24, { align: 'right' });
 
-            // Preparar Dados da Tabela (removido a coluna do corredor)
             let body = [];
             for (let f = 13; f >= 1; f--) {
                 let floorLabel = `${f < 10 ? '0'+f : f}° Pavto.`;
-                
                 if (f > 1) {
                     let a03 = `${f}03`; let ar03 = DB_REAL[a03] ? DB_REAL[a03].areaTotal.toFixed(2) + 'm²' : '';
                     let a02 = `${f}02`; let ar02 = DB_REAL[a02] ? DB_REAL[a02].areaTotal.toFixed(2) + 'm²' : '';
                     let a01 = `${f}01`; let ar01 = DB_REAL[a01] ? DB_REAL[a01].areaTotal.toFixed(2) + 'm²' : '';
                     let a04 = `${f}04`; let ar04 = DB_REAL[a04] ? DB_REAL[a04].areaTotal.toFixed(2) + 'm²' : '';
-                    
-                    body.push([
-                        floorLabel,
-                        `Apto ${a03}\n${ar03}`,
-                        `Apto ${a02}\n${ar02}`,
-                        `Apto ${a01}\n${ar01}`,
-                        `Apto ${a04}\n${ar04}`
-                    ]);
+                    body.push([ floorLabel, `Apto ${a03}\n${ar03}`, `Apto ${a02}\n${ar02}`, `Apto ${a01}\n${ar01}`, `Apto ${a04}\n${ar04}` ]);
                 } else {
-                    // Térreo (102 e 101)
                     let a102 = `102`; let ar102 = DB_REAL[a102] ? DB_REAL[a102].areaTotal.toFixed(2) + 'm²' : '';
                     let a101 = `101`; let ar101 = DB_REAL[a101] ? DB_REAL[a101].areaTotal.toFixed(2) + 'm²' : '';
-                    
-                    body.push([
-                        floorLabel,
-                        { content: `Apto ${a102}\n${ar102}`, colSpan: 2 },
-                        { content: `Apto ${a101}\n${ar101}`, colSpan: 2 }
-                    ]);
+                    body.push([ floorLabel, { content: `Apto ${a102}\n${ar102}`, colSpan: 2 }, { content: `Apto ${a101}\n${ar101}`, colSpan: 2 } ]);
                 }
             }
 
-            // Gerar Tabela (Visual do PDF)
             doc.autoTable({
                 head: [["PAVIMENTO", "FINAL 03", "FINAL 02", "FINAL 01", "FINAL 04"]],
-                body: body,
-                startY: 32,
-                theme: 'grid',
-                styles: { 
-                    fontSize: 9, 
-                    cellPadding: 4, 
-                    halign: 'center', 
-                    valign: 'middle', 
-                    lineColor: [255, 255, 255], // Bordas brancas entre as células (estilo blocos)
-                    lineWidth: 0.5, 
-                    fontStyle: 'bold' 
-                },
-                headStyles: { 
-                    fillColor: brandPrimary, 
-                    textColor: 255,
-                    fontSize: 10
-                },
+                body: body, startY: 32, theme: 'grid',
+                styles: { fontSize: 9, cellPadding: 4, halign: 'center', valign: 'middle', lineColor: [255, 255, 255], lineWidth: 0.5, fontStyle: 'bold' },
+                headStyles: { fillColor: brandPrimary, textColor: 255, fontSize: 10 },
                 didParseCell: function(data) {
                     if (data.section === 'body') {
-                        // Estilo da coluna de Pavimentos
                         if (data.column.index === 0) {
-                            data.cell.styles.fillColor = [240, 240, 240];
-                            data.cell.styles.textColor = [50, 50, 50];
-                            return;
+                            data.cell.styles.fillColor = [240, 240, 240]; data.cell.styles.textColor = [50, 50, 50]; return;
                         }
-                        
-                        // Pintar as células baseando no status Firebase
                         let raw = data.cell.raw.content ? data.cell.raw.content : data.cell.raw;
                         let aptMatch = raw.match(/Apto (\d+)/);
                         if(aptMatch) {
                             let apt = aptMatch[1];
                             let st = state.statusMap[apt] || 'livre';
-                            
                             if (st === 'livre') {
-                                data.cell.styles.fillColor = [220, 252, 231]; // Verde claro
-                                data.cell.styles.textColor = [20, 83, 45];    // Verde escuro
+                                data.cell.styles.fillColor = [220, 252, 231]; data.cell.styles.textColor = [20, 83, 45];
                             } else if (st === 'reservado') {
-                                data.cell.styles.fillColor = [254, 249, 195]; // Amarelo
-                                data.cell.styles.textColor = [133, 77, 14];   // Marrom
+                                data.cell.styles.fillColor = [254, 249, 195]; data.cell.styles.textColor = [133, 77, 14];
                             } else if (st === 'vendido') {
-                                data.cell.styles.fillColor = [254, 226, 226]; // Vermelho
-                                data.cell.styles.textColor = [153, 27, 27];   // Vermelho escuro
+                                data.cell.styles.fillColor = [254, 226, 226]; data.cell.styles.textColor = [153, 27, 27];
                             }
                         }
                     }
@@ -868,19 +890,13 @@
             });
 
             let finalY = doc.lastAutoTable.finalY + 2;
-            
-            // Tarja Avenida JK
-            doc.setFillColor(230, 230, 230);
-            doc.rect(14, finalY, 182, 8, 'F');
+            doc.setFillColor(230, 230, 230); doc.rect(14, finalY, 182, 8, 'F');
             doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(100);
             doc.text("AVENIDA JK", 105, finalY + 5.5, { align: 'center' });
-
+            
             finalY += 15;
-
-            // Legenda Inferior
             doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(50);
             doc.text("LEGENDA:", 14, finalY + 4);
-            
             doc.setFont("helvetica", "bold"); doc.setFontSize(9);
             
             doc.setFillColor(220, 252, 231); doc.rect(36, finalY, 5, 5, 'F');
@@ -896,23 +912,19 @@
         }
     };
 
-    // --- AUTH & START ---
     const auth = {
         loginAdmin: () => {
             const e = document.getElementById('adminUser').value;
             const p = document.getElementById('adminPass').value;
             firebase.auth().signInWithEmailAndPassword(e, p).catch(err => {
-                document.getElementById('loginError').innerText = "Erro: " + err.message;
+                document.getElementById('loginError').innerText = "Acesso Negado: Verifique as suas credenciais.";
                 document.getElementById('loginError').style.display = 'block';
             });
         },
         loginVisitor: () => {
             if(document.getElementById('visitorName').value) {
                 state.isAdmin = false; state.user = document.getElementById('visitorName').value; auth.initApp();
-            } else alert("Nome obrigatório");
-        },
-        loginTestMode: () => {
-            state.isAdmin = true; state.user = "Gestor (Modo Teste)"; auth.initApp();
+            } else alert("Por favor, preencha o seu nome para aceder.");
         },
         toggleMode: () => {
             document.getElementById('formAdmin').classList.toggle('hidden');
@@ -927,13 +939,9 @@
             
             const adm = document.querySelectorAll('.admin-only');
             if(state.isAdmin) {
-                // Remove a classe hidden e garante a exibição
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminMapHint').classList.remove('hidden');
-                adm.forEach(e => {
-                    e.classList.remove('hidden'); 
-                    e.style.display = 'flex'; // ou block dependendo do elemento
-                });
+                adm.forEach(e => { e.classList.remove('hidden'); e.style.display = 'flex'; });
             } else {
                 document.getElementById('adminPanel').classList.add('hidden');
                 document.getElementById('adminMapHint').classList.add('hidden');
@@ -962,7 +970,7 @@
             database.ref('madrid_data/globalAdjust').set(val);
         },
         reset: () => {
-            if(confirm('Zerar tudo?')) {
+            if(confirm('Tem a certeza que deseja resetar todo o espelho?')) {
                 database.ref('madrid_data').set({ statusMap:{}, globalAdjust:0 });
             }
         }
