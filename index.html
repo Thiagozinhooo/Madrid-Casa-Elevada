@@ -139,12 +139,13 @@
         .btn-primary { width: 100%; height: 46px; margin-top: 15px; background: #10B981; color: white; border: none; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; transition: all 0.3s; }
         .btn-primary:hover { background: #059669; }
         
-        .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        /* BOTÃO DE AÇÃO MENOR */
+        .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-btn); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-outline:hover { background: var(--bg-hover); }
 
-        /* DASHBOARD GESTOR */
+        /* DASHBOARD GESTOR - NOVO LAYOUT HOMOGÊNEO */
         .dashboard-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
-        .kpi-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: center; }
+        .kpi-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
         .kpi-title { font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         .kpi-val { font-size: 15px; font-weight: 700; color: var(--text-main); }
         
@@ -152,11 +153,11 @@
         .kpi-livre .kpi-title, .kpi-livre .kpi-val { color: var(--st-livre-txt); }
         .kpi-vendido .kpi-val { color: var(--st-vend-txt); }
 
-        .dashboard-controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: center; background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+        .dashboard-controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: center; background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
 
-        /* TABELA */
+        /* TABELA - TRAVADA NO CONTAINER */
         main { min-width: 0; width: 100%; display: block; } 
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px; font-size: 12px; }
         th { background: var(--bg-input); color: var(--text-secondary); padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; font-size: 10px; position: sticky; top: 0; z-index: 10; }
         td { padding: 12px 15px; border-bottom: 1px solid var(--bg-hover); text-align: left; color: var(--text-main); vertical-align: middle; white-space: nowrap; }
@@ -207,7 +208,7 @@
             
             /* Ajuste Cabeçalho App */
             .header { padding: 10px 15px; margin-bottom: 20px; }
-            .user-badge { max-width: 100px; }
+            .user-badge { max-width: 100px; } 
             
             /* Tabela Ajuste Responsivo */
             .card-header { flex-direction: column; align-items: flex-start; }
@@ -426,11 +427,13 @@
                         <strong id="valDolar" style="margin-left:5px; font-size: 13px;">...</strong>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <input type="number" id="globalAdjust" value="0" step="0.1" class="control-input" style="width:70px; height:34px; text-align: center; padding:0 5px;" placeholder="%">
+                        <input type="number" id="globalAdjust" value="" step="0.1" class="control-input" style="width:70px; height:34px; text-align: center; padding:0 5px;" placeholder="%">
                         
-                        <button onclick="app.applyGlobalAdjustment()" class="btn-outline" style="height:34px; background:var(--bg-card);">Aplicar Reajuste</button>
+                        <button onclick="app.applyGlobalAdjustment()" class="btn-outline" style="height:34px; background:var(--bg-card); color:var(--brand-primary); border-color:var(--brand-primary);" title="Aplica o reajuste sobre a tabela atual">
+                            Aplicar
+                        </button>
                         
-                        <button onclick="app.undoGlobalAdjustment()" class="btn-icon" style="width:34px; height:34px; border: 1px solid var(--border-color); background: var(--bg-card);" title="Desfazer reajuste anterior">
+                        <button onclick="app.undoGlobalAdjustment()" class="btn-icon" style="width:34px; height:34px; border: 1px solid var(--border-color); background: var(--bg-card);" title="Desfazer último reajuste e voltar à tabela anterior">
                             <i class="fas fa-undo"></i>
                         </button>
                         
@@ -461,7 +464,7 @@
 </div>
 
 <script>
-    // 1. DADOS ESTÁTICOS
+    // 1. DADOS ESTÁTICOS (TABELA ZERO - NUNCA ALTERAR AQUI MANUALMENTE)
     const DB_REAL = {
         1304: { area: 108.22, areaTotal: 114.69, esc: '49', areaEsc: 6.47, vagas: '27A/27B', pav: 'SUB', valor: 1162993.37 },
         1303: { area: 125.20, areaTotal: 133.12, esc: '3', areaEsc: 7.92, vagas: '49A/49B', pav: 'TER', valor: 1364121.93 },
@@ -528,8 +531,16 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     
-    // Adicionado variável "previousAdjust" para o botão desfazer
-    let state = { isAdmin: false, user: '', statusMap: {}, globalAdjust: 0, previousAdjust: 0, lastPriceUpdate: null, lastSaleUpdate: null };
+    // Novo State com suporte a Juros Compostos (Multiplicador Acumulado)
+    let state = { 
+        isAdmin: false, 
+        user: '', 
+        statusMap: {}, 
+        globalMultiplier: 1,    // Multiplicador acumulado atual
+        previousMultiplier: 1,  // Memória do passo anterior para Desfazer
+        lastPriceUpdate: null, 
+        lastSaleUpdate: null 
+    };
     
     // --- 3. LÓGICA DO SIMULADOR ---
     const simulator = {
@@ -562,7 +573,7 @@
                 if(!state.isAdmin && st === 'vendido') return;
 
                 if(!first) first = u;
-                let price = d.valor * (1 + state.globalAdjust/100);
+                let price = d.valor * state.globalMultiplier; // Calcula baseado no acumulado
                 s.innerHTML += `<option value="${u}">Apto ${u} (${t}) - ${app.formatMoney(price)}</option>`;
             });
             if(first) { s.value = first; simulator.selectUnit(); }
@@ -592,7 +603,7 @@
         calculate: () => {
             const u = document.getElementById('selUnidade').value;
             if(!u) return;
-            let price = DB_REAL[u].valor * (1 + state.globalAdjust/100);
+            let price = DB_REAL[u].valor * state.globalMultiplier; // Valor Acumulado
             document.getElementById('displayTotal').innerText = app.formatMoney(price);
             
             let pSinal = parseFloat(document.getElementById('inpSinal').value)||0;
@@ -637,7 +648,6 @@
             app.renderFacade();
             app.renderTable(); 
             if(document.getElementById('selUnidade').options.length <= 1) simulator.updateUnitList();
-            if(document.getElementById('globalAdjust')) document.getElementById('globalAdjust').value = state.globalAdjust;
         },
         formatMoney: (v) => v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}),
         fetchAPIs: async () => {
@@ -672,7 +682,7 @@
                     let st101 = state.statusMap[101] || 'livre';
                     let act102 = state.isAdmin ? `app.toggleStatus(102)` : `app.selectApt(102)`;
                     let act101 = state.isAdmin ? `app.toggleStatus(101)` : `app.selectApt(101)`;
-                    row.innerHTML += `<div class="unit-box ${st102}" style="width:120px;" onclick="${act102}"><span class="unit-num">102</span></div><div class="unit-spacer"></div><div class="unit-box ${st101}" style="width:120px;" onclick="${act101}"><span class="unit-num">101</span></div>`;
+                    row.innerHTML += `<div class="unit-box ${st102}" style="width:104px;" onclick="${act102}"><span class="unit-num">102</span></div><div class="unit-spacer"></div><div class="unit-box ${st101}" style="width:104px;" onclick="${act101}"><span class="unit-num">101</span></div>`;
                 }
                 c.appendChild(row);
             }
@@ -704,7 +714,7 @@
                 <th>Sinal/Ato</th>
                 ${showM ? `<th>Mensais (${m}x)</th>` : ''}
                 ${showB ? `<th>Balão (3x)</th>` : ''}
-                <th>Financiamento</th><th>VGV (Tabela)</th>
+                <th>Financiamento</th><th>VGV Atual</th>
                 <th>Status</th>
                 ${state.isAdmin ? '<th>Ação</th>' : ''}
             </tr></thead><tbody>`;
@@ -714,7 +724,7 @@
             Object.keys(DB_REAL).sort((a,b)=>b-a).forEach(u => {
                 let d = DB_REAL[u];
                 let st = state.statusMap[u] || 'livre';
-                let finalPrice = d.valor * (1 + state.globalAdjust/100);
+                let finalPrice = d.valor * state.globalMultiplier; // Calcula Juros Compostos
                 
                 totalVGV += finalPrice;
                 if(st === 'vendido') totalVend += finalPrice;
@@ -763,25 +773,41 @@
                     document.getElementById('logVenda').innerText = state.lastSaleUpdate ? `Última venda: ${state.lastSaleUpdate}` : 'Nenhuma venda registrada';
                 }
                 if(document.getElementById('logReajuste')) {
-                    document.getElementById('logReajuste').innerText = state.lastPriceUpdate ? `Atualizado em: ${state.lastPriceUpdate}` : '';
+                    document.getElementById('logReajuste').innerText = state.lastPriceUpdate ? `Log: ${state.lastPriceUpdate}` : '';
                 }
             }
         },
         
-        // --- FUNÇÕES DE REAJUSTE COM "DESFAZER" ---
+        // --- FUNÇÃO DE JUROS COMPOSTOS ---
         applyGlobalAdjustment: () => {
-            const val = parseFloat(document.getElementById('globalAdjust').value)||0;
-            const prevVal = state.globalAdjust; // Salva o valor atual antes de alterar
-            db.updateAdjust(val, prevVal);
+            const valInput = document.getElementById('globalAdjust').value;
+            if(!valInput) return alert("Digite um valor de reajuste (ex: 0.72)");
+            
+            const val = parseFloat(valInput);
+            if(isNaN(val) || val === 0) return;
+
+            // Transforma % em multiplicador. Ex: 0.72 -> 1.0072
+            const factor = 1 + (val / 100);
+            
+            // Multiplica o acumulado atual pelo novo fator
+            const newMultiplier = state.globalMultiplier * factor;
+
+            // Salva no banco (o novo multiplicador, o antigo para desfazer, e o log)
+            db.updateAdjust(newMultiplier, state.globalMultiplier, val);
+            
+            // Zera a caixinha
+            document.getElementById('globalAdjust').value = '';
         },
+        
+        // --- FUNÇÃO PARA DESFAZER REAJUSTE ---
         undoGlobalAdjustment: () => {
-            if (state.previousAdjust !== undefined) {
-                if(confirm(`Deseja desfazer a última alteração e voltar a tabela para o reajuste de ${state.previousAdjust}%?`)) {
-                    document.getElementById('globalAdjust').value = state.previousAdjust;
-                    db.updateAdjust(state.previousAdjust, state.previousAdjust); 
+            if (state.previousMultiplier && state.previousMultiplier !== state.globalMultiplier) {
+                if(confirm(`Tem certeza que deseja desfazer o último reajuste e voltar a tabela para os preços anteriores?`)) {
+                    // Restaura o multiplicador anterior e diz que foi desfeito
+                    db.updateAdjust(state.previousMultiplier, state.previousMultiplier, "Desfeito");
                 }
             } else {
-                alert("Nenhum reajuste anterior encontrado.");
+                alert("Não há nenhuma alteração recente para desfazer no momento.");
             }
         },
         
@@ -823,7 +849,7 @@
                 if (filter === 'disponivel' && st === 'vendido') return;
                 if (filter === 'vendido' && st !== 'vendido') return;
 
-                let price = d.valor * (1 + state.globalAdjust / 100);
+                let price = d.valor * state.globalMultiplier; // Atualizado para o cálculo de Juros Compostos
                 let vEntrada = (price * (pSinal/100)) / 3;
                 let vMensal = (price * (pMensal/100)) / m;
                 let vBalao = (price * (pBalao/100)) / 3;
@@ -987,8 +1013,9 @@
                 const data = snap.val();
                 if(data) {
                     state.statusMap = data.statusMap || {};
-                    state.globalAdjust = data.globalAdjust || 0;
-                    state.previousAdjust = data.previousAdjust || 0;
+                    // Carrega os dados atualizados de multiplicadores
+                    state.globalMultiplier = data.globalMultiplier || 1;
+                    state.previousMultiplier = data.previousMultiplier || 1;
                     state.lastPriceUpdate = data.lastPriceUpdate || null;
                     state.lastSaleUpdate = data.lastSaleUpdate || null;
                 }
@@ -1002,15 +1029,17 @@
                 database.ref('madrid_data/lastSaleUpdate').set(now);
             }
         },
-        updateAdjust: (val, prevVal) => {
+        updateAdjust: (newMult, prevMult, appliedVal) => {
             const now = new Date().toLocaleString('pt-BR');
-            database.ref('madrid_data/globalAdjust').set(val);
-            database.ref('madrid_data/previousAdjust').set(prevVal);
-            database.ref('madrid_data/lastPriceUpdate').set(now);
+            let logMsg = appliedVal === "Desfeito" ? `${now} (Desfeito)` : `${now} (+${appliedVal}%)`;
+            
+            database.ref('madrid_data/globalMultiplier').set(newMult);
+            database.ref('madrid_data/previousMultiplier').set(prevMult);
+            database.ref('madrid_data/lastPriceUpdate').set(logMsg);
         },
         reset: () => {
-            if(confirm('Tem a certeza que deseja resetar todo o espelho?')) {
-                database.ref('madrid_data').set({ statusMap:{}, globalAdjust:0, previousAdjust:0, lastPriceUpdate: null, lastSaleUpdate: null });
+            if(confirm('Tem a certeza que deseja resetar todo o espelho e a tabela de preços para a Original (Tabela Zero)?')) {
+                database.ref('madrid_data').set({ statusMap:{}, globalMultiplier: 1, previousMultiplier: 1, lastPriceUpdate: null, lastSaleUpdate: null });
             }
         }
     };
