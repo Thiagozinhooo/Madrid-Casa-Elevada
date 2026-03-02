@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada</title>
+    <title>Madrid Casa Elevada | Gestão Premium</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -140,12 +140,12 @@
         .btn-primary:hover { background: #059669; }
         
         /* BOTÃO DE AÇÃO MENOR */
-        .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-btn); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-outline:hover { background: var(--bg-hover); }
 
-        /* DASHBOARD GESTOR - NOVO LAYOUT HOMOGÊNEO */
+        /* DASHBOARD GESTOR */
         .dashboard-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
-        .kpi-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
+        .kpi-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: center; }
         .kpi-title { font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         .kpi-val { font-size: 15px; font-weight: 700; color: var(--text-main); }
         
@@ -153,11 +153,11 @@
         .kpi-livre .kpi-title, .kpi-livre .kpi-val { color: var(--st-livre-txt); }
         .kpi-vendido .kpi-val { color: var(--st-vend-txt); }
 
-        .dashboard-controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: center; background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
+        .dashboard-controls { display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; align-items: center; background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
 
-        /* TABELA - TRAVADA NO CONTAINER */
+        /* TABELA */
         main { min-width: 0; width: 100%; display: block; } 
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
+        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px; font-size: 12px; }
         th { background: var(--bg-input); color: var(--text-secondary); padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; font-size: 10px; position: sticky; top: 0; z-index: 10; }
         td { padding: 12px 15px; border-bottom: 1px solid var(--bg-hover); text-align: left; color: var(--text-main); vertical-align: middle; white-space: nowrap; }
@@ -174,11 +174,13 @@
         .btn-action-sell { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.2s; font-size: 11px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: white; border-color: var(--brand-primary); }
 
-        /* MAPA ESPELHO */
+        /* MAPA ESPELHO ALINHADO E MINIMALISTA */
         .map-container-inner { overflow-x: auto; padding-bottom: 10px; display: flex; flex-direction: column; align-items: center; width: 100%; }
-        .building-roof { width: 100%; max-width: 250px; height: 6px; background: var(--brand-gold); border-radius: 10px 10px 0 0; margin-bottom: 12px; }
-        .map-header { display: flex; justify-content: space-between; width: 100%; max-width: 280px; margin-bottom: 15px; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: 1px; padding-left: 30px; }
-        .map-header span { flex: 1; text-align: center; }
+        .building-roof { width: 100%; max-width: 250px; height: 6px; background: var(--brand-gold); border-radius: 10px 10px 0 0; margin-bottom: 15px; }
+        
+        /* NOVO CABEÇALHO DO MAPA */
+        .map-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; justify-content: center; width: 100%; max-width: 320px; color: var(--text-muted); font-size: 9px; font-weight: 700; letter-spacing: 1px; }
+        .map-header .group-label { width: 104px; text-align: center; background: var(--bg-hover); padding: 4px 0; border-radius: 4px; }
         
         .map-floor { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; justify-content: center; width: 100%; max-width: 320px; }
         .floor-indicator { font-size: 11px; font-weight: 600; color: var(--text-muted); width: 30px; text-align: right; }
@@ -240,18 +242,6 @@
     <div class="login-side-visual">
         <img src="IMG 01 - BANHEIRO SUITE.png" class="carousel-img active" alt="Madrid">
         <img src="IMG 02 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 03 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 04 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 05 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 06 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 07 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 08 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 09 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 10 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 11 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 12 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 13 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 14 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
         <img src="IMG 15 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
     </div>
     
@@ -323,7 +313,7 @@
                         </div>
 
                         <div style="margin-bottom:20px;">
-                            <label class="control-label">Plano</label>
+                            <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
                                 <option value="mensal_20" id="optMensal">...Carregando</option>
                                 <option value="balao_20">Sinal + Balões (20%)</option>
@@ -375,7 +365,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title"><i class="fas fa-building"></i> Mapa</span>
+                    <span class="card-title"><i class="fas fa-building"></i> Espelho</span>
                     <button onclick="app.downloadEspelhoPDF()" class="admin-only hidden btn-outline">
                         <i class="fas fa-file-pdf" style="color: #DC2626;"></i> Baixar PDF
                     </button>
@@ -388,14 +378,14 @@
                 <div class="visual-map-container">
                     <div class="map-container-inner">
                         <div class="building-roof"></div>
+                        
                         <div class="map-header">
-                            <div style="width:30px;"></div>
-                            <div style="display:flex; gap:8px; justify-content:center;">
-                                <span>F-03</span><span>F-02</span><div class="unit-spacer"></div><span>F-01</span><span>F-04</span>
-                            </div>
+                            <div class="floor-indicator" style="opacity: 0;"></div> <div class="group-label">3 SUÍTES</div>
+                            <div class="unit-spacer"></div>
+                            <div class="group-label">1 SUÍTE</div>
                         </div>
+                        
                         <div id="buildingFacade" style="display:flex; flex-direction:column; gap:8px;"></div>
-                        <div style="font-size:10px; font-weight:700; color:var(--text-muted); margin-top:20px; letter-spacing:2px; background: var(--bg-hover); padding: 4px 15px; border-radius: 4px;">AVENIDA JK</div>
                     </div>
                     
                     <div class="map-legend">
@@ -956,12 +946,8 @@
                 }
             });
 
-            let finalY = doc.lastAutoTable.finalY + 2;
-            doc.setFillColor(230, 230, 230); doc.rect(14, finalY, 182, 8, 'F');
-            doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(100);
-            doc.text("AVENIDA JK", 105, finalY + 5.5, { align: 'center' });
+            let finalY = doc.lastAutoTable.finalY + 10;
             
-            finalY += 15;
             doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(50);
             doc.text("LEGENDA:", 14, finalY + 4);
             doc.setFont("helvetica", "bold"); doc.setFontSize(9);
@@ -1089,4 +1075,3 @@
 </script>
 </body>
 </html>
-
