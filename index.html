@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Sistema de Vendas</title>
+    <title>Madrid Casa Elevada | Gestão Premium</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,6 +67,7 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* CUSTOM SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
@@ -89,7 +90,7 @@
         .inp-login { width: 100%; height: 46px; padding: 0 15px; border: 1px solid rgba(255,255,255,0.2); border-radius: var(--radius-btn); margin-bottom: 15px; background: rgba(255,255,255,0.05); color: white; font-family: inherit; font-size: 13px; transition: all 0.3s; }
         .inp-login:focus { background: rgba(255,255,255,0.1); border-color: var(--brand-gold); }
         
-        .btn-login { width: 100%; height: 46px; border-radius: var(--radius-btn); background: var(--brand-gold); color: #fff; border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: all 0.3s; margin-bottom: 10px; }
+        .btn-login { width: 100%; height: 46px; border-radius: var(--radius-btn); background: var(--brand-gold); color: #fff; border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: all 0.3s; margin-top: 10px; }
         .btn-login:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(197, 160, 101, 0.3); }
 
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
@@ -98,11 +99,12 @@
         .app-layout { max-width: 1500px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.5s forwards; }
         @keyframes fadeIn { to { opacity: 1; } }
         
+        /* CABEÇALHO FLUTUANTE */
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 25px; margin-bottom: 25px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); }
         .header-logo { height: 35px; width: auto; object-fit: contain; }
         
         .user-controls { display: flex; align-items: center; gap: 10px; background: var(--bg-card); padding: 5px 5px 5px 15px; border-radius: 50px; border: 1px solid var(--border-color); }
-        .user-badge { font-weight: 700; color: var(--text-secondary); font-size: 12px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border-color); padding-right: 10px; text-transform: capitalize; }
+        .user-badge { font-weight: 700; color: var(--text-secondary); font-size: 12px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border-color); padding-right: 10px; text-transform: lowercase; }
         .btn-icon { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 13px; }
         .btn-icon:hover { background: var(--brand-primary); color: white; }
 
@@ -137,6 +139,7 @@
         .admin-reajuste { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
         .admin-reajuste input { width: 70px; height: 38px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: white; text-align: center; font-weight: 700; font-size: 13px; font-family: inherit; }
         .admin-reajuste input:focus { border-color: var(--brand-gold); outline: none; background: rgba(255,255,255,0.15); }
+        .admin-reajuste input::placeholder { color: rgba(255,255,255,0.3); }
         .admin-reajuste .btn-apply { flex: 1; height: 38px; background: var(--brand-gold); color: white; border: none; border-radius: 6px; font-weight: 700; font-size: 11px; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
         .admin-reajuste .btn-apply:hover { filter: brightness(1.1); transform: translateY(-1px); }
         .admin-reajuste .btn-undo { width: 38px; height: 38px; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
@@ -187,7 +190,7 @@
         .btn-action-sell { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.2s; font-size: 11px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: white; border-color: var(--brand-primary); }
 
-        /* MAPA ESPELHO */
+        /* MAPA ESPELHO ALINHADO E MINIMALISTA */
         .map-container-inner { overflow-x: auto; padding-bottom: 10px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 250px; height: 6px; background: var(--brand-gold); border-radius: 10px 10px 0 0; margin-bottom: 15px; }
         
@@ -219,10 +222,13 @@
         @media(max-width: 768px) {
             .app-layout { padding: 15px; }
             .card { padding: 20px; margin-bottom: 20px; }
+            
             .header { padding: 10px 15px; margin-bottom: 20px; border-radius: 12px; }
             .user-badge { max-width: 100px; } 
+            
             .card-header { flex-direction: column; align-items: flex-start; }
             .card-header > div, .card-header > button { width: 100%; justify-content: flex-start; margin-top: 12px; }
+            
             .sim-grid-3 { grid-template-columns: 1fr; gap: 10px; } 
         }
 
@@ -244,12 +250,12 @@
     </div>
     
     <div class="login-panel">
-        <button onclick="ui.toggleTheme()" class="toggle-theme-login"><i class="fas fa-moon" id="iconLogin"></i></button>
+        <button onclick="ui.toggleTheme()" class="toggle-theme-login" title="Modo Escuro"><i class="fas fa-moon" id="iconLogin"></i></button>
         <div class="login-box">
             <img src="MADRID LOGO BRANCA-01.png" alt="Madrid Casa Elevada" class="login-logo">
             
-            <input type="email" id="loginUser" class="inp-login" placeholder="E-mail de Acesso">
-            <input type="password" id="loginPass" class="inp-login" placeholder="Senha">
+            <input type="email" id="loginEmail" class="inp-login" placeholder="E-mail de Acesso">
+            <input type="password" id="loginPassword" class="inp-login" placeholder="Senha">
             <button onclick="auth.login()" class="btn-login">Entrar no Sistema</button>
             
             <p id="loginError" style="color:#FCA5A5; display:none; margin-top:10px; font-size:11px; background:rgba(220, 38, 38, 0.2); padding:10px; border-radius:8px; border: 1px solid rgba(220,38,38,0.3);"></p>
@@ -451,10 +457,12 @@
 
 <script>
     // --- LISTA DE EMAILS DOS GESTORES ---
-    // Adicione aqui os e-mails que terão permissão total no sistema
+    // Apenas estes e-mails terão acesso ao Painel Premium e edição do mapa
     const EMAILS_GESTOR = [
-        "madridcasaelevada@gmail.com",
-        "seu.email@exemplo.com"
+        "thiago.tsuk@gmail.com",
+        "baumann.inc2@gmail.com",
+        "bellavista.financeiro@gmail.com",
+        "marcal.bellavista@gmail.com"
     ];
 
     // 1. DADOS ESTÁTICOS
@@ -631,8 +639,15 @@
     // --- 4. APP PRINCIPAL ---
     const auth = {
         login: () => {
-            const e = document.getElementById('loginUser').value;
-            const p = document.getElementById('loginPass').value;
+            const e = document.getElementById('loginEmail').value.trim();
+            const p = document.getElementById('loginPassword').value;
+            
+            if(!e || !p) {
+                document.getElementById('loginError').innerText = "Por favor, preencha o e-mail e a senha.";
+                document.getElementById('loginError').style.display = 'block';
+                return;
+            }
+            
             firebase.auth().signInWithEmailAndPassword(e, p).catch(err => {
                 document.getElementById('loginError').innerText = "Acesso Negado: Verifique seu e-mail e senha.";
                 document.getElementById('loginError').style.display = 'block';
@@ -650,7 +665,7 @@
             if(state.isAdmin) {
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminMapHint').classList.remove('hidden');
-                adm.forEach(e => { e.classList.remove('hidden'); e.style.display = 'block'; });
+                adm.forEach(e => { e.classList.remove('hidden'); e.style.display = ''; });
             } else {
                 document.getElementById('adminPanel').classList.add('hidden');
                 document.getElementById('adminMapHint').classList.add('hidden');
@@ -1042,7 +1057,7 @@
     window.onload = () => {
         firebase.auth().onAuthStateChanged((u) => {
             if(u) { 
-                // Verifica na lista de Gestores se o usuário atual é Administrador
+                // VERIFICA SE O EMAIL LOGADO ESTÁ NA LISTA DE GESTORES
                 state.isAdmin = EMAILS_GESTOR.includes(u.email.toLowerCase());
                 state.user = u.email; 
                 auth.initApp(); 
