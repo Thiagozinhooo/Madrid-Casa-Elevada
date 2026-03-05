@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Gestão Premium</title>
+    <title>Madrid Casa Elevada | Sistema de Vendas</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -67,7 +67,6 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* CUSTOM SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
@@ -76,7 +75,7 @@
         .hidden { display: none !important; }
         .admin-only { display: none; } 
 
-        /* TELA DE LOGIN */
+        /* TELA DE LOGIN UNIFICADA */
         #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
         .login-side-visual { flex: 1.5; background: #000; display: none; position: relative; overflow: hidden; }
         @media(min-width: 1024px) { .login-side-visual { display: block; } }
@@ -99,16 +98,14 @@
         .app-layout { max-width: 1500px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.5s forwards; }
         @keyframes fadeIn { to { opacity: 1; } }
         
-        /* CABEÇALHO FLUTUANTE */
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 25px; margin-bottom: 25px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); }
         .header-logo { height: 35px; width: auto; object-fit: contain; }
         
         .user-controls { display: flex; align-items: center; gap: 10px; background: var(--bg-card); padding: 5px 5px 5px 15px; border-radius: 50px; border: 1px solid var(--border-color); }
-        .user-badge { font-weight: 700; color: var(--text-secondary); font-size: 12px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border-color); padding-right: 10px; }
+        .user-badge { font-weight: 700; color: var(--text-secondary); font-size: 12px; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border-color); padding-right: 10px; text-transform: capitalize; }
         .btn-icon { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 13px; }
         .btn-icon:hover { background: var(--brand-primary); color: white; }
 
-        /* GRIDS MAIN - Sidebar e Principal */
         .grid-main { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 25px; align-items: start; }
         
         .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 25px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); margin-bottom: 25px; }
@@ -119,34 +116,20 @@
 
         .card.card-fullscreen { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; margin: 0; padding: 30px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-content: center; }
 
-        /* --- NOVO PAINEL DE GESTÃO (PREMIUM DARK) --- */
-        .premium-admin-card { 
-            background: linear-gradient(135deg, #16241a 0%, var(--brand-primary) 100%); 
-            color: white; 
-            border: none; 
-            position: relative; 
-            overflow: hidden;
-            box-shadow: 0 10px 25px -5px rgba(31, 51, 36, 0.4);
-        }
-        .premium-admin-card::before { 
-            content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; 
-            background: radial-gradient(circle, rgba(197,160,101,0.15) 0%, transparent 70%); 
-            border-radius: 50%; pointer-events: none; 
-        }
+        /* PAINEL DE GESTÃO (PREMIUM DARK) */
+        .premium-admin-card { background: linear-gradient(135deg, #16241a 0%, var(--brand-primary) 100%); color: white; border: none; position: relative; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(31, 51, 36, 0.4); }
+        .premium-admin-card::before { content: ''; position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(197,160,101,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
         
-        /* Box Principal VGV Global */
         .admin-kpi-main { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-btn); padding: 15px; text-align: center; margin-bottom: 15px; backdrop-filter: blur(5px); }
         .admin-kpi-main span { font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.6); font-weight: 700; letter-spacing: 1px; }
         .admin-kpi-main #kpiTotal { font-size: 24px; font-weight: 800; color: var(--brand-gold); margin-top: 4px; }
         
-        /* Boxes Secundárias */
         .admin-kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .admin-kpi-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-btn); padding: 15px; text-align: center; }
         .admin-kpi-box span { font-size: 10px; text-transform: uppercase; color: rgba(255,255,255,0.6); font-weight: 700; margin-bottom: 5px; display: block; }
         .admin-kpi-box strong { font-size: 15px; font-weight: 800; }
         .admin-kpi-box small { display: block; font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 8px; line-height: 1.2; font-weight: 600; }
         
-        /* Controles Financeiros */
         .admin-controls-panel { background: rgba(0,0,0,0.25); padding: 15px; border-radius: var(--radius-btn); border: 1px solid rgba(255,255,255,0.05); }
         .admin-rates { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
         .admin-rates strong { color: white; font-size: 13px; margin-left: 4px; }
@@ -154,7 +137,6 @@
         .admin-reajuste { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
         .admin-reajuste input { width: 70px; height: 38px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: white; text-align: center; font-weight: 700; font-size: 13px; font-family: inherit; }
         .admin-reajuste input:focus { border-color: var(--brand-gold); outline: none; background: rgba(255,255,255,0.15); }
-        .admin-reajuste input::placeholder { color: rgba(255,255,255,0.3); }
         .admin-reajuste .btn-apply { flex: 1; height: 38px; background: var(--brand-gold); color: white; border: none; border-radius: 6px; font-weight: 700; font-size: 11px; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
         .admin-reajuste .btn-apply:hover { filter: brightness(1.1); transform: translateY(-1px); }
         .admin-reajuste .btn-undo { width: 38px; height: 38px; background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
@@ -163,33 +145,32 @@
         .btn-reset { width: 100%; height: 34px; margin-top: 15px; background: transparent; color: #FCA5A5; border: 1px dashed rgba(252,165,165,0.3); border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.2s; letter-spacing: 0.5px; }
         .btn-reset:hover { background: rgba(220,38,38,0.1); border-color: #FCA5A5; }
 
-
         /* CONTROLS (Simulador) */
         .control-label { display: block; font-size: 10px; font-weight: 700; color: var(--text-secondary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .control-input { width: 100%; height: 44px; padding: 0 12px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 600; font-size: 13px; font-family: inherit; transition: 0.2s; appearance: none; }
+        .control-input { width: 100%; height: 44px; padding: 0 12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 600; font-size: 13px; font-family: inherit; transition: 0.2s; appearance: none; }
         .control-input:focus { border-color: var(--brand-gold); background: var(--bg-card); outline: none; box-shadow: 0 0 0 3px rgba(197, 160, 101, 0.1); }
         .control-input:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .price-hero { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); padding: 20px; border-radius: var(--radius-btn); text-align: center; margin: 20px 0; color: white; box-shadow: var(--shadow-sm); }
+        .price-hero { background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); padding: 20px; border-radius: var(--radius-md); text-align: center; margin: 20px 0; color: white; box-shadow: var(--shadow-sm); }
         .price-main { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin-top: 5px; }
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
 
-        .calc-results-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-btn); border: 1px solid var(--border-color); margin-top: 15px; }
+        .calc-results-box { background: var(--bg-input); padding: 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 15px; }
         .res-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: var(--text-secondary); align-items: center; }
         .res-row strong { color: var(--text-main); font-weight: 600; }
         .res-total { display: flex; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border-color); font-size: 14px; }
         .res-total span, .res-total strong { color: var(--brand-gold); font-weight: 800; }
 
-        .btn-primary { width: 100%; height: 46px; margin-top: 15px; background: #10B981; color: white; border: none; border-radius: var(--radius-btn); font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; transition: all 0.3s; }
+        .btn-primary { width: 100%; height: 46px; margin-top: 15px; background: #10B981; color: white; border: none; border-radius: var(--radius-md); font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13px; transition: all 0.3s; }
         .btn-primary:hover { background: #059669; }
         
-        .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-btn); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-outline:hover { background: var(--bg-hover); }
 
-        /* TABELA - TRAVADA NO CONTAINER */
+        /* TABELA */
         main { min-width: 0; width: 100%; display: block; } 
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-btn); border: 1px solid var(--border-color); }
+        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
         table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 900px; font-size: 12px; }
         th { background: var(--bg-input); color: var(--text-secondary); padding: 14px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; font-size: 10px; position: sticky; top: 0; z-index: 10; }
         td { padding: 12px 15px; border-bottom: 1px solid var(--bg-hover); text-align: left; color: var(--text-main); vertical-align: middle; white-space: nowrap; font-weight: 500; }
@@ -229,7 +210,7 @@
         .legend-item { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;}
         .dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
 
-        /* --- RESPONSIVIDADE PRECISA --- */
+        /* --- RESPONSIVIDADE --- */
         @media(max-width: 1100px) { 
             .grid-main { grid-template-columns: 1fr; } 
             .card-fullscreen { grid-template-columns: 1fr; display: block; padding: 15px; }
@@ -238,13 +219,10 @@
         @media(max-width: 768px) {
             .app-layout { padding: 15px; }
             .card { padding: 20px; margin-bottom: 20px; }
-            
             .header { padding: 10px 15px; margin-bottom: 20px; border-radius: 12px; }
             .user-badge { max-width: 100px; } 
-            
             .card-header { flex-direction: column; align-items: flex-start; }
             .card-header > div, .card-header > button { width: 100%; justify-content: flex-start; margin-top: 12px; }
-            
             .sim-grid-3 { grid-template-columns: 1fr; gap: 10px; } 
         }
 
@@ -270,20 +248,10 @@
         <div class="login-box">
             <img src="MADRID LOGO BRANCA-01.png" alt="Madrid Casa Elevada" class="login-logo">
             
-            <div id="formVisitor">
-                <input type="text" id="visitorName" class="inp-login" placeholder="Seu Nome Completo">
-                <button onclick="auth.loginVisitor()" class="btn-login">Acessar Simulador</button>
-                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-                    <button onclick="auth.toggleMode()" style="background:transparent; border:none; color:rgba(255,255,255,0.5); cursor: pointer; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Acesso da Gestão</button>
-                </div>
-            </div>
+            <input type="email" id="loginUser" class="inp-login" placeholder="E-mail de Acesso">
+            <input type="password" id="loginPass" class="inp-login" placeholder="Senha">
+            <button onclick="auth.login()" class="btn-login">Entrar no Sistema</button>
             
-            <div id="formAdmin" class="hidden">
-                <input type="text" id="adminUser" class="inp-login" placeholder="E-mail Corporativo">
-                <input type="password" id="adminPass" class="inp-login" placeholder="Senha">
-                <button onclick="auth.loginAdmin()" class="btn-login">Entrar no Painel</button>
-                <button onclick="auth.toggleMode()" style="background:none; border:none; color:rgba(255,255,255,0.6); margin-top: 15px; cursor: pointer; font-size: 12px; font-weight: 600;">Voltar</button>
-            </div>
             <p id="loginError" style="color:#FCA5A5; display:none; margin-top:10px; font-size:11px; background:rgba(220, 38, 38, 0.2); padding:10px; border-radius:8px; border: 1px solid rgba(220,38,38,0.3);"></p>
         </div>
     </div>
@@ -293,7 +261,7 @@
     <header id="mainHeader" class="header no-print">
         <img id="logoHeader" src="MADRID LOGO MUSGO-01-01.png" alt="Madrid" class="header-logo">
         <div class="user-controls">
-            <span id="userBadge" class="user-badge" title="Usuário Logado">Visitante</span>
+            <span id="userBadge" class="user-badge" title="Usuário Logado">...</span>
             <button onclick="ui.toggleTheme()" class="btn-icon" title="Modo Escuro"><i class="fas fa-moon" id="iconApp"></i></button>
             <button onclick="auth.logout()" class="btn-icon" title="Sair"><i class="fas fa-sign-out-alt"></i></button>
         </div>
@@ -349,7 +317,7 @@
                 </div>
                 
                 <div class="sim-content-wrapper" style="display:contents;">
-                    <div class="gallery-box" style="position: relative; height: 180px; border-radius: var(--radius-btn); overflow: hidden; margin-bottom: 20px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">
+                    <div class="gallery-box" style="position: relative; height: 180px; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 20px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">
                         <img id="unitImage" src="PLANTA_3_SUITES.jpg.png" style="max-width: 100%; max-height: 100%; object-fit: contain; padding: 10px;" alt="Planta">
                         <span id="unitTypeLabel" style="position: absolute; bottom: 10px; left: 10px; background: var(--glass-bg); backdrop-filter: blur(5px); color: var(--text-main); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid var(--border-color);">Planta do Andar</span>
                     </div>
@@ -426,7 +394,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title"><i class="fas fa-building"></i> Mapa do Prédio</span>
+                    <span class="card-title"><i class="fas fa-building"></i> Espelho</span>
                     <button onclick="app.downloadEspelhoPDF()" class="admin-only hidden btn-outline" style="height: 28px; padding: 0 10px;">
                         <i class="fas fa-file-pdf" style="color: #DC2626;"></i> Baixar PDF
                     </button>
@@ -482,6 +450,13 @@
 </div>
 
 <script>
+    // --- LISTA DE EMAILS DOS GESTORES ---
+    // Adicione aqui os e-mails que terão permissão total no sistema
+    const EMAILS_GESTOR = [
+        "madridcasaelevada@gmail.com",
+        "seu.email@exemplo.com"
+    ];
+
     // 1. DADOS ESTÁTICOS
     const DB_REAL = {
         1304: { area: 108.22, areaTotal: 114.69, esc: '49', areaEsc: 6.47, vagas: '27A/27B', pav: 'SUB', valor: 1162993.37 },
@@ -654,6 +629,38 @@
     };
 
     // --- 4. APP PRINCIPAL ---
+    const auth = {
+        login: () => {
+            const e = document.getElementById('loginUser').value;
+            const p = document.getElementById('loginPass').value;
+            firebase.auth().signInWithEmailAndPassword(e, p).catch(err => {
+                document.getElementById('loginError').innerText = "Acesso Negado: Verifique seu e-mail e senha.";
+                document.getElementById('loginError').style.display = 'block';
+            });
+        },
+        logout: () => firebase.auth().signOut().then(() => location.reload()),
+        initApp: () => {
+            document.getElementById('loginOverlay').style.display='none';
+            document.getElementById('app').style.display='block';
+            
+            const userName = state.user.split('@')[0];
+            document.getElementById('userBadge').innerText = userName;
+            
+            const adm = document.querySelectorAll('.admin-only');
+            if(state.isAdmin) {
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('adminMapHint').classList.remove('hidden');
+                adm.forEach(e => { e.classList.remove('hidden'); e.style.display = 'block'; });
+            } else {
+                document.getElementById('adminPanel').classList.add('hidden');
+                document.getElementById('adminMapHint').classList.add('hidden');
+                adm.forEach(e => e.classList.add('hidden'));
+            }
+            db.load();
+            app.init();
+        }
+    };
+
     const app = {
         init: () => {
             ui.toggleFullscreen = () => { document.getElementById('simulatorCard').classList.toggle('card-fullscreen'); };
@@ -979,46 +986,6 @@
         }
     };
 
-    const auth = {
-        loginAdmin: () => {
-            const e = document.getElementById('adminUser').value;
-            const p = document.getElementById('adminPass').value;
-            firebase.auth().signInWithEmailAndPassword(e, p).catch(err => {
-                document.getElementById('loginError').innerText = "Acesso Negado: Verifique as suas credenciais.";
-                document.getElementById('loginError').style.display = 'block';
-            });
-        },
-        loginVisitor: () => {
-            if(document.getElementById('visitorName').value) {
-                state.isAdmin = false; state.user = document.getElementById('visitorName').value; auth.initApp();
-            } else alert("Por favor, preencha o seu nome para aceder.");
-        },
-        toggleMode: () => {
-            document.getElementById('formAdmin').classList.toggle('hidden');
-            document.getElementById('formVisitor').classList.toggle('hidden');
-            document.getElementById('loginError').style.display = 'none';
-        },
-        logout: () => firebase.auth().signOut().then(() => location.reload()),
-        initApp: () => {
-            document.getElementById('loginOverlay').style.display='none';
-            document.getElementById('app').style.display='block';
-            document.getElementById('userBadge').innerText = state.user;
-            
-            const adm = document.querySelectorAll('.admin-only');
-            if(state.isAdmin) {
-                document.getElementById('adminPanel').classList.remove('hidden');
-                document.getElementById('adminMapHint').classList.remove('hidden');
-                adm.forEach(e => { e.classList.remove('hidden'); e.style.display = 'block'; });
-            } else {
-                document.getElementById('adminPanel').classList.add('hidden');
-                document.getElementById('adminMapHint').classList.add('hidden');
-                adm.forEach(e => e.classList.add('hidden'));
-            }
-            db.load();
-            app.init();
-        }
-    };
-
     const db = {
         load: () => {
             database.ref('madrid_data').on('value', (snap) => {
@@ -1074,7 +1041,12 @@
 
     window.onload = () => {
         firebase.auth().onAuthStateChanged((u) => {
-            if(u) { state.isAdmin=true; state.user=u.email; auth.initApp(); }
+            if(u) { 
+                // Verifica na lista de Gestores se o usuário atual é Administrador
+                state.isAdmin = EMAILS_GESTOR.includes(u.email.toLowerCase());
+                state.user = u.email; 
+                auth.initApp(); 
+            }
         });
         ui.updateAssets('light');
         const slides = document.querySelectorAll('.carousel-img');
