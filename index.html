@@ -18,14 +18,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <style>
-        /* --- DESIGN SYSTEM: FLUIDO E ADAPTÁVEL --- */
+        /* --- DESIGN SYSTEM MINIMALISTA E PREMIUM --- */
         :root {
-            /* Cores da Marca */
             --brand-primary: #1F3324; 
             --brand-secondary: #2E4A35; 
             --brand-gold: #C5A065;
             
-            /* Temas Claros */
             --bg-body: #F3F4F6; 
             --bg-card: #FFFFFF; 
             --bg-input: #F9FAFB; 
@@ -33,23 +31,19 @@
             --border-color: #E5E7EB; 
             --glass-bg: rgba(255, 255, 255, 0.95);
             
-            /* Textos */
             --text-main: #111827; 
             --text-secondary: #4B5563; 
             --text-muted: #9CA3AF; 
             
-            /* Status */
             --st-livre-bg: #ECFDF5; --st-livre-txt: #059669; 
             --st-res-bg: #FFFBEB; --st-res-txt: #D97706; 
             --st-vend-bg: #FEF2F2; --st-vend-txt: #DC2626; 
 
-            /* Layout Fluido e Sombras */
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
             --radius-card: 14px;
             --radius-btn: 8px;
 
-            /* VARIÁVEIS MATEMÁTICAS PARA O MAPA ESPELHO */
             --unit-w: clamp(40px, 4vw, 55px);
             --unit-h: clamp(38px, 3.5vw, 48px);
             --unit-gap: clamp(6px, 0.8vw, 12px);
@@ -87,7 +81,7 @@
         .hidden { display: none !important; }
         .admin-only { display: none; } 
 
-        /* TELA DE LOGIN UNIFICADA */
+        /* TELA DE LOGIN UNIFICADA E FECHADA */
         #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
         .login-side-visual { flex: 1.5; background: #000; display: none; position: relative; overflow: hidden; }
         @media(min-width: 1024px) { .login-side-visual { display: block; } }
@@ -106,12 +100,12 @@
 
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
-        /* APP LAYOUT - 100% FLUIDO E ADAPTÁVEL */
+        /* APP LAYOUT */
         .app-layout { 
             width: 100%; 
-            max-width: 1920px; /* Preenche até monitores gigantes */
+            max-width: 1920px; 
             margin: 0 auto; 
-            padding: clamp(15px, 3vw, 35px); /* Margens que esticam/encolhem */
+            padding: clamp(15px, 3vw, 35px); 
             display: none; 
             opacity: 0; 
             animation: fadeIn 0.5s forwards; 
@@ -127,7 +121,7 @@
         .btn-icon { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 13px; }
         .btn-icon:hover { background: var(--brand-primary); color: white; }
 
-        /* GRID PRINCIPAL (Sidebar Dinâmica e Área Central Fluida) */
+        /* GRID PRINCIPAL */
         .grid-main { 
             display: grid; 
             grid-template-columns: clamp(360px, 28vw, 450px) minmax(0, 1fr); 
@@ -196,29 +190,46 @@
         .btn-outline { height: 38px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 600; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-outline:hover { background: var(--bg-hover); }
 
-        /* TABELA */
+        /* TABELA - COMPACTADA PARA CABER INTEIRA SEM BARRA DE ROLAGEM */
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
-        table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: max-content; font-size: 13px; }
-        th { background: var(--bg-input); color: var(--text-secondary); padding: 16px 15px; text-align: left; border-bottom: 1px solid var(--border-color); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; font-size: 11px; position: sticky; top: 0; z-index: 10; }
-        td { padding: 14px 15px; border-bottom: 1px solid var(--bg-hover); text-align: left; color: var(--text-main); vertical-align: middle; white-space: nowrap; font-weight: 500; }
+        
+        /* Modificações principais para encaixar na tela: */
+        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; }
+        
+        th { 
+            background: var(--bg-input); color: var(--text-secondary); 
+            padding: 10px 8px; /* Padding menor para economizar espaço */
+            text-align: left; border-bottom: 1px solid var(--border-color); 
+            font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; 
+            white-space: normal; line-height: 1.2; font-size: 9px; /* Títulos menores e com quebra de linha permitida */
+            position: sticky; top: 0; z-index: 10; 
+        }
+        
+        td { 
+            padding: 10px 8px; /* Padding menor para o conteúdo da tabela */
+            border-bottom: 1px solid var(--bg-hover); text-align: left; 
+            color: var(--text-main); vertical-align: middle; 
+            white-space: nowrap; font-weight: 500; font-size: 11px; /* Fonte ajustada para melhor encaixe */
+        }
+        
         tr:last-child td { border-bottom: none; }
         tr:hover td { background-color: var(--bg-hover); }
         
-        .badge { padding: 6px 14px; border-radius: 6px; font-size: 10px; font-weight: 700; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px;}
+        .badge { padding: 5px 12px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px;}
         tr.livre .badge { background: var(--st-livre-bg); color: var(--st-livre-txt); }
         tr.reservado .badge { background: var(--st-res-bg); color: var(--st-res-txt); }
         tr.vendido .badge { background: var(--st-vend-bg); color: var(--st-vend-txt); }
         tr.vendido td { opacity: 0.6; text-decoration: line-through; }
         tr.vendido .badge { text-decoration: none; opacity: 1; }
         
-        .btn-action-sell { width: 30px; height: 30px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.2s; font-size: 12px; }
+        .btn-action-sell { width: 28px; height: 28px; border-radius: 6px; background: var(--bg-card); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.2s; font-size: 11px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: white; border-color: var(--brand-primary); }
 
         /* --- MAPA ESPELHO ALINHADO MATEMATICAMENTE --- */
         .map-container-inner { overflow-x: auto; padding-bottom: 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         
-        /* O telhado calcula perfeitamente o tamanho da estrutura abaixo (4 unidades + 1 buraco + 4 gaps) */
+        /* O telhado calcula perfeitamente o tamanho da estrutura abaixo */
         .building-roof { width: 100%; max-width: calc(var(--unit-w) * 4.5 + var(--unit-gap) * 4); height: 8px; background: var(--brand-gold); border-radius: 10px 10px 0 0; margin-bottom: 20px; }
         
         .map-header, .map-floor { 
@@ -227,7 +238,7 @@
         }
         
         .floor-indicator { width: var(--indicator-w); text-align: right; font-size: 12px; font-weight: 700; color: var(--text-muted); }
-        .unit-spacer { width: calc(var(--unit-w) * 0.5); } /* Corredor/buraco no meio */
+        .unit-spacer { width: calc(var(--unit-w) * 0.5); } 
         
         /* Etiqueta Superior (Ocupa 2 blocos + 1 gap) */
         .map-header .group-label { 
@@ -254,7 +265,7 @@
         .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;}
         .dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); }
 
-        /* --- RESPONSIVIDADE --- */
+        /* --- RESPONSIVIDADE MOBILE --- */
         @media(max-width: 1150px) { 
             .grid-main { grid-template-columns: 1fr; } 
             .card-fullscreen { grid-template-columns: 1fr; display: block; padding: 20px; }
@@ -292,11 +303,11 @@
         <div class="login-box">
             <img src="MADRID LOGO BRANCA-01.png" alt="Madrid Casa Elevada" class="login-logo">
             
-            <input type="email" id="loginEmail" class="inp-login" placeholder="E-mail">
-            <input type="password" id="loginPass" class="inp-login" placeholder="Senha">
-            <button onclick="auth.login()" class="btn-login">Acessar Sistema</button>
+            <input type="email" id="loginEmail" class="inp-login" placeholder="E-mail de Acesso">
+            <input type="password" id="loginPass" class="inp-login" placeholder="Sua Senha">
+            <button onclick="auth.login()" class="btn-login">Entrar no Sistema</button>
             
-            <p id="loginError" style="color:#FCA5A5; display:none; margin-top:10px; font-size:11px; background:rgba(220, 38, 38, 0.2); padding:10px; border-radius:8px; border: 1px solid rgba(220,38,38,0.3);"></p>
+            <p id="loginError" style="color:#FCA5A5; display:none; margin-top:10px; font-size:11px; background:rgba(220, 38, 38, 0.2); padding:8px; border-radius:6px; border: 1px solid rgba(220,38,38,0.3);"></p>
         </div>
     </div>
 </div>
@@ -334,7 +345,7 @@
                     </div>
                     <div class="admin-kpi-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2);">
                         <span style="color: #6EE7B7;">Disponíveis</span>
-                        <strong id="kpiLivre" style="color: #6EE7B7; font-size: 22px;">...</strong>
+                        <strong id="kpiLivre" style="color: #6EE7B7; font-size: 20px;">...</strong>
                     </div>
                 </div>
 
@@ -358,7 +369,7 @@
             <div id="simulatorCard" class="card">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-calculator"></i> Simulador</span>
-                    <button onclick="ui.toggleFullscreen()" class="btn-icon" style="border: 1px solid var(--border-color); width: 32px; height: 32px;" title="Tela Cheia"><i class="fas fa-expand" id="iconFullscreen"></i></button>
+                    <button onclick="ui.toggleFullscreen()" class="btn-icon" style="border: 1px solid var(--border-color); width: 28px; height: 28px;" title="Tela Cheia"><i class="fas fa-expand" id="iconFullscreen"></i></button>
                 </div>
                 
                 <div class="sim-content-wrapper" style="display:contents;">
@@ -391,7 +402,7 @@
                         </div>
 
                         <div class="price-hero">
-                            <div style="font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing: 1px; font-weight: 700;">Valor de Tabela</div>
+                            <div style="font-size:10px; opacity:0.8; text-transform:uppercase; letter-spacing: 1px; font-weight: 700;">Valor de Tabela</div>
                             <div id="displayTotal" class="price-main">R$ 0,00</div>
                         </div>
 
@@ -426,7 +437,7 @@
                         </div>
 
                         <button onclick="simulator.sendWhatsApp()" class="btn-primary">
-                            <i class="fab fa-whatsapp" style="font-size: 18px;"></i> Enviar Proposta
+                            <i class="fab fa-whatsapp" style="font-size: 16px;"></i> Enviar Proposta
                         </button>
                     </div>
                 </div>
@@ -435,12 +446,12 @@
             <div class="card">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-building"></i> Mapa do Prédio</span>
-                    <button onclick="app.downloadEspelhoPDF()" class="admin-only hidden btn-outline" style="height: 32px; padding: 0 12px;">
-                        <i class="fas fa-file-pdf" style="color: #DC2626;"></i> PDF
+                    <button onclick="app.downloadEspelhoPDF()" class="admin-only hidden btn-outline" style="height: 28px; padding: 0 10px;">
+                        <i class="fas fa-file-pdf" style="color: #DC2626;"></i> Baixar PDF
                     </button>
                 </div>
                 
-                <div id="adminMapHint" class="admin-only hidden" style="text-align:center; font-size:11px; color:var(--text-secondary); margin-bottom:20px; background: var(--bg-input); padding: 10px; border-radius: 6px; font-weight: 600;">
+                <div id="adminMapHint" class="admin-only hidden" style="text-align:center; font-size:10px; color:var(--text-secondary); margin-bottom:15px; background: var(--bg-input); padding: 8px; border-radius: 6px; font-weight: 600;">
                     <i class="fas fa-mouse-pointer" style="margin-right: 5px;"></i> Clique nas unidades para alterar o status
                 </div>
 
@@ -455,7 +466,7 @@
                             <div class="group-label">1 SUÍTE</div>
                         </div>
                         
-                        <div id="buildingFacade" style="display:flex; flex-direction:column; width: 100%;"></div>
+                        <div id="buildingFacade" style="display:flex; flex-direction:column; gap:8px;"></div>
                     </div>
                     
                     <div class="map-legend">
@@ -468,14 +479,14 @@
         </aside>
 
         <main>
-            <div class="card">
+            <div class="card" style="padding-top: 25px;">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-list-ul"></i> Tabela Oficial</span>
                     <div style="display:flex; gap:10px; align-items: center; flex-wrap: wrap;">
-                        <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only hidden" style="width:auto; height:38px; padding: 0 15px;">
+                        <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only hidden" style="width:auto; height:36px; padding: 0 10px;">
                             <option value="disponivel">Ocultar Vendidos</option><option value="todos">Mostrar Todos</option><option value="vendido">Apenas Vendidos</option>
                         </select>
-                        <button onclick="app.downloadTablePDF()" class="btn-outline" style="height: 38px;">
+                        <button onclick="app.downloadTablePDF()" class="btn-outline">
                             <i class="fas fa-file-pdf"></i> PDF Tabela
                         </button>
                     </div>
@@ -689,7 +700,6 @@
             
             if(state.isAdmin) {
                 badge.innerHTML = `<i class="fas fa-star" style="color:var(--brand-gold); margin-right:5px;"></i> Gestor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
-                // Remove a classe hidden de todos os elementos com admin-only
                 admElements.forEach(e => { e.classList.remove('hidden'); });
             } else {
                 badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px;"></i> Corretor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
@@ -757,12 +767,10 @@
             const curr = state.statusMap[apt] || 'livre';
             const next = curr === 'livre' ? 'reservado' : (curr === 'reservado' ? 'vendido' : 'livre');
             
-            // Aviso de Bloqueio do Firebase
             database.ref('madrid_data/statusMap/' + apt).set(next).catch(error => {
-                alert("🔴 O Firebase bloqueou a gravação!\nVocê precisa ir no painel do Firebase > Realtime Database > Regras (Rules) e colocar '.write': 'auth != null'.");
+                alert("🔴 O Firebase bloqueou a gravação! Vá ao painel do Firebase > Realtime Database > Regras (Rules) e coloque '.write': 'auth != null'.");
                 console.error("Erro Firebase:", error);
             });
-            
             if(next === 'vendido') {
                 const now = new Date().toLocaleString('pt-BR');
                 database.ref('madrid_data/lastSaleUpdate').set(now);
@@ -817,7 +825,7 @@
                 let vBalao = (finalPrice * (pBalao/100)) / 3;
                 let vChaves = finalPrice * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
-                let btn = state.isAdmin ? `<td><button onclick="app.toggleStatus(${u})" class="btn-action-sell"><i class="fas fa-sync-alt"></i></button></td>` : '';
+                let btn = state.isAdmin ? `<td><button onclick="app.toggleStatus(${u})" class="btn-action-sell" title="Alterar Status"><i class="fas fa-sync-alt"></i></button></td>` : '';
                 let stLabel = st === 'livre' ? 'Disponível' : (st === 'reservado' ? 'Reservado' : 'Vendido');
 
                 html += `<tr class="${st}">
@@ -827,10 +835,10 @@
                     <td style="color:var(--text-muted);">${d.areaTotal}m²</td>
                     <td>${d.esc}</td>
                     <td>${d.vagas}</td>
-                    <td style="font-weight:600;">${app.formatMoney(vSinal)}</td>
+                    <td style="font-weight:700;">${app.formatMoney(vSinal)}</td>
                     ${showM ? `<td>${app.formatMoney(vMensal)}</td>` : ''}
                     ${showB ? `<td>${app.formatMoney(vBalao)}</td>` : ''}
-                    <td style="font-weight:600; color:var(--brand-gold);">${app.formatMoney(vChaves)}</td>
+                    <td style="font-weight:700; color:var(--brand-gold);">${app.formatMoney(vChaves)}</td>
                     <td style="font-weight:800">${app.formatMoney(finalPrice)}</td>
                     <td><span class="badge">${stLabel}</span></td>
                     ${btn}
