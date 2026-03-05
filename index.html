@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Gestão Premium</title>
+    <title>Madrid Casa Elevada | Sistema Oficial</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,6 +73,7 @@
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
+        /* Apenas esta classe gerencia os elementos ocultos */
         .hidden { display: none !important; }
 
         /* TELA DE LOGIN UNIFICADA E FECHADA */
@@ -250,9 +251,9 @@
         <div class="login-box">
             <img src="MADRID LOGO BRANCA-01.png" alt="Madrid Casa Elevada" class="login-logo">
             
-            <input type="email" id="loginEmail" class="inp-login" placeholder="E-mail">
-            <input type="password" id="loginPass" class="inp-login" placeholder="Senha">
-            <button onclick="auth.login()" class="btn-login">Entrar</button>
+            <input type="email" id="loginEmail" class="inp-login" placeholder="E-mail de Acesso">
+            <input type="password" id="loginPass" class="inp-login" placeholder="Sua Senha">
+            <button onclick="auth.login()" class="btn-login">Entrar no Sistema</button>
             
             <p id="loginError" style="color:#FCA5A5; display:none; margin-top:10px; font-size:11px; background:rgba(220, 38, 38, 0.2); padding:8px; border-radius:6px; border: 1px solid rgba(220,38,38,0.3);"></p>
         </div>
@@ -646,16 +647,13 @@
             const badge = document.getElementById('userBadge');
             const admElements = document.querySelectorAll('.admin-only');
             
-            // Controle visual se é Gestor ou Corretor
             if(state.isAdmin) {
                 badge.innerHTML = `<i class="fas fa-star" style="color:var(--brand-gold); margin-right:5px;"></i> Gestor: <span style="font-weight:400; opacity:0.8;">${state.user}</span>`;
-                
-                // Mostra recursos de gestor (removendo a classe hidden de todos eles)
+                // REMOVE A CLASSE HIDDEN DE TODOS OS ELEMENTOS ADMIN
                 admElements.forEach(e => { e.classList.remove('hidden'); });
             } else {
                 badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px;"></i> Corretor: <span style="font-weight:400; opacity:0.8;">${state.user}</span>`;
-                
-                // Esconde recursos de gestor
+                // ESCONDE RECURSOS DE GESTOR
                 admElements.forEach(e => { e.classList.add('hidden'); });
             }
             
@@ -1020,7 +1018,7 @@
             database.ref('madrid_data/lastPriceUpdate').set(logMsg);
         },
         reset: () => {
-            const confirmWord = prompt('⚠️ ATENÇÃO: Esta ação vai apagar todas as vendas do mapa e zerar os reajustes da tabela!\n\nSe tem certeza, digite a palavra "ZERAR" abaixo:');
+            const confirmWord = prompt('⚠️ ATENÇÃO: Esta ação vai apagar todas as vendas do mapa e zerar os reajustes da tabela!\n\nSe tem certeza, digite a palavra "ZERAR" abaixo (tudo em maiúsculo):');
             
             if(confirmWord === 'ZERAR') {
                 database.ref('madrid_data').set({ statusMap:{}, globalMultiplier: 1, previousMultiplier: 1, lastPriceUpdate: null, lastSaleUpdate: null });
@@ -1052,6 +1050,7 @@
         firebase.auth().onAuthStateChanged((u) => {
             if(u) { 
                 const userEmail = u.email.toLowerCase().trim();
+                // Verifica se o email logado está na lista de Gestores
                 state.isAdmin = EMAILS_GESTOR.some(e => e.toLowerCase().trim() === userEmail);
                 state.user = userEmail; 
                 auth.initApp(); 
