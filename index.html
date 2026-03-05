@@ -79,7 +79,7 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
         .hidden { display: none !important; }
-        .admin-only { display: none; } 
+        /* O BUG DO PAINEL ESTAVA AQUI - LINHA REMOVIDA COM SUCESSO! */
 
         /* TELA DE LOGIN UNIFICADA E FECHADA */
         #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
@@ -194,23 +194,22 @@
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
         
-        /* Modificações principais para encaixar na tela: */
         table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; }
         
         th { 
             background: var(--bg-input); color: var(--text-secondary); 
-            padding: 10px 8px; /* Padding menor para economizar espaço */
+            padding: 10px 8px; 
             text-align: left; border-bottom: 1px solid var(--border-color); 
             font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; 
-            white-space: normal; line-height: 1.2; font-size: 9px; /* Títulos menores e com quebra de linha permitida */
+            white-space: normal; line-height: 1.2; font-size: 9px; 
             position: sticky; top: 0; z-index: 10; 
         }
         
         td { 
-            padding: 10px 8px; /* Padding menor para o conteúdo da tabela */
+            padding: 10px 8px; 
             border-bottom: 1px solid var(--bg-hover); text-align: left; 
             color: var(--text-main); vertical-align: middle; 
-            white-space: nowrap; font-weight: 500; font-size: 11px; /* Fonte ajustada para melhor encaixe */
+            white-space: nowrap; font-weight: 500; font-size: 11px; 
         }
         
         tr:last-child td { border-bottom: none; }
@@ -229,7 +228,6 @@
         /* --- MAPA ESPELHO ALINHADO MATEMATICAMENTE --- */
         .map-container-inner { overflow-x: auto; padding-bottom: 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         
-        /* O telhado calcula perfeitamente o tamanho da estrutura abaixo */
         .building-roof { width: 100%; max-width: calc(var(--unit-w) * 4.5 + var(--unit-gap) * 4); height: 8px; background: var(--brand-gold); border-radius: 10px 10px 0 0; margin-bottom: 20px; }
         
         .map-header, .map-floor { 
@@ -240,7 +238,6 @@
         .floor-indicator { width: var(--indicator-w); text-align: right; font-size: 12px; font-weight: 700; color: var(--text-muted); }
         .unit-spacer { width: calc(var(--unit-w) * 0.5); } 
         
-        /* Etiqueta Superior (Ocupa 2 blocos + 1 gap) */
         .map-header .group-label { 
             width: calc(var(--unit-w) * 2 + var(--unit-gap)); 
             text-align: center; background: var(--bg-input); padding: 8px 0; 
@@ -502,6 +499,7 @@
 
 <script>
     // --- 1. LISTA OFICIAL DE GESTORES ---
+    // Apenas estes e-mails verão o painel escuro e poderão editar o mapa.
     const EMAILS_GESTOR = [
         "thiago.tsuk@gmail.com",
         "baumann.inc2@gmail.com",
@@ -700,9 +698,11 @@
             
             if(state.isAdmin) {
                 badge.innerHTML = `<i class="fas fa-star" style="color:var(--brand-gold); margin-right:5px;"></i> Gestor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
+                // REMOVE A CLASSE HIDDEN DE TODOS OS ELEMENTOS ADMIN
                 admElements.forEach(e => { e.classList.remove('hidden'); });
             } else {
                 badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px;"></i> Corretor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
+                // ESCONDE RECURSOS DE GESTOR
                 admElements.forEach(e => { e.classList.add('hidden'); });
             }
             
@@ -1120,6 +1120,7 @@
         firebase.auth().onAuthStateChanged((u) => {
             if(u) { 
                 const userEmail = u.email.toLowerCase().trim();
+                // Verifica se o email logado está na lista de Gestores
                 state.isAdmin = EMAILS_GESTOR.some(e => e.toLowerCase().trim() === userEmail);
                 state.user = userEmail; 
                 auth.initApp(); 
