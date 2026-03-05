@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Sistema Oficial</title>
+    <title>Madrid Casa Elevada | Gestão Premium</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,7 +74,6 @@
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
         .hidden { display: none !important; }
-        .admin-only { display: none; } 
 
         /* TELA DE LOGIN UNIFICADA E FECHADA */
         #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
@@ -104,7 +103,7 @@
         .header-logo { height: 35px; width: auto; object-fit: contain; }
         
         .user-controls { display: flex; align-items: center; gap: 10px; background: var(--bg-card); padding: 5px 5px 5px 15px; border-radius: 50px; border: 1px solid var(--border-color); }
-        .user-badge { font-weight: 700; color: var(--text-secondary); font-size: 12px; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border-color); padding-right: 10px; }
+        .user-badge { font-weight: 700; color: var(--text-secondary); font-size: 12px; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--border-color); padding-right: 10px; text-transform: lowercase; }
         .btn-icon { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 13px; }
         .btn-icon:hover { background: var(--brand-primary); color: white; }
 
@@ -321,11 +320,6 @@
                 </div>
                 
                 <div class="sim-content-wrapper" style="display:contents;">
-                    <div class="gallery-box" style="position: relative; height: 180px; border-radius: var(--radius-md); overflow: hidden; margin-bottom: 20px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">
-                        <img id="unitImage" src="PLANTA_3_SUITES.jpg.png" style="max-width: 100%; max-height: 100%; object-fit: contain; padding: 10px;" alt="Planta">
-                        <span id="unitTypeLabel" style="position: absolute; bottom: 10px; left: 10px; background: var(--glass-bg); backdrop-filter: blur(5px); color: var(--text-main); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid var(--border-color);">Planta do Andar</span>
-                    </div>
-
                     <div class="sim-controls">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
                             <div>
@@ -578,13 +572,6 @@
             else { simulator.calculate(); }
         },
         selectUnit: () => {
-            const u = document.getElementById('selUnidade').value;
-            if(!u) return;
-            const d = DB_REAL[u];
-            const t = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
-            
-            document.getElementById('unitTypeLabel').innerText = `Planta ${t} - ${d.area}m²`;
-            document.getElementById('unitImage').src = t === '3 Suítes' ? 'PLANTA_3_SUITES.jpg.png' : 'PLANTA_1_SUITE.png';
             simulator.calculate();
         },
         updatePlan: () => {
@@ -657,19 +644,18 @@
             document.getElementById('app').style.display='block';
             
             const badge = document.getElementById('userBadge');
+            const admElements = document.querySelectorAll('.admin-only');
             
             // Controle visual se é Gestor ou Corretor
             if(state.isAdmin) {
                 badge.innerHTML = `<i class="fas fa-star" style="color:var(--brand-gold); margin-right:5px;"></i> Gestor: <span style="font-weight:400; opacity:0.8;">${state.user}</span>`;
                 
-                // Mostra todos os painéis bloqueados com a classe admin-only
-                const admElements = document.querySelectorAll('.admin-only');
+                // Mostra recursos de gestor (removendo a classe hidden de todos eles)
                 admElements.forEach(e => { e.classList.remove('hidden'); });
             } else {
                 badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px;"></i> Corretor: <span style="font-weight:400; opacity:0.8;">${state.user}</span>`;
                 
                 // Esconde recursos de gestor
-                const admElements = document.querySelectorAll('.admin-only');
                 admElements.forEach(e => { e.classList.add('hidden'); });
             }
             
@@ -1034,7 +1020,6 @@
             database.ref('madrid_data/lastPriceUpdate').set(logMsg);
         },
         reset: () => {
-            // TRAVA DE SEGURANÇA PARA NÃO APAGAR SEM QUERER
             const confirmWord = prompt('⚠️ ATENÇÃO: Esta ação vai apagar todas as vendas do mapa e zerar os reajustes da tabela!\n\nSe tem certeza, digite a palavra "ZERAR" abaixo:');
             
             if(confirmWord === 'ZERAR') {
@@ -1067,7 +1052,6 @@
         firebase.auth().onAuthStateChanged((u) => {
             if(u) { 
                 const userEmail = u.email.toLowerCase().trim();
-                // Verifica se o email logado está na lista de Gestores
                 state.isAdmin = EMAILS_GESTOR.some(e => e.toLowerCase().trim() === userEmail);
                 state.user = userEmail; 
                 auth.initApp(); 
