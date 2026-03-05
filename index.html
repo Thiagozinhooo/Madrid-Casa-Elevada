@@ -182,15 +182,15 @@
         
         #salesTable th { 
             background: var(--bg-input); color: var(--text-secondary); 
-            padding: 8px 6px; /* Espaço bem reduzido para caber 12 colunas */
+            padding: 10px 8px; 
             text-align: left; border-bottom: 1px solid var(--border-color); 
             font-weight: 700; text-transform: uppercase; letter-spacing: 0px; 
-            white-space: normal; line-height: 1.1; font-size: 9px; /* Títulos podem quebrar de linha */
+            white-space: normal; line-height: 1.1; font-size: 9px; 
             position: sticky; top: 0; z-index: 10; 
         }
         
         #salesTable td { 
-            padding: 8px 6px; /* Espaço reduzido nas células */
+            padding: 10px 8px; 
             border-bottom: 1px solid var(--bg-hover); text-align: left; 
             color: var(--text-main); vertical-align: middle; 
             white-space: nowrap; font-weight: 500; font-size: 11px; 
@@ -469,6 +469,7 @@
 
 <script>
     // --- 1. LISTA OFICIAL DE GESTORES ---
+    // Apenas estes e-mails verão o painel escuro e poderão editar o mapa.
     const EMAILS_GESTOR = [
         "thiago.tsuk@gmail.com",
         "baumann.inc2@gmail.com",
@@ -665,7 +666,6 @@
             const badge = document.getElementById('userBadge');
             
             if(state.isAdmin) {
-                // ISTO LIBERA O PAINEL DE GESTÃO AUTOMATICAMENTE
                 document.body.setAttribute('data-admin', 'true');
                 badge.innerHTML = `<i class="fas fa-star" style="color:var(--brand-gold); margin-right:5px;"></i> Gestor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
             } else {
@@ -750,18 +750,20 @@
             simulator.selectUnit();
         },
         
-        /* A TABELA COM TODAS AS COLUNAS MOSTRADAS DE FORMA FIXA */
+        /* A TABELA COM AS COLUNAS DINÂMICAS DE VOLTA + ORDEM CORRETA */
         renderTable: () => {
             const tb = document.getElementById('salesTable');
             if(!tb) return;
             
             const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'disponivel';
-            const pSinal = parseFloat(document.getElementById('inpSinal').value)||10;
-            const pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
-            const pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
+            const plan = document.getElementById('selPlano').value;
+            
+            // Lógica que oculta ou mostra colunas dependendo do plano
+            const showM = plan === 'mensal_20' || plan === 'misto_completo';
+            const showB = plan === 'balao_20' || plan === 'misto_completo';
             const m = simulator.getMonths();
 
-            // CABEÇALHOS CORRIGIDOS (VGV Atual primeiro, Entrega da Chave depois)
+            // CABEÇALHOS (VGV Atual primeiro, Entrega da Chave depois)
             let html = `<thead><tr>
                 <th>Unidade</th>
                 <th>Tipologia</th>
@@ -770,8 +772,8 @@
                 <th>Esc.</th>
                 <th>Vagas</th>
                 <th>Sinal/Ato</th>
-                <th>Mensais (${m}x)</th>
-                <th>Balão (3x)</th>
+                ${showM ? `<th>Mensais (${m}x)</th>` : ''}
+                ${showB ? `<th>Balão (3x)</th>` : ''}
                 <th>VGV Atual</th>
                 <th>Entrega da Chave</th>
                 <th>Status</th>
@@ -793,13 +795,14 @@
                 if((filter=='disponivel' && st=='vendido') || (filter=='vendido' && st!='vendido')) return;
 
                 let tipo = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
+                
+                let pSinal = parseFloat(document.getElementById('inpSinal').value)||10;
+                let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
+                let pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
+
                 let vSinal = (finalPrice * (pSinal/100)) / 3;
-                
-                // Agora os valores mensais e balões são calculados sempre, mesmo que sejam R$ 0,00
-                let vMensal = m > 0 ? (finalPrice * (pMensal/100)) / m : 0;
+                let vMensal = (finalPrice * (pMensal/100)) / m;
                 let vBalao = (finalPrice * (pBalao/100)) / 3;
-                
-                // Entrega da chave = Valor restante
                 let vChaves = finalPrice * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
                 let btn = state.isAdmin ? `<td class="admin-only"><button onclick="app.toggleStatus(${u})" class="btn-action-sell" title="Alterar Status"><i class="fas fa-sync-alt"></i></button></td>` : '';
@@ -813,8 +816,8 @@
                     <td>${d.esc}</td>
                     <td>${d.vagas}</td>
                     <td style="font-weight:600;">${app.formatMoney(vSinal)}</td>
-                    <td>${app.formatMoney(vMensal)}</td>
-                    <td>${app.formatMoney(vBalao)}</td>
+                    ${showM ? `<td>${app.formatMoney(vMensal)}</td>` : ''}
+                    ${showB ? `<td>${app.formatMoney(vBalao)}</td>` : ''}
                     <td style="font-weight:800">${app.formatMoney(finalPrice)}</td>
                     <td style="font-weight:700; color:var(--brand-gold);">${app.formatMoney(vChaves)}</td>
                     <td><span class="badge">${stLabel}</span></td>
@@ -884,6 +887,11 @@
 
             let tableBody = [];
             const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'disponivel';
+            const plan = document.getElementById('selPlano').value;
+            
+            const showM = plan === 'mensal_20' || plan === 'misto_completo';
+            const showB = plan === 'balao_20' || plan === 'misto_completo';
+            
             const pSinal = parseFloat(document.getElementById('inpSinal').value) || 10;
             const pMensal = parseFloat(document.getElementById('inpMensal').value) || 0;
             const pBalao = parseFloat(document.getElementById('inpBalao').value) || 0;
@@ -892,9 +900,17 @@
 
             const colHeaders = [
                 "APTO", "ÁREA\nAPTO", "ÁREA\nTOTAL", "N°\nESC.", "ÁREA\nESC.", "VAGAS", "PAVT.\nVAGA", 
-                `ENTRADA (3X)\n${pSinal}%`, `MENSAIS (${m}X)\n${pMensal}%`, `BALÕES (3X)\n${pBalao}%`, 
-                "VGV ATUAL", `ENTREGA DE CHAVE\n${pChaves}%`
+                `ENTRADA (3X)\n${pSinal}%`
             ];
+
+            if (showM) colHeaders.push(`MENSAIS (${m}X)\n${pMensal}%`);
+            if (showB) colHeaders.push(`BALÕES (3X)\n${pBalao}%`);
+            
+            colHeaders.push("VGV ATUAL");
+            colHeaders.push(`ENTREGA DE CHAVE\n${pChaves}%`);
+
+            let idxVGV = colHeaders.length - 2;
+            let idxChaves = colHeaders.length - 1;
 
             Object.keys(DB_REAL).sort((a,b)=>b-a).forEach(u => {
                 let d = DB_REAL[u];
@@ -904,24 +920,34 @@
 
                 let price = d.valor * state.globalMultiplier;
                 let vEntrada = (price * (pSinal/100)) / 3;
-                let vMensal = m > 0 ? (price * (pMensal/100)) / m : 0;
+                let vMensal = (price * (pMensal/100)) / m;
                 let vBalao = (price * (pBalao/100)) / 3;
                 let vChaves = price * (pChaves/100);
 
-                tableBody.push([
+                let row = [
                     u, d.area.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
                     d.areaTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
                     d.esc, d.areaEsc.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
-                    d.vagas, d.pav, app.formatMoney(vEntrada), app.formatMoney(vMensal), app.formatMoney(vBalao),
-                    app.formatMoney(price), app.formatMoney(vChaves)
-                ]);
+                    d.vagas, d.pav, app.formatMoney(vEntrada)
+                ];
+
+                if (showM) row.push(app.formatMoney(vMensal));
+                if (showB) row.push(app.formatMoney(vBalao));
+                row.push(app.formatMoney(price));
+                row.push(app.formatMoney(vChaves));
+                
+                tableBody.push(row);
             });
+
+            let dynamicColumnStyles = { 0: { fontStyle: 'bold' } };
+            dynamicColumnStyles[idxVGV] = { fontStyle: 'bold' };
+            dynamicColumnStyles[idxChaves] = { fontStyle: 'bold', fillColor: [240, 245, 240] };
 
             doc.autoTable({
                 head: [colHeaders], body: tableBody, startY: 45, theme: 'grid',
                 styles: { font: 'helvetica', fontSize: 7, cellPadding: 2, valign: 'middle', halign: 'center', lineColor: [200, 200, 200], lineWidth: 0.1, textColor: [40, 40, 40] },
                 headStyles: { fillColor: brandPrimary, textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center', valign: 'middle', lineWidth: 0 },
-                columnStyles: { 0: { fontStyle: 'bold' }, 10: { fontStyle: 'bold' }, 11: { fontStyle: 'bold', fillColor: [240, 245, 240] } },
+                columnStyles: dynamicColumnStyles,
                 alternateRowStyles: { fillColor: [248, 248, 248] },
                 margin: { top: 45, bottom: 10, left: 14, right: 14 }
             });
