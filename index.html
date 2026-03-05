@@ -72,16 +72,18 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* --- TRAVA DE SEGURANÇA VISUAL (GESTOR VS CORRETOR) --- */
+        body:not([data-admin="true"]) .admin-only {
+            display: none !important;
+        }
+
         /* CUSTOM SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-        .hidden { display: none !important; }
-        /* O BUG DO PAINEL ESTAVA AQUI - LINHA REMOVIDA COM SUCESSO! */
-
-        /* TELA DE LOGIN UNIFICADA E FECHADA */
+        /* TELA DE LOGIN UNIFICADA */
         #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
         .login-side-visual { flex: 1.5; background: #000; display: none; position: relative; overflow: hidden; }
         @media(min-width: 1024px) { .login-side-visual { display: block; } }
@@ -101,15 +103,7 @@
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
         /* APP LAYOUT */
-        .app-layout { 
-            width: 100%; 
-            max-width: 1920px; 
-            margin: 0 auto; 
-            padding: clamp(15px, 3vw, 35px); 
-            display: none; 
-            opacity: 0; 
-            animation: fadeIn 0.5s forwards; 
-        }
+        .app-layout { width: 100%; max-width: 1920px; margin: 0 auto; padding: clamp(15px, 3vw, 35px); display: none; opacity: 0; animation: fadeIn 0.5s forwards; }
         @keyframes fadeIn { to { opacity: 1; } }
         
         /* CABEÇALHO FLUTUANTE */
@@ -122,12 +116,7 @@
         .btn-icon:hover { background: var(--brand-primary); color: white; }
 
         /* GRID PRINCIPAL */
-        .grid-main { 
-            display: grid; 
-            grid-template-columns: clamp(360px, 28vw, 450px) minmax(0, 1fr); 
-            gap: clamp(20px, 3vw, 35px); 
-            align-items: start; 
-        }
+        .grid-main { display: grid; grid-template-columns: clamp(360px, 28vw, 450px) minmax(0, 1fr); gap: clamp(20px, 3vw, 35px); align-items: start; }
         
         .card { background: var(--bg-card); border-radius: var(--radius-card); padding: clamp(20px, 2.5vw, 30px); box-shadow: var(--shadow-card); border: 1px solid var(--border-color); margin-bottom: clamp(20px, 3vw, 35px); }
         
@@ -194,19 +183,20 @@
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
         
+        /* Ajuste fino nas larguras e espaços para garantir encaixe perfeito em 1 ecrã */
         table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; }
         
         th { 
             background: var(--bg-input); color: var(--text-secondary); 
-            padding: 10px 8px; 
+            padding: 10px 6px; /* Espaçamento interno reduzido */
             text-align: left; border-bottom: 1px solid var(--border-color); 
             font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; 
-            white-space: normal; line-height: 1.2; font-size: 9px; 
+            white-space: normal; line-height: 1.2; font-size: 9px; /* Títulos podem quebrar linha */
             position: sticky; top: 0; z-index: 10; 
         }
         
         td { 
-            padding: 10px 8px; 
+            padding: 10px 6px; /* Espaçamento interno reduzido */
             border-bottom: 1px solid var(--bg-hover); text-align: left; 
             color: var(--text-main); vertical-align: middle; 
             white-space: nowrap; font-weight: 500; font-size: 11px; 
@@ -215,7 +205,7 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background-color: var(--bg-hover); }
         
-        .badge { padding: 5px 12px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px;}
+        .badge { padding: 5px 10px; border-radius: 4px; font-size: 10px; font-weight: 700; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px;}
         tr.livre .badge { background: var(--st-livre-bg); color: var(--st-livre-txt); }
         tr.reservado .badge { background: var(--st-res-bg); color: var(--st-res-txt); }
         tr.vendido .badge { background: var(--st-vend-bg); color: var(--st-vend-txt); }
@@ -324,7 +314,7 @@
         
         <aside>
             
-            <div id="adminPanel" class="card premium-admin-card admin-only hidden no-print">
+            <div id="adminPanel" class="card premium-admin-card admin-only no-print">
                 <div class="card-header" style="border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 15px;">
                     <span class="card-title" style="color: white;"><i class="fas fa-chart-pie" style="color: var(--brand-gold);"></i> Gestão Premium</span>
                 </div>
@@ -443,12 +433,12 @@
             <div class="card">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-building"></i> Mapa do Prédio</span>
-                    <button onclick="app.downloadEspelhoPDF()" class="admin-only hidden btn-outline" style="height: 28px; padding: 0 10px;">
+                    <button onclick="app.downloadEspelhoPDF()" class="admin-only btn-outline" style="height: 28px; padding: 0 10px;">
                         <i class="fas fa-file-pdf" style="color: #DC2626;"></i> Baixar PDF
                     </button>
                 </div>
                 
-                <div id="adminMapHint" class="admin-only hidden" style="text-align:center; font-size:10px; color:var(--text-secondary); margin-bottom:15px; background: var(--bg-input); padding: 8px; border-radius: 6px; font-weight: 600;">
+                <div id="adminMapHint" class="admin-only" style="text-align:center; font-size:10px; color:var(--text-secondary); margin-bottom:15px; background: var(--bg-input); padding: 8px; border-radius: 6px; font-weight: 600;">
                     <i class="fas fa-mouse-pointer" style="margin-right: 5px;"></i> Clique nas unidades para alterar o status
                 </div>
 
@@ -480,7 +470,7 @@
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-list-ul"></i> Tabela Oficial</span>
                     <div style="display:flex; gap:10px; align-items: center; flex-wrap: wrap;">
-                        <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only hidden" style="width:auto; height:36px; padding: 0 10px;">
+                        <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only" style="width:auto; height:36px; padding: 0 10px;">
                             <option value="disponivel">Ocultar Vendidos</option><option value="todos">Mostrar Todos</option><option value="vendido">Apenas Vendidos</option>
                         </select>
                         <button onclick="app.downloadTablePDF()" class="btn-outline">
@@ -694,16 +684,13 @@
             document.getElementById('app').style.display='block';
             
             const badge = document.getElementById('userBadge');
-            const admElements = document.querySelectorAll('.admin-only');
             
             if(state.isAdmin) {
+                document.body.setAttribute('data-admin', 'true');
                 badge.innerHTML = `<i class="fas fa-star" style="color:var(--brand-gold); margin-right:5px;"></i> Gestor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
-                // REMOVE A CLASSE HIDDEN DE TODOS OS ELEMENTOS ADMIN
-                admElements.forEach(e => { e.classList.remove('hidden'); });
             } else {
+                document.body.removeAttribute('data-admin');
                 badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px;"></i> Corretor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
-                // ESCONDE RECURSOS DE GESTOR
-                admElements.forEach(e => { e.classList.add('hidden'); });
             }
             
             db.load();
@@ -782,24 +769,32 @@
             document.getElementById('selUnidade').value = apt;
             simulator.selectUnit();
         },
+        
+        /* A TABELA COM TODAS AS COLUNAS MOSTRADAS DE FORMA FIXA */
         renderTable: () => {
             const tb = document.getElementById('salesTable');
             if(!tb) return;
             
             const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'disponivel';
-            const plan = document.getElementById('selPlano').value;
+            const pSinal = parseFloat(document.getElementById('inpSinal').value)||10;
+            const pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
+            const pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
             const m = simulator.getMonths();
-            const showM = plan === 'mensal_20' || plan === 'misto_completo';
-            const showB = plan === 'balao_20' || plan === 'misto_completo';
 
             let html = `<thead><tr>
-                <th>Unidade</th><th>Tipologia</th><th>Área</th><th>Total</th><th>Esc.</th><th>Vagas</th>
+                <th>Unidade</th>
+                <th>Tipologia</th>
+                <th>Área</th>
+                <th>Total</th>
+                <th>Esc.</th>
+                <th>Vagas</th>
                 <th>Sinal/Ato</th>
-                ${showM ? `<th>Mensais (${m}x)</th>` : ''}
-                ${showB ? `<th>Balão (3x)</th>` : ''}
-                <th>Financiamento</th><th>VGV Atual</th>
+                <th>Mensais (${m}x)</th>
+                <th>Balão (3x)</th>
+                <th>VGV Atual</th>
+                <th>Entrega da Chave</th>
                 <th>Status</th>
-                ${state.isAdmin ? '<th>Ação</th>' : ''}
+                ${state.isAdmin ? '<th class="admin-only">Ação</th>' : ''}
             </tr></thead><tbody>`;
 
             let totalVGV = 0, totalVend = 0, countLivre = 0;
@@ -807,7 +802,9 @@
             Object.keys(DB_REAL).sort((a,b)=>b-a).forEach(u => {
                 let d = DB_REAL[u];
                 let st = state.statusMap[u] || 'livre';
-                let finalPrice = d.valor * state.globalMultiplier;
+                
+                // O VGV ATUAL SEMPRE MOSTRA O VALOR TOTAL DO APARTAMENTO
+                let finalPrice = d.valor * state.globalMultiplier; 
                 
                 totalVGV += finalPrice;
                 if(st === 'vendido') totalVend += finalPrice;
@@ -816,16 +813,14 @@
                 if((filter=='disponivel' && st=='vendido') || (filter=='vendido' && st!='vendido')) return;
 
                 let tipo = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
-                let pSinal = parseFloat(document.getElementById('inpSinal').value)||10;
-                let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
-                let pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
-
                 let vSinal = (finalPrice * (pSinal/100)) / 3;
-                let vMensal = (finalPrice * (pMensal/100)) / m;
+                let vMensal = m > 0 ? (finalPrice * (pMensal/100)) / m : 0;
                 let vBalao = (finalPrice * (pBalao/100)) / 3;
+                
+                // A ENTREGA DA CHAVE MOSTRA O SALDO DEVEDOR (ANTIGO FINANCIAMENTO)
                 let vChaves = finalPrice * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
-                let btn = state.isAdmin ? `<td><button onclick="app.toggleStatus(${u})" class="btn-action-sell" title="Alterar Status"><i class="fas fa-sync-alt"></i></button></td>` : '';
+                let btn = state.isAdmin ? `<td class="admin-only"><button onclick="app.toggleStatus(${u})" class="btn-action-sell" title="Alterar Status"><i class="fas fa-sync-alt"></i></button></td>` : '';
                 let stLabel = st === 'livre' ? 'Disponível' : (st === 'reservado' ? 'Reservado' : 'Vendido');
 
                 html += `<tr class="${st}">
@@ -835,11 +830,11 @@
                     <td style="color:var(--text-muted);">${d.areaTotal}m²</td>
                     <td>${d.esc}</td>
                     <td>${d.vagas}</td>
-                    <td style="font-weight:700;">${app.formatMoney(vSinal)}</td>
-                    ${showM ? `<td>${app.formatMoney(vMensal)}</td>` : ''}
-                    ${showB ? `<td>${app.formatMoney(vBalao)}</td>` : ''}
-                    <td style="font-weight:700; color:var(--brand-gold);">${app.formatMoney(vChaves)}</td>
+                    <td style="font-weight:600;">${app.formatMoney(vSinal)}</td>
+                    <td>${app.formatMoney(vMensal)}</td>
+                    <td>${app.formatMoney(vBalao)}</td>
                     <td style="font-weight:800">${app.formatMoney(finalPrice)}</td>
+                    <td style="font-weight:700; color:var(--brand-gold);">${app.formatMoney(vChaves)}</td>
                     <td><span class="badge">${stLabel}</span></td>
                     ${btn}
                 </tr>`;
@@ -851,13 +846,8 @@
                 if(document.getElementById('kpiTotal')) document.getElementById('kpiTotal').innerText = app.formatMoney(totalVGV);
                 if(document.getElementById('kpiVend')) document.getElementById('kpiVend').innerText = app.formatMoney(totalVend);
                 if(document.getElementById('kpiLivre')) document.getElementById('kpiLivre').innerText = countLivre;
-                
-                if(document.getElementById('logVenda')) {
-                    document.getElementById('logVenda').innerText = state.lastSaleUpdate ? `Última venda:\n${state.lastSaleUpdate}` : '';
-                }
-                if(document.getElementById('logReajuste')) {
-                    document.getElementById('logReajuste').innerText = state.lastPriceUpdate ? `Log: ${state.lastPriceUpdate}` : '';
-                }
+                if(document.getElementById('logVenda')) document.getElementById('logVenda').innerText = state.lastSaleUpdate ? `Última venda:\n${state.lastSaleUpdate}` : '';
+                if(document.getElementById('logReajuste')) document.getElementById('logReajuste').innerText = state.lastPriceUpdate ? `Log: ${state.lastPriceUpdate}` : '';
             }
         },
         
@@ -918,12 +908,11 @@
             const pChaves = 100 - pSinal - pMensal - pBalao;
             const m = simulator.getMonths();
 
-            const colHeaders = ["APTO", "ÁREA\nAPTO", "ÁREA\nTOTAL", "N°\nESC.", "ÁREA\nESC.", "VAGAS", "PAVT.\nVAGA", "VALOR DO\nIMÓVEL"];
-            colHeaders.push(`ENTRADA (3X)\n${pSinal}%`);
-
-            if (pMensal > 0) colHeaders.push(`MENSAIS (${m}X)\n${pMensal}%`);
-            if (pBalao > 0) colHeaders.push(`BALÕES (3X)\n${pBalao}%`);
-            colHeaders.push(`ENTREGA DE CHAVE\n${pChaves}%`);
+            const colHeaders = [
+                "APTO", "ÁREA\nAPTO", "ÁREA\nTOTAL", "N°\nESC.", "ÁREA\nESC.", "VAGAS", "PAVT.\nVAGA", 
+                `ENTRADA (3X)\n${pSinal}%`, `MENSAIS (${m}X)\n${pMensal}%`, `BALÕES (3X)\n${pBalao}%`, 
+                "VGV ATUAL", `ENTREGA DE CHAVE\n${pChaves}%`
+            ];
 
             Object.keys(DB_REAL).sort((a,b)=>b-a).forEach(u => {
                 let d = DB_REAL[u];
@@ -937,24 +926,20 @@
                 let vBalao = (price * (pBalao/100)) / 3;
                 let vChaves = price * (pChaves/100);
 
-                let row = [
+                tableBody.push([
                     u, d.area.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
                     d.areaTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
                     d.esc, d.areaEsc.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
-                    d.vagas, d.pav, app.formatMoney(price), app.formatMoney(vEntrada)
-                ];
-
-                if (pMensal > 0) row.push(app.formatMoney(vMensal));
-                if (pBalao > 0) row.push(app.formatMoney(vBalao));
-                row.push(app.formatMoney(vChaves));
-                tableBody.push(row);
+                    d.vagas, d.pav, app.formatMoney(vEntrada), app.formatMoney(vMensal), app.formatMoney(vBalao),
+                    app.formatMoney(price), app.formatMoney(vChaves)
+                ]);
             });
 
             doc.autoTable({
                 head: [colHeaders], body: tableBody, startY: 45, theme: 'grid',
                 styles: { font: 'helvetica', fontSize: 7, cellPadding: 2, valign: 'middle', halign: 'center', lineColor: [200, 200, 200], lineWidth: 0.1, textColor: [40, 40, 40] },
                 headStyles: { fillColor: brandPrimary, textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center', valign: 'middle', lineWidth: 0 },
-                columnStyles: { 0: { fontStyle: 'bold' }, 7: { fontStyle: 'bold', fillColor: [240, 245, 240] } },
+                columnStyles: { 0: { fontStyle: 'bold' }, 10: { fontStyle: 'bold' }, 11: { fontStyle: 'bold', fillColor: [240, 245, 240] } },
                 alternateRowStyles: { fillColor: [248, 248, 248] },
                 margin: { top: 45, bottom: 10, left: 14, right: 14 }
             });
@@ -1120,7 +1105,6 @@
         firebase.auth().onAuthStateChanged((u) => {
             if(u) { 
                 const userEmail = u.email.toLowerCase().trim();
-                // Verifica se o email logado está na lista de Gestores
                 state.isAdmin = EMAILS_GESTOR.some(e => e.toLowerCase().trim() === userEmail);
                 state.user = userEmail; 
                 auth.initApp(); 
