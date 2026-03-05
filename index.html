@@ -73,7 +73,6 @@
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-        /* Apenas esta classe gerencia os elementos ocultos */
         .hidden { display: none !important; }
 
         /* TELA DE LOGIN UNIFICADA E FECHADA */
@@ -310,7 +309,7 @@
                     <div id="logReajuste" style="font-size: 9px; color: rgba(255,255,255,0.5); text-align: center; margin-top: 8px; font-weight: 600; min-height: 14px;"></div>
                 </div>
                 
-                <button onclick="db.reset()" class="btn-reset">Resetar Tabela Base</button>
+                <button onclick="db.reset()" class="btn-reset">Resetar Reajustes da Tabela</button>
             </div>
 
 
@@ -427,7 +426,7 @@
         </aside>
 
         <main>
-            <div class="card" style="padding-top: 25px;">
+            <div class="card">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-list-ul"></i> Tabela Oficial</span>
                     <div style="display:flex; gap:10px; align-items: center; flex-wrap: wrap;">
@@ -649,7 +648,7 @@
             
             if(state.isAdmin) {
                 badge.innerHTML = `<i class="fas fa-star" style="color:var(--brand-gold); margin-right:5px;"></i> Gestor: <span style="font-weight:400; opacity:0.8;">${state.user}</span>`;
-                // REMOVE A CLASSE HIDDEN DE TODOS OS ELEMENTOS ADMIN
+                // REMOVE A CLASSE HIDDEN DE TODOS OS ELEMENTOS ADMIN (Esta era a falha anterior!)
                 admElements.forEach(e => { e.classList.remove('hidden'); });
             } else {
                 badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px;"></i> Corretor: <span style="font-weight:400; opacity:0.8;">${state.user}</span>`;
@@ -768,7 +767,7 @@
                 let vBalao = (finalPrice * (pBalao/100)) / 3;
                 let vChaves = finalPrice * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
-                let btn = state.isAdmin ? `<td><button onclick="app.toggleStatus(${u})" class="btn-action-sell"><i class="fas fa-sync-alt"></i></button></td>` : '';
+                let btn = state.isAdmin ? `<td><button onclick="app.toggleStatus(${u})" class="btn-action-sell" title="Alterar Status"><i class="fas fa-sync-alt"></i></button></td>` : '';
                 let stLabel = st === 'livre' ? 'Disponível' : (st === 'reservado' ? 'Reservado' : 'Vendido');
 
                 html += `<tr class="${st}">
@@ -1003,7 +1002,12 @@
             });
         },
         updateStatus: (apt, next) => {
-            database.ref('madrid_data/statusMap/' + apt).set(next);
+            // AVISO DE ERRO DE FIREBASE CASO BLOQUEIE
+            database.ref('madrid_data/statusMap/' + apt).set(next).catch(error => {
+                alert("🔴 ERRO DE PERMISSÃO: O Firebase bloqueou esta ação. Por favor, libere as Regras de leitura/escrita no painel do banco de dados.");
+                console.error(error);
+            });
+
             if(next === 'vendido') {
                 const now = new Date().toLocaleString('pt-BR');
                 database.ref('madrid_data/lastSaleUpdate').set(now);
@@ -1013,17 +1017,20 @@
             const now = new Date().toLocaleString('pt-BR');
             let logMsg = appliedVal === "Desfeito" ? `${now} (Desfeito)` : `${now} (+${appliedVal}%)`;
             
-            database.ref('madrid_data/globalMultiplier').set(newMult);
+            database.ref('madrid_data/globalMultiplier').set(newMult).catch(err => alert("Erro ao salvar reajuste. Verifique as regras do Firebase."));
             database.ref('madrid_data/previousMultiplier').set(prevMult);
             database.ref('madrid_data/lastPriceUpdate').set(logMsg);
         },
         reset: () => {
-            const confirmWord = prompt('⚠️ ATENÇÃO: Esta ação vai apagar todas as vendas do mapa e zerar os reajustes da tabela!\n\nSe tem certeza, digite a palavra "ZERAR" abaixo (tudo em maiúsculo):');
+            const confirmWord = prompt('⚠️ ATENÇÃO: Esta ação vai ZERAR todos os reajustes da tabela e voltar aos preços originais!\n\nOs status das unidades (vendidas/reservadas) NÃO serão apagados.\n\nSe tem certeza, digite a palavra "ZERAR" abaixo:');
             
             if(confirmWord === 'ZERAR') {
-                database.ref('madrid_data').set({ statusMap:{}, globalMultiplier: 1, previousMultiplier: 1, lastPriceUpdate: null, lastSaleUpdate: null });
-                alert("Banco de dados limpo com sucesso.");
-            } else {
+                // AGORA APAGA APENAS OS PREÇOS, NUNCA O STATUS DAS UNIDADES
+                database.ref('madrid_data/globalMultiplier').set(1);
+                database.ref('madrid_data/previousMultiplier').set(1);
+                database.ref('madrid_data/lastPriceUpdate').set(null);
+                alert("Tabela de preços resetada com sucesso! Os status das unidades foram mantidos.");
+            } else if (confirmWord !== null) {
                 alert("Ação cancelada. A palavra não confere.");
             }
         }
