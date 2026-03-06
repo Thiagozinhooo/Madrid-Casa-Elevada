@@ -123,12 +123,48 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO DE TELA CHEIA (SIMULADOR E TABELA) --- */
-        .card.card-fullscreen { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; }
+        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA (SIMULADOR E TABELA) --- */
+        .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
         
-        .card.table-fullscreen { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; margin: 0; padding: 40px; background: var(--bg-body); display: flex; flex-direction: column; }
-        .card.table-fullscreen .table-wrapper { flex: 1; max-height: none; overflow-y: auto; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-card); }
-        .card.table-fullscreen #salesTable th { position: sticky; top: 0; z-index: 20; background: var(--brand-primary); color: white; border-bottom: none; }
+        /* O Segredo do Enquadramento da Tabela: Flexbox e min-width */
+        .card.table-fullscreen { 
+            position: fixed !important; 
+            inset: 0 !important; 
+            width: 100% !important; 
+            height: 100% !important; 
+            max-width: none !important;
+            z-index: 99999 !important; 
+            border-radius: 0 !important; 
+            margin: 0 !important; 
+            padding: clamp(15px, 3vw, 30px) !important; 
+            background: var(--bg-body) !important; 
+            display: flex !important; 
+            flex-direction: column !important; 
+            box-sizing: border-box !important;
+        }
+        .card.table-fullscreen .card-header {
+            flex-shrink: 0; /* Cabeçalho não diminui de tamanho */
+            margin-bottom: 15px;
+        }
+        .card.table-fullscreen .table-wrapper { 
+            flex: 1 1 auto !important; 
+            min-height: 0 !important; /* Impede transbordamento vertical */
+            min-width: 0 !important;  /* Impede transbordamento horizontal da tela */
+            width: 100% !important;
+            overflow: auto !important; /* Rolagem apenas dentro da tabela */
+            border-radius: var(--radius-md); 
+            border: 1px solid var(--border-color); 
+            box-shadow: var(--shadow-card); 
+        }
+        .card.table-fullscreen #salesTable th { 
+            position: sticky; 
+            top: 0; 
+            z-index: 20; 
+            background: var(--brand-primary); 
+            color: var(--brand-gold); 
+            border-bottom: none; 
+            font-size: 10px;
+        }
 
         /* PAINEL DE GESTÃO (PREMIUM DARK) */
         .premium-admin-card { background: linear-gradient(135deg, var(--brand-primary) 0%, #0d1710 100%); color: white; border: none; position: relative; overflow: hidden; box-shadow: 0 15px 35px -10px rgba(31, 51, 36, 0.5); }
@@ -185,18 +221,18 @@
         .btn-outline { height: 40px; padding: 0 18px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
 
-        /* --- TABELA OFICIAL --- */
+        /* --- TABELA OFICIAL (PREMIUM & FLUIDA) --- */
         main { min-width: 0; width: 100%; display: block; } 
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); }
+        .table-wrapper { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); }
         
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
         
         th { 
             background: var(--bg-input); color: var(--text-secondary); 
-            padding: 14px 12px; 
+            padding: 15px 12px; 
             text-align: left; border-bottom: 1px solid var(--border-color); 
-            font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; 
-            white-space: nowrap; font-size: 10px; 
+            font-weight: 800; text-transform: uppercase; letter-spacing: 1px; 
+            white-space: normal; line-height: 1.3; font-size: 9px; 
             position: sticky; top: 0; z-index: 10; 
         }
         
@@ -211,18 +247,18 @@
         tr:last-child td { border-bottom: none; }
         tr:hover td { background-color: var(--bg-hover); }
         
-        .badge { padding: 6px 12px; border-radius: 4px; font-size: 10px; font-weight: 800; display: inline-block; text-transform: uppercase; letter-spacing: 1px;}
+        .badge { padding: 6px 10px; border-radius: 4px; font-size: 9px; font-weight: 800; display: inline-block; text-transform: uppercase; letter-spacing: 1px;}
         tr.livre .badge { background: var(--st-livre-bg); color: var(--st-livre-txt); border: 1px solid rgba(39, 64, 43, 0.1); }
         tr.reservado .badge { background: var(--st-res-bg); color: var(--st-res-txt); border: 1px solid rgba(161, 129, 74, 0.2); }
         tr.vendido .badge { background: var(--st-vend-bg); color: var(--st-vend-txt); border: 1px solid rgba(138, 51, 51, 0.1); }
         tr.vendido td { opacity: 0.5; text-decoration: line-through; }
         tr.vendido .badge { text-decoration: none; opacity: 1; }
         
-        .btn-action-sell { width: 30px; height: 30px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
+        .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
         /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
-        .map-container-inner { overflow-x: auto; padding-bottom: 15px; display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
         .map-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; justify-content: center; width: 100%; max-width: 350px; color: var(--text-secondary); font-size: 10px; font-weight: 800; letter-spacing: 1.5px; }
@@ -251,7 +287,7 @@
         }
 
         @media(max-width: 768px) {
-            .app-layout { padding: 15px; }
+            .app-layout { padding: 15px 10px; }
             .card { padding: 20px; margin-bottom: 20px; }
             .header { padding: 15px; margin-bottom: 20px; border-radius: 16px; }
             .user-badge { max-width: 120px; } 
@@ -324,7 +360,7 @@
                     </div>
                     <div class="admin-kpi-box" style="background: rgba(39, 64, 43, 0.3); border-color: rgba(39, 64, 43, 0.5);">
                         <span style="color: #8FBC9B;">Disponíveis</span>
-                        <strong id="kpiLivre" style="color: #8FBC9B; font-size: 20px;">...</strong>
+                        <strong id="kpiLivre" style="color: #8FBC9B; font-size: 22px;">...</strong>
                     </div>
                 </div>
 
@@ -765,7 +801,7 @@
             simulator.selectUnit();
         },
         
-        /* FUNÇÃO PARA EXPANDIR E COLOCAR A TABELA EM TELA CHEIA */
+        /* FUNÇÃO PARA EXPANDIR E COLOCAR A TABELA EM TELA CHEIA (Corrigido para não vazar a tela) */
         toggleTable: () => {
             state.tableExpanded = !state.tableExpanded;
             const btn = document.getElementById('btnToggleTable');
@@ -776,12 +812,12 @@
                 btn.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> Fechar Tela Cheia';
                 tableCard.classList.add('table-fullscreen');
                 header.classList.add('hidden-nav');
-                document.body.style.overflow = 'hidden'; // Impede rolagem do fundo
+                document.body.style.overflow = 'hidden'; 
             } else {
                 btn.innerHTML = '<i class="fas fa-expand-arrows-alt"></i> Expandir Detalhes';
                 tableCard.classList.remove('table-fullscreen');
                 header.classList.remove('hidden-nav');
-                document.body.style.overflow = ''; // Devolve a rolagem
+                document.body.style.overflow = ''; 
             }
             app.renderTable();
         },
@@ -799,7 +835,7 @@
             const m = simulator.getMonths();
             const exp = state.tableExpanded; 
 
-            // CABEÇALHOS CONDICIONAIS
+            // CABEÇALHOS (Aparece resumido ou completo)
             let html = `<thead><tr>
                 <th>Unidade</th>
                 ${exp ? '<th>Tipologia</th>' : ''}
@@ -976,7 +1012,7 @@
 
             let dynamicColumnStyles = { 0: { fontStyle: 'bold' } };
             dynamicColumnStyles[idxVGV] = { fontStyle: 'bold' };
-            dynamicColumnStyles[idxChaves] = { fontStyle: 'bold', fillColor: [248, 245, 238] }; // Fundo dourado super leve
+            dynamicColumnStyles[idxChaves] = { fontStyle: 'bold', fillColor: [248, 245, 238] };
 
             doc.autoTable({
                 head: [colHeaders], body: tableBody, startY: 45, theme: 'grid',
