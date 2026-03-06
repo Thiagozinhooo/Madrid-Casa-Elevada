@@ -40,8 +40,8 @@
             --st-vend-bg: #FEF2F2; --st-vend-txt: #DC2626; 
 
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --radius-card: 12px;
+            --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+            --radius-card: 14px;
             --radius-btn: 8px;
         }
 
@@ -78,7 +78,7 @@
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-        /* TELA DE LOGIN UNIFICADA */
+        /* TELA DE LOGIN UNIFICADA E FECHADA */
         #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
         .login-side-visual { flex: 1.5; background: #000; display: none; position: relative; overflow: hidden; }
         @media(min-width: 1024px) { .login-side-visual { display: block; } }
@@ -97,7 +97,7 @@
 
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
-        /* APP LAYOUT - PADRÃO ORIGINAL */
+        /* APP LAYOUT */
         .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.5s forwards; }
         @keyframes fadeIn { to { opacity: 1; } }
         
@@ -116,8 +116,8 @@
         .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 25px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); margin-bottom: 25px; }
         
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--bg-hover); flex-wrap: wrap; gap: 10px; }
-        .card-title { font-size: 13px; font-weight: 800; color: var(--text-title); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
-        .card-title i { color: var(--brand-gold); font-size: 15px; }
+        .card-title { font-size: 14px; font-weight: 800; color: var(--text-title); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .card-title i { color: var(--brand-gold); font-size: 16px; }
 
         .card.card-fullscreen { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; margin: 0; padding: 30px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-content: center; }
 
@@ -174,30 +174,30 @@
         .btn-outline { height: 36px; padding: 0 15px; background: transparent; color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 600; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-outline:hover { background: var(--bg-hover); }
 
-        /* --- TABELA OFICIAL COMPACTADA (Para caber as colunas) --- */
+        /* --- TABELA OFICIAL --- */
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
         
-        #salesTable { width: 100%; border-collapse: collapse; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; }
         
-        #salesTable th { 
+        th { 
             background: var(--bg-input); color: var(--text-secondary); 
-            padding: 10px 5px; /* Espaço reduzido para caber as 12 colunas */
+            padding: 12px 8px; 
             text-align: left; border-bottom: 1px solid var(--border-color); 
             font-weight: 700; text-transform: uppercase; letter-spacing: 0px; 
-            white-space: normal; line-height: 1.2; font-size: 9px; /* Títulos com quebra de linha permitida */
+            white-space: normal; line-height: 1.2; font-size: 9px; 
             position: sticky; top: 0; z-index: 10; 
         }
         
-        #salesTable td { 
-            padding: 10px 5px; /* Espaço reduzido nas células */
+        td { 
+            padding: 12px 8px; 
             border-bottom: 1px solid var(--bg-hover); text-align: left; 
             color: var(--text-main); vertical-align: middle; 
             white-space: nowrap; font-weight: 500; font-size: 11px; 
         }
         
-        #salesTable tr:last-child td { border-bottom: none; }
-        #salesTable tr:hover td { background-color: var(--bg-hover); }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: var(--bg-hover); }
         
         .badge { padding: 4px 8px; border-radius: 4px; font-size: 9px; font-weight: 700; display: inline-block; text-transform: uppercase; letter-spacing: 0.5px;}
         tr.livre .badge { background: var(--st-livre-bg); color: var(--st-livre-txt); }
@@ -453,8 +453,11 @@
                         <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only" style="width:auto; height:36px; padding: 0 10px;">
                             <option value="disponivel">Ocultar Vendidos</option><option value="todos">Mostrar Todos</option><option value="vendido">Apenas Vendidos</option>
                         </select>
+                        <button onclick="app.toggleTable()" class="btn-outline" id="btnToggleTable" style="color: var(--brand-primary); border-color: var(--brand-primary);">
+                            <i class="fas fa-expand-arrows-alt"></i> Expandir Detalhes
+                        </button>
                         <button onclick="app.downloadTablePDF()" class="btn-outline">
-                            <i class="fas fa-file-pdf"></i> PDF Tabela
+                            <i class="fas fa-file-pdf"></i> PDF Completo
                         </button>
                     </div>
                 </div>
@@ -550,7 +553,8 @@
         globalMultiplier: 1,
         previousMultiplier: 1,
         lastPriceUpdate: null, 
-        lastSaleUpdate: null 
+        lastSaleUpdate: null,
+        tableExpanded: false // Estado que controla se a tabela está resumida ou aberta
     };
     
     // --- 4. LÓGICA DO SIMULADOR ---
@@ -749,7 +753,19 @@
             simulator.selectUnit();
         },
         
-        /* TABELA OFICIAL CORRIGIDA */
+        /* FUNÇÃO PARA EXPANDIR/RESUMIR A TABELA */
+        toggleTable: () => {
+            state.tableExpanded = !state.tableExpanded;
+            const btn = document.getElementById('btnToggleTable');
+            if(state.tableExpanded) {
+                btn.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> Resumir Tabela';
+            } else {
+                btn.innerHTML = '<i class="fas fa-expand-arrows-alt"></i> Expandir Detalhes';
+            }
+            app.renderTable();
+        },
+        
+        /* A TABELA INTELIGENTE (Resumida ou Expandida) */
         renderTable: () => {
             const tb = document.getElementById('salesTable');
             if(!tb) return;
@@ -760,22 +776,22 @@
             const showM = plan === 'mensal_20' || plan === 'misto_completo';
             const showB = plan === 'balao_20' || plan === 'misto_completo';
             const m = simulator.getMonths();
+            const exp = state.tableExpanded; // Verifica se o botão expandir foi clicado
 
+            // Cabeçalhos (Mostra apenas o principal se estiver resumido)
             let html = `<thead><tr>
                 <th>Unidade</th>
-                <th>Tipologia</th>
+                ${exp ? '<th>Tipologia</th>' : ''}
                 <th>Área</th>
                 <th>Total</th>
-                <th>Esc.</th>
-                <th>Área Esc.</th>
-                <th>Vagas</th>
+                ${exp ? '<th>Esc.</th><th>Área Esc.</th><th>Vagas</th>' : ''}
                 <th>Sinal/Ato</th>
                 ${showM ? `<th>Mensais (${m}x)</th>` : ''}
                 ${showB ? `<th>Balão (3x)</th>` : ''}
                 <th>VGV Atual</th>
                 <th>Entrega da Chave</th>
-                <th class="admin-only">Status</th>
-                ${state.isAdmin ? '<th class="admin-only">Ação</th>' : ''}
+                ${exp && state.isAdmin ? '<th class="admin-only">Status</th>' : ''}
+                ${exp && state.isAdmin ? '<th class="admin-only">Ação</th>' : ''}
             </tr></thead><tbody>`;
 
             let totalVGV = 0, totalVend = 0, countLivre = 0;
@@ -807,19 +823,17 @@
 
                 html += `<tr class="${st}">
                     <td style="font-weight:800;">${u}</td>
-                    <td>${tipo}</td>
+                    ${exp ? `<td>${tipo}</td>` : ''}
                     <td>${d.area}m²</td>
                     <td style="color:var(--text-muted);">${d.areaTotal}m²</td>
-                    <td>${d.esc}</td>
-                    <td style="color:var(--text-muted);">${d.areaEsc}m²</td>
-                    <td>${d.vagas}</td>
+                    ${exp ? `<td>${d.esc}</td><td style="color:var(--text-muted);">${d.areaEsc}m²</td><td>${d.vagas}</td>` : ''}
                     <td style="font-weight:600;">${app.formatMoney(vSinal)}</td>
                     ${showM ? `<td>${app.formatMoney(vMensal)}</td>` : ''}
                     ${showB ? `<td>${app.formatMoney(vBalao)}</td>` : ''}
                     <td style="font-weight:800">${app.formatMoney(finalPrice)}</td>
                     <td style="font-weight:700; color:var(--brand-gold);">${app.formatMoney(vChaves)}</td>
-                    <td class="admin-only"><span class="badge">${stLabel}</span></td>
-                    ${btn}
+                    ${exp && state.isAdmin ? `<td class="admin-only"><span class="badge">${stLabel}</span></td>` : ''}
+                    ${exp && state.isAdmin ? btn : ''}
                 </tr>`;
             });
             html += `</tbody>`;
@@ -866,6 +880,7 @@
             }
         },
         
+        /* O PDF CONTINUA COM TODAS AS INFORMAÇÕES (COMPLETO) */
         downloadTablePDF: () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('l', 'mm', 'a4');
@@ -897,7 +912,7 @@
             const m = simulator.getMonths();
 
             const colHeaders = [
-                "APTO", "ÁREA\nAPTO", "ÁREA\nTOTAL", "N°\nESC.", "ÁREA\nESC.", "VAGAS", "PAVT.\nVAGA", 
+                "APTO", "TIPO", "ÁREA\nAPTO", "ÁREA\nTOTAL", "N°\nESC.", "ÁREA\nESC.", "VAGAS", "PAVT.\nVAGA", 
                 `ENTRADA (3X)\n${pSinal}%`
             ];
 
@@ -916,6 +931,7 @@
                 if (filter === 'disponivel' && st === 'vendido') return;
                 if (filter === 'vendido' && st !== 'vendido') return;
 
+                let tipo = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
                 let price = d.valor * state.globalMultiplier;
                 let vEntrada = (price * (pSinal/100)) / 3;
                 let vMensal = (price * (pMensal/100)) / m;
@@ -923,7 +939,7 @@
                 let vChaves = price * (pChaves/100);
 
                 let row = [
-                    u, d.area.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
+                    u, tipo, d.area.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
                     d.areaTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
                     d.esc, d.areaEsc.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
                     d.vagas, d.pav, app.formatMoney(vEntrada)
