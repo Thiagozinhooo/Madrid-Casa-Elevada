@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V19</title>
+    <title>Madrid Casa Elevada | Premium V21</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,13 +20,11 @@
     <style>
         /* --- DESIGN SYSTEM LUXURY & PREMIUM --- */
         :root {
-            /* Paleta Oficial Madrid */
             --brand-primary: #1F3324; 
             --brand-secondary: #2E4A35; 
             --brand-gold: #C5A065;
             --brand-gold-dark: #A68550;
             
-            /* Tons de Fundo e Cartões */
             --bg-body: #F8F9F8; 
             --bg-card: #FFFFFF; 
             --bg-input: #F4F6F4; 
@@ -34,17 +32,14 @@
             --border-color: #E2E6E0; 
             --glass-bg: rgba(255, 255, 255, 0.95);
             
-            /* Textos */
             --text-main: #1C241E; 
             --text-secondary: #6A736C; 
             --text-muted: #A3ACA5; 
             
-            /* Status */
             --st-livre-bg: #E8F0EA; --st-livre-txt: #27402B; 
             --st-res-bg: #FDF5E6; --st-res-txt: #A1814A; 
             --st-vend-bg: #F5E6E6; --st-vend-txt: #8A3333; 
 
-            /* Profundidade e Sombras Premium */
             --shadow-sm: 0 4px 10px rgba(31, 51, 36, 0.05);
             --shadow-card: 0 10px 30px rgba(31, 51, 36, 0.06), 0 2px 8px rgba(0,0,0,0.02);
             --radius-card: 16px;
@@ -71,11 +66,9 @@
             overflow-x: hidden; transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* --- TRAVA DE SEGURANÇA (GESTOR VS CORRETOR) --- */
         body:not([data-admin="true"]) .admin-only { display: none !important; }
         .hidden { display: none !important; }
 
-        /* CUSTOM SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
@@ -123,7 +116,7 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA --- */
+        /* --- CONFIGURAÇÃO DE TELA CHEIA --- */
         .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
         
         .card.table-fullscreen { 
@@ -181,12 +174,11 @@
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 
-        /* --- BLINDAGEM: CAIXA DE RESULTADOS UNIFICADA --- */
+        /* CAIXA DE RESULTADOS UNIFICADA E BLINDADA */
         .calc-results-box { background: var(--bg-input); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 20px; }
         .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
         .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); align-items: center; }
         
-        /* A REGRA ABAIXO FORÇA TUDO A TER EXATAMENTE O MESMO TAMANHO, PESO E COR */
         .calc-results-box span, 
         .calc-results-box strong,
         .res-row span, 
@@ -365,9 +357,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal">...Carregando</option>
-                                <option value="balao_20" id="optBalao">...Carregando</option>
-                                <option value="misto_completo" id="optMisto">...Carregando</option>
+                                <option value="mensal_20" id="optMensal"></option>
+                                <option value="balao_20" id="optBalao"></option>
+                                <option value="misto_completo" id="optMisto"></option>
                             </select>
                         </div>
                         
@@ -406,11 +398,11 @@
                                 <strong id="resSinal">...</strong>
                             </div>
                             <div id="rowMensal" class="res-row">
-                                <span>Mensais (<span id="txtMeses" style="font-size: 16px !important; font-weight: 700 !important; color: var(--text-main) !important;">16</span>x)</span>
+                                <span id="lblMensal">Mensais (16x)</span>
                                 <strong id="resMensal">...</strong>
                             </div>
                             <div id="rowBalao" class="res-row">
-                                <span>Balões (3x)</span>
+                                <span id="lblBalao">Balões (3x)</span>
                                 <strong id="resBalao">...</strong>
                             </div>
                             <div class="res-total">
@@ -570,14 +562,22 @@
             }
             
             const m = simulator.getMonths();
+            const b = simulator.getBalloons();
+            
+            // ATUALIZAÇÃO DINÂMICA: Ajusta os números baseado na data real (Meses e Balões)
             document.getElementById('optMensal').innerText = `${m}x Mensal (20%)`;
-            document.getElementById('optBalao').innerText = `3x Balão (20%)`;
-            document.getElementById('optMisto').innerText = `${m}x Mensal (10%) + 3x Balão (10%)`;
+            document.getElementById('optBalao').innerText = `${b}x Balão (20%)`;
+            document.getElementById('optMisto').innerText = `${m}x Mensal (10%) + ${b}x Balão (10%)`;
         },
         getMonths: () => {
             const now = new Date();
             const target = new Date('2027-06-01');
             return Math.max(1, (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth()));
+        },
+        getBalloons: () => {
+            // LÓGICA DO BALÃO: Pega os meses restantes e divide por 6 (1 balão por semestre).
+            let m = simulator.getMonths();
+            return Math.max(1, Math.ceil(m / 6));
         },
         updateUnitList: () => {
             const andar = document.getElementById('selAndar').value;
@@ -630,20 +630,23 @@
             let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
             let pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
             let parcelasSinal = parseInt(document.getElementById('selSinalParcelas').value) || 3;
-            let m = simulator.getMonths();
             
-            document.getElementById('txtMeses').innerText = m;
+            let m = simulator.getMonths();
+            let b = simulator.getBalloons() || 1; // Para evitar divisão por zero
+            
             document.getElementById('lblSinal').innerText = `Ato/Sinal (${parcelasSinal}x)`;
             document.getElementById('resSinal').innerText = app.formatMoney((price * pSinal/100)/parcelasSinal);
             
             if(pMensal > 0) {
                 document.getElementById('rowMensal').style.display='flex';
+                document.getElementById('lblMensal').innerText = `Mensais (${m}x)`;
                 document.getElementById('resMensal').innerText = app.formatMoney((price * pMensal/100)/m);
             } else document.getElementById('rowMensal').style.display='none';
 
             if(pBalao > 0) {
                 document.getElementById('rowBalao').style.display='flex';
-                document.getElementById('resBalao').innerText = app.formatMoney((price * pBalao/100)/3);
+                document.getElementById('lblBalao').innerText = `Balões (${b}x)`;
+                document.getElementById('resBalao').innerText = app.formatMoney((price * pBalao/100)/b);
             } else document.getElementById('rowBalao').style.display='none';
 
             let pChaves = 100 - pSinal - pMensal - pBalao;
@@ -668,11 +671,13 @@
             let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
             let pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
             let parcelasSinal = parseInt(document.getElementById('selSinalParcelas').value) || 3;
+            
             let m = simulator.getMonths();
+            let b = simulator.getBalloons() || 1;
             
             let vSinal = (price * pSinal/100)/parcelasSinal;
             let vMensal = m > 0 ? (price * pMensal/100)/m : 0;
-            let vBalao = (price * pBalao/100)/3;
+            let vBalao = (price * pBalao/100)/b;
             let vChaves = price * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
             try { doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 15, 50, 20); } 
@@ -704,7 +709,7 @@
             let planBody = [];
             planBody.push([`Ato/Sinal (${parcelasSinal}x de ${pSinal}%)`, app.formatMoney(vSinal)]);
             if (pMensal > 0) planBody.push([`Mensais (${m}x de ${pMensal}%)`, app.formatMoney(vMensal)]);
-            if (pBalao > 0) planBody.push([`Balões (3x de ${pBalao}%)`, app.formatMoney(vBalao)]);
+            if (pBalao > 0) planBody.push([`Balões (${b}x de ${pBalao}%)`, app.formatMoney(vBalao)]);
             planBody.push([`Entrega das Chaves (${100 - pSinal - pMensal - pBalao}%)`, app.formatMoney(vChaves)]);
 
             doc.autoTable({
@@ -737,11 +742,13 @@
             let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
             let pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
             let parcelasSinal = parseInt(document.getElementById('selSinalParcelas').value) || 3;
+            
             let m = simulator.getMonths();
+            let b = simulator.getBalloons() || 1;
             
             let vSinal = (price * pSinal/100)/parcelasSinal;
             let vMensal = m > 0 ? (price * pMensal/100)/m : 0;
-            let vBalao = (price * pBalao/100)/3;
+            let vBalao = (price * pBalao/100)/b;
             let vChaves = price * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
             let csv = "\uFEFF"; 
@@ -750,12 +757,12 @@
             csv += `Tipologia;${tipo}\n`;
             csv += `Area Privativa;${d.area} m2\n`;
             csv += `Vagas;${d.vagas}\n`;
-            csv += `Valor Total;${app.formatMoney(price)}\n\n`;
+            csv += `Valor Total de Tabela;${app.formatMoney(price)}\n\n`;
             
             csv += "FLUXO DE PAGAMENTO;VALOR DA PARCELA\n";
             csv += `Ato/Sinal (${parcelasSinal}x);${app.formatMoney(vSinal)}\n`;
             if(pMensal > 0) csv += `Mensais (${m}x);${app.formatMoney(vMensal)}\n`;
-            if(pBalao > 0) csv += `Baloes (3x);${app.formatMoney(vBalao)}\n`;
+            if(pBalao > 0) csv += `Baloes (${b}x);${app.formatMoney(vBalao)}\n`;
             csv += `Entrega das Chaves;${app.formatMoney(vChaves)}\n\n`;
             
             csv += "Observacao: Correcao de INCC ate a entrega das chaves.\n";
@@ -878,7 +885,9 @@
             const parcelasSinal = elSinalParcelas ? (parseInt(elSinalParcelas.value) || 3) : 3;
             const showM = plan === 'mensal_20' || plan === 'misto_completo';
             const showB = plan === 'balao_20' || plan === 'misto_completo';
+            
             const m = simulator.getMonths();
+            const b = simulator.getBalloons() || 1;
             const exp = state.tableExpanded; 
 
             let html = `<thead><tr>
@@ -889,7 +898,7 @@
                 ${exp ? '<th>Esc.</th><th>Área Esc.</th><th>Vagas</th>' : ''}
                 <th>Sinal/Ato (${parcelasSinal}x)</th>
                 ${showM ? `<th>Mensais (${m}x)</th>` : ''}
-                ${showB ? `<th>Balões (3x)</th>` : ''}
+                ${showB ? `<th>Balões (${b}x)</th>` : ''}
                 <th>Entrega da Chave</th>
                 <th>Valor Total</th>
                 ${exp ? '<th class="admin-only">Status</th>' : ''}
@@ -916,7 +925,7 @@
 
                 let vSinal = (finalPrice * (pSinal/100)) / parcelasSinal;
                 let vMensal = m > 0 ? (finalPrice * (pMensal/100)) / m : 0;
-                let vBalao = (finalPrice * (pBalao/100)) / 3;
+                let vBalao = (finalPrice * (pBalao/100)) / b;
                 let vChaves = finalPrice * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
                 let btn = state.isAdmin ? `<td class="admin-only"><button onclick="app.toggleStatus(${u})" class="btn-action-sell" title="Alterar Status"><i class="fas fa-sync-alt"></i></button></td>` : '';
@@ -998,7 +1007,9 @@
             const pMensal = parseFloat(document.getElementById('inpMensal').value) || 0;
             const pBalao = parseFloat(document.getElementById('inpBalao').value) || 0;
             const pChaves = 100 - pSinal - pMensal - pBalao;
+            
             const m = simulator.getMonths();
+            const b = simulator.getBalloons() || 1;
 
             const colHeaders = [
                 "APTO", "TIPO", "ÁREA\nAPTO", "ÁREA\nTOTAL", "N°\nESC.", "ÁREA\nESC.", "VAGAS", "PAVT.\nVAGA", 
@@ -1006,7 +1017,7 @@
             ];
 
             if (showM) colHeaders.push(`MENSAIS (${m}X)\n${pMensal}%`);
-            if (showB) colHeaders.push(`BALÕES (3X)\n${pBalao}%`);
+            if (showB) colHeaders.push(`BALÕES (${b}X)\n${pBalao}%`);
             colHeaders.push(`ENTREGA DE CHAVE\n${pChaves}%`);
             colHeaders.push("VALOR TOTAL");
 
@@ -1023,7 +1034,7 @@
                 let price = d.valor * state.globalMultiplier;
                 let vEntrada = (price * (pSinal/100)) / parcelasSinal;
                 let vMensal = (price * (pMensal/100)) / m;
-                let vBalao = (price * (pBalao/100)) / 3;
+                let vBalao = (price * (pBalao/100)) / b;
                 let vChaves = price * (pChaves/100);
 
                 let row = [
