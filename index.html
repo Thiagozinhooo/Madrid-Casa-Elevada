@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V16</title>
+    <title>Madrid Casa Elevada | Premium V17</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -404,7 +404,7 @@
                                 <span>Balões (3x)</span><strong id="resBalao">...</strong>
                             </div>
                             <div class="res-total">
-                                <span>Chaves</span><strong id="resChaves">...</strong>
+                                <span>Entrega da Chave</span><strong id="resChaves">...</strong>
                             </div>
                         </div>
 
@@ -629,6 +629,7 @@
             } else document.getElementById('rowBalao').style.display='none';
 
             let pChaves = 100 - pSinal - pMensal - pBalao;
+            // Atualizei de "Chaves" para "Entrega da Chave" no simulador também, para padronizar
             document.getElementById('resChaves').innerText = app.formatMoney(price * pChaves/100);
             document.getElementById('calcResults').classList.remove('hidden');
         },
@@ -681,7 +682,7 @@
             doc.text(`Vagas de Garagem: ${d.vagas}`, 14, 72);
 
             doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
-            doc.text(`Valor Total de Tabela: ${app.formatMoney(price)}`, 14, 85);
+            doc.text(`Valor Total: ${app.formatMoney(price)}`, 14, 85);
 
             let planBody = [];
             planBody.push([`Ato/Sinal (${parcelasSinal}x de ${pSinal}%)`, app.formatMoney(vSinal)]);
@@ -732,7 +733,7 @@
             csv += `Tipologia;${tipo}\n`;
             csv += `Area Privativa;${d.area} m2\n`;
             csv += `Vagas;${d.vagas}\n`;
-            csv += `Valor Total de Tabela;${app.formatMoney(price)}\n\n`;
+            csv += `Valor Total;${app.formatMoney(price)}\n\n`;
             
             csv += "FLUXO DE PAGAMENTO;VALOR DA PARCELA\n";
             csv += `Ato/Sinal (${parcelasSinal}x);${app.formatMoney(vSinal)}\n`;
@@ -872,8 +873,8 @@
                 <th>Sinal/Ato (${parcelasSinal}x)</th>
                 ${showM ? `<th>Mensais (${m}x)</th>` : ''}
                 ${showB ? `<th>Balões (3x)</th>` : ''}
-                <th>VGV Atual</th>
                 <th>Entrega da Chave</th>
+                <th>Valor Total</th>
                 ${exp ? '<th class="admin-only">Status</th>' : ''}
                 ${exp ? '<th class="admin-only">Ação</th>' : ''}
             </tr></thead><tbody>`;
@@ -913,8 +914,8 @@
                     <td style="font-weight:600;">${app.formatMoney(vSinal)}</td>
                     ${showM ? `<td>${app.formatMoney(vMensal)}</td>` : ''}
                     ${showB ? `<td>${app.formatMoney(vBalao)}</td>` : ''}
-                    <td style="font-weight:800">${app.formatMoney(finalPrice)}</td>
                     <td style="font-weight:700; color:var(--text-main);">${app.formatMoney(vChaves)}</td>
+                    <td style="font-weight:800">${app.formatMoney(finalPrice)}</td>
                     ${exp ? `<td class="admin-only"><span class="badge">${stLabel}</span></td>` : ''}
                     ${exp ? btn : ''}
                 </tr>`;
@@ -989,11 +990,11 @@
 
             if (showM) colHeaders.push(`MENSAIS (${m}X)\n${pMensal}%`);
             if (showB) colHeaders.push(`BALÕES (3X)\n${pBalao}%`);
-            colHeaders.push("VGV ATUAL");
             colHeaders.push(`ENTREGA DE CHAVE\n${pChaves}%`);
+            colHeaders.push("VALOR TOTAL");
 
-            let idxVGV = colHeaders.length - 2;
-            let idxChaves = colHeaders.length - 1;
+            let idxChaves = colHeaders.length - 2;
+            let idxValorTotal = colHeaders.length - 1;
 
             Object.keys(state.units).sort((a,b)=>b-a).forEach(u => {
                 let d = state.units[u];
@@ -1017,14 +1018,14 @@
 
                 if (showM) row.push(app.formatMoney(vMensal));
                 if (showB) row.push(app.formatMoney(vBalao));
-                row.push(app.formatMoney(price));
                 row.push(app.formatMoney(vChaves));
+                row.push(app.formatMoney(price));
                 tableBody.push(row);
             });
 
             let dynamicColumnStyles = { 0: { fontStyle: 'bold' } };
-            dynamicColumnStyles[idxVGV] = { fontStyle: 'bold' };
             dynamicColumnStyles[idxChaves] = { fontStyle: 'bold', fillColor: [248, 245, 238] };
+            dynamicColumnStyles[idxValorTotal] = { fontStyle: 'bold' };
 
             doc.autoTable({
                 head: [colHeaders], body: tableBody, startY: 45, theme: 'grid',
