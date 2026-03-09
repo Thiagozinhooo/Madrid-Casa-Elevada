@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V23</title>
+    <title>Madrid Casa Elevada | Premium V24</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -88,6 +88,11 @@
         .inp-login { width: 100%; height: 48px; padding: 0 15px; border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-btn); margin-bottom: 15px; background: rgba(0,0,0,0.2); color: white; font-family: inherit; font-size: 13px; transition: all 0.3s; }
         .inp-login:focus { background: rgba(0,0,0,0.4); border-color: var(--brand-gold); }
         
+        /* CSS PARA O BOTÃO DE MOSTRAR SENHA */
+        .password-wrapper { position: relative; width: 100%; }
+        .toggle-password { position: absolute; right: 15px; top: 24px; transform: translateY(-50%); cursor: pointer; color: rgba(255,255,255,0.5); font-size: 15px; transition: 0.3s; z-index: 10; }
+        .toggle-password:hover { color: var(--brand-gold); }
+
         .btn-login { width: 100%; height: 48px; border-radius: var(--radius-btn); background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: all 0.3s; margin-top: 5px; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.2); }
         .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4); }
 
@@ -116,7 +121,7 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO DE TELA CHEIA --- */
+        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA --- */
         .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
         
         .card.table-fullscreen { 
@@ -270,8 +275,14 @@
         <button onclick="ui.toggleTheme()" class="toggle-theme-login" title="Modo Escuro"><i class="fas fa-moon" id="iconLogin"></i></button>
         <div class="login-box">
             <img src="MADRID LOGO BRANCA-01.png" alt="Madrid Casa Elevada" class="login-logo">
-            <input type="email" id="loginEmail" class="inp-login" placeholder="E-mail de Acesso">
-            <input type="password" id="loginPass" class="inp-login" placeholder="Sua Senha">
+            
+            <input type="email" id="loginEmail" class="inp-login" placeholder="E-mail de Acesso" onkeydown="if(event.key === 'Enter') auth.login()">
+            
+            <div class="password-wrapper">
+                <input type="password" id="loginPass" class="inp-login" placeholder="Sua Senha" style="padding-right: 45px;" onkeydown="if(event.key === 'Enter') auth.login()">
+                <i class="fas fa-eye toggle-password" id="togglePasswordIcon" onclick="ui.togglePassword()"></i>
+            </div>
+
             <button onclick="auth.login()" class="btn-login">Entrar no Sistema</button>
             <p id="loginError" style="color:#D98888; display:none; margin-top:15px; font-size:11px; background:rgba(217, 136, 136, 0.15); padding:10px; border-radius:8px; border: 1px solid rgba(217, 136, 136, 0.3); font-weight: 600;"></p>
         </div>
@@ -357,9 +368,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal">...Carregando</option>
-                                <option value="balao_20" id="optBalao">...Carregando</option>
-                                <option value="misto_completo" id="optMisto">...Carregando</option>
+                                <option value="mensal_20" id="optMensal">15x Mensal (20%)</option>
+                                <option value="balao_20" id="optBalao">3x Balão (20%)</option>
+                                <option value="misto_completo" id="optMisto">15x Mensal (10%) + 3x Balão (10%)</option>
                             </select>
                         </div>
                         
@@ -551,6 +562,37 @@
         globalMultiplier: 1, previousMultiplier: 1, lastPriceUpdate: null, lastSaleUpdate: null,
         tableExpanded: false, units: DEFAULT_UNITS
     };
+
+    const ui = {
+        toggleTheme: () => {
+            const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', next);
+            ui.updateAssets(next);
+        },
+        updateAssets: (t) => {
+            const logo = t==='dark' ? 'MADRID LOGO BRANCA-01.png' : 'MADRID LOGO MUSGO-01-01.png';
+            document.getElementById('logoHeader').src = logo;
+        },
+        toggleFullscreen: () => {
+            const c = document.getElementById('simulatorCard');
+            c.classList.toggle('card-fullscreen');
+            document.getElementById('mainHeader').classList.toggle('hidden-nav');
+        },
+        // FUNÇÃO NOVA PARA MOSTRAR/OCULTAR SENHA
+        togglePassword: () => {
+            const inp = document.getElementById('loginPass');
+            const icon = document.getElementById('togglePasswordIcon');
+            if (inp.type === 'password') {
+                inp.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                inp.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+    };
     
     const simulator = {
         init: () => {
@@ -561,16 +603,11 @@
                 s.innerHTML+=`<option value="${i}">${i}º Andar</option>`;
             }
             
-            const m = simulator.getMonths();
-            const b = simulator.getBalloons();
-            
-            document.getElementById('optMensal').innerText = `${m}x Mensal (20%)`;
-            document.getElementById('optBalao').innerText = `${b}x Balão (20%)`;
-            document.getElementById('optMisto').innerText = `${m}x Mensal (10%) + ${b}x Balão (10%)`;
+            // Textos já fixados no HTML
         },
         getMonths: () => {
             const now = new Date();
-            // Data alvo: Julho de 2027 (Mês index 6 no JS)
+            // Data alvo: Julho de 2027
             const target = new Date(2027, 6, 1); 
             return Math.max(1, (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth()));
         },
@@ -703,7 +740,6 @@
             doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
             doc.text(`Valor Total de Tabela: ${app.formatMoney(price)}`, 14, 85);
 
-            // LOGICA DA TABELA MÊS A MÊS EM COLUNAS
             let scheduleBody = [];
             let currentDate = new Date();
             let startMonth = currentDate.getMonth(); 
@@ -726,13 +762,13 @@
                 
                 let vS = 0, vM = 0, vB = 0, vC = 0;
 
-                // Sinal a partir de hoje
+                // Regra: Sinal
                 if (i < parcelasSinal && pSinal > 0) vS = vSinal;
-                // Mensais a partir do mês que vem (i=1) até a entrega (i=m)
+                // Regra: Mensais 1 mês após o primeiro sinal (i=1)
                 if (i > 0 && i <= m && pMensal > 0) vM = vMensal;
-                // Balões distribuídos
+                // Regra: Balões intercalados
                 if (balloonMonths.includes(i) && pBalao > 0) vB = vBalao;
-                // Chave na data final da obra
+                // Regra: Chaves
                 if (i === m) vC = vChaves;
 
                 let valMonth = vS + vM + vB + vC;
@@ -754,7 +790,6 @@
                 }
             }
             
-            // LINHA FINAL DE TOTAIS
             scheduleBody.push([
                 { content: 'TOTAL GERAL', styles: { halign: 'right', fontStyle: 'bold' } }, 
                 { content: app.formatMoney(totalSinalCol), styles: { fontStyle: 'bold' } },
@@ -823,9 +858,7 @@
             let balloonMonths = [];
             if (pBalao > 0 && b > 0) {
                 let step = Math.floor(m / b);
-                for(let i=1; i<=b; i++) {
-                    balloonMonths.push(i * step); 
-                }
+                for(let i=1; i<=b; i++) balloonMonths.push(i * step); 
             }
 
             let totalSinalCol = 0, totalMensalCol = 0, totalBalaoCol = 0, totalChavesCol = 0, totalProposta = 0;
@@ -854,7 +887,7 @@
                 }
             }
             
-            csv += `\nTOTAL GERAL;${app.formatMoney(totalSinalCol)};${app.formatMoney(totalMensalCol)};${app.formatMoney(totalBalaoCol)};${app.formatMoney(totalChavesCol)};${app.formatMoney(totalProposta)}\n\n`;
+            csv += `TOTAL GERAL;${app.formatMoney(totalSinalCol)};${app.formatMoney(totalMensalCol)};${app.formatMoney(totalBalaoCol)};${app.formatMoney(totalChavesCol)};${app.formatMoney(totalProposta)}\n\n`;
             csv += "Observacao: Correcao de INCC ate a entrega das chaves.\n";
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1097,7 +1130,6 @@
             const pMensal = parseFloat(document.getElementById('inpMensal').value) || 0;
             const pBalao = parseFloat(document.getElementById('inpBalao').value) || 0;
             const pChaves = 100 - pSinal - pMensal - pBalao;
-            
             const m = simulator.getMonths();
             const b = simulator.getBalloons() || 1;
 
@@ -1270,23 +1302,6 @@
                 database.ref('madrid_data/lastPriceUpdate').set(null);
                 alert("Tabela de preços resetada com sucesso! As unidades vendidas e as áreas no banco de dados continuam a salvo.");
             } else if (confirmWord !== null) { alert("Ação cancelada."); }
-        }
-    };
-
-    const ui = {
-        toggleTheme: () => {
-            const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', next);
-            ui.updateAssets(next);
-        },
-        updateAssets: (t) => {
-            const logo = t==='dark' ? 'MADRID LOGO BRANCA-01.png' : 'MADRID LOGO MUSGO-01-01.png';
-            document.getElementById('logoHeader').src = logo;
-        },
-        toggleFullscreen: () => {
-            const c = document.getElementById('simulatorCard');
-            c.classList.toggle('card-fullscreen');
-            document.getElementById('mainHeader').classList.toggle('hidden-nav');
         }
     };
 
