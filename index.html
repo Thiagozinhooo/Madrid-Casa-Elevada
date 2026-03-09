@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V21</title>
+    <title>Madrid Casa Elevada | Premium V22</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -116,7 +116,7 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO DE TELA CHEIA --- */
+        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA --- */
         .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
         
         .card.table-fullscreen { 
@@ -199,7 +199,7 @@
         .btn-outline { height: 40px; padding: 0 18px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
 
-        /* --- TABELA OFICIAL --- */
+        /* TABELA OFICIAL */
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); }
         
@@ -230,7 +230,7 @@
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
+        /* MAPA ESPELHO */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -357,9 +357,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal"></option>
-                                <option value="balao_20" id="optBalao"></option>
-                                <option value="misto_completo" id="optMisto"></option>
+                                <option value="mensal_20" id="optMensal">15x Mensal (20%)</option>
+                                <option value="balao_20" id="optBalao">3x Balão (20%)</option>
+                                <option value="misto_completo" id="optMisto">15x Mensal (10%) + 3x Balão (10%)</option>
                             </select>
                         </div>
                         
@@ -561,10 +561,10 @@
                 s.innerHTML+=`<option value="${i}">${i}º Andar</option>`;
             }
             
+            // INJETA O TEXTO CORRETO E ATUALIZADO DIRETO NO HTML ASSIM QUE O SITE ABRE
             const m = simulator.getMonths();
             const b = simulator.getBalloons();
             
-            // ATUALIZAÇÃO DINÂMICA: Ajusta os números baseado na data real (Meses e Balões)
             document.getElementById('optMensal').innerText = `${m}x Mensal (20%)`;
             document.getElementById('optBalao').innerText = `${b}x Balão (20%)`;
             document.getElementById('optMisto').innerText = `${m}x Mensal (10%) + ${b}x Balão (10%)`;
@@ -575,7 +575,6 @@
             return Math.max(1, (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth()));
         },
         getBalloons: () => {
-            // LÓGICA DO BALÃO: Pega os meses restantes e divide por 6 (1 balão por semestre).
             let m = simulator.getMonths();
             return Math.max(1, Math.ceil(m / 6));
         },
@@ -632,7 +631,7 @@
             let parcelasSinal = parseInt(document.getElementById('selSinalParcelas').value) || 3;
             
             let m = simulator.getMonths();
-            let b = simulator.getBalloons() || 1; // Para evitar divisão por zero
+            let b = simulator.getBalloons() || 1; 
             
             document.getElementById('lblSinal').innerText = `Ato/Sinal (${parcelasSinal}x)`;
             document.getElementById('resSinal').innerText = app.formatMoney((price * pSinal/100)/parcelasSinal);
@@ -654,6 +653,7 @@
             document.getElementById('calcResults').classList.remove('hidden');
         },
         
+        // --- FUNÇÃO PARA GERAR O PDF COM A TABELA MÊS A MÊS ---
         saveProposalPDF: () => {
             const u = document.getElementById('selUnidade').value;
             if(!u || !state.units[u]) return;
@@ -706,20 +706,69 @@
             doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
             doc.text(`Valor Total: ${app.formatMoney(price)}`, 14, 85);
 
-            let planBody = [];
-            planBody.push([`Ato/Sinal (${parcelasSinal}x de ${pSinal}%)`, app.formatMoney(vSinal)]);
-            if (pMensal > 0) planBody.push([`Mensais (${m}x de ${pMensal}%)`, app.formatMoney(vMensal)]);
-            if (pBalao > 0) planBody.push([`Balões (${b}x de ${pBalao}%)`, app.formatMoney(vBalao)]);
-            planBody.push([`Entrega das Chaves (${100 - pSinal - pMensal - pBalao}%)`, app.formatMoney(vChaves)]);
+            // LOGICA DA TABELA MÊS A MÊS
+            let scheduleBody = [];
+            let currentDate = new Date();
+            let startMonth = currentDate.getMonth(); 
+            let startYear = currentDate.getFullYear();
+            
+            let balloonMonths = [];
+            if (pBalao > 0 && b > 0) {
+                let step = Math.floor(m / b);
+                for(let i=1; i<=b; i++) {
+                    balloonMonths.push(i * step - 1); 
+                }
+            }
+
+            let totalProposta = 0;
+
+            for (let i = 0; i <= m; i++) {
+                let rowDate = new Date(startYear, startMonth + i, 1);
+                let monthStr = rowDate.toLocaleDateString('pt-BR', { month: '2-digit', year: 'numeric' });
+                
+                let desc = [];
+                let valMonth = 0;
+
+                if (i < parcelasSinal && pSinal > 0) {
+                    desc.push(`Sinal (${i+1}/${parcelasSinal})`);
+                    valMonth += vSinal;
+                }
+                
+                if (i < m && pMensal > 0) {
+                    desc.push(`Mensal (${i+1}/${m})`);
+                    valMonth += vMensal;
+                }
+
+                if (balloonMonths.includes(i) && pBalao > 0) {
+                    let bIndex = balloonMonths.indexOf(i) + 1;
+                    desc.push(`Balão (${bIndex}/${b})`);
+                    valMonth += vBalao;
+                }
+
+                if (i === m) {
+                    desc.push(`Entrega das Chaves`);
+                    valMonth += vChaves;
+                }
+
+                if (valMonth > 0) {
+                    scheduleBody.push([ monthStr, desc.join(" + "), app.formatMoney(valMonth) ]);
+                    totalProposta += valMonth;
+                }
+            }
+            
+            scheduleBody.push([{ content: 'TOTAL DA PROPOSTA', colSpan: 2, styles: { halign: 'right', fontStyle: 'bold' } }, { content: app.formatMoney(totalProposta), styles: { fontStyle: 'bold', textColor: brandPrimary } }]);
 
             doc.autoTable({
                 startY: 95,
-                head: [["FLUXO DE PAGAMENTO", "VALOR DA PARCELA"]],
-                body: planBody,
+                head: [["MÊS/VENCIMENTO", "COMPOSIÇÃO DA PARCELA", "VALOR A PAGAR"]],
+                body: scheduleBody,
                 theme: 'grid',
-                headStyles: { fillColor: brandPrimary, textColor: 255, fontStyle: 'bold', fontSize: 11 },
-                styles: { fontSize: 11, cellPadding: 5, textColor: [50, 50, 50] },
-                columnStyles: { 1: { fontStyle: 'bold', halign: 'right', textColor: brandGold } }
+                headStyles: { fillColor: brandPrimary, textColor: 255, fontStyle: 'bold', fontSize: 10 },
+                styles: { fontSize: 9, cellPadding: 4, textColor: [50, 50, 50] },
+                columnStyles: { 
+                    0: { halign: 'center', fontStyle: 'bold' },
+                    2: { fontStyle: 'bold', halign: 'right', textColor: brandPrimary } 
+                }
             });
 
             let finalY = doc.lastAutoTable.finalY + 15;
@@ -759,12 +808,42 @@
             csv += `Vagas;${d.vagas}\n`;
             csv += `Valor Total de Tabela;${app.formatMoney(price)}\n\n`;
             
-            csv += "FLUXO DE PAGAMENTO;VALOR DA PARCELA\n";
-            csv += `Ato/Sinal (${parcelasSinal}x);${app.formatMoney(vSinal)}\n`;
-            if(pMensal > 0) csv += `Mensais (${m}x);${app.formatMoney(vMensal)}\n`;
-            if(pBalao > 0) csv += `Baloes (${b}x);${app.formatMoney(vBalao)}\n`;
-            csv += `Entrega das Chaves;${app.formatMoney(vChaves)}\n\n`;
+            csv += "MES/VENCIMENTO;COMPOSICAO DA PARCELA;VALOR A PAGAR\n";
+
+            let currentDate = new Date();
+            let startMonth = currentDate.getMonth(); 
+            let startYear = currentDate.getFullYear();
             
+            let balloonMonths = [];
+            if (pBalao > 0 && b > 0) {
+                let step = Math.floor(m / b);
+                for(let i=1; i<=b; i++) balloonMonths.push(i * step - 1); 
+            }
+
+            let totalProposta = 0;
+            for (let i = 0; i <= m; i++) {
+                let rowDate = new Date(startYear, startMonth + i, 1);
+                let monthStr = rowDate.toLocaleDateString('pt-BR', { month: '2-digit', year: 'numeric' });
+                
+                let desc = [];
+                let valMonth = 0;
+
+                if (i < parcelasSinal && pSinal > 0) { desc.push(`Sinal (${i+1}/${parcelasSinal})`); valMonth += vSinal; }
+                if (i < m && pMensal > 0) { desc.push(`Mensal (${i+1}/${m})`); valMonth += vMensal; }
+                if (balloonMonths.includes(i) && pBalao > 0) {
+                    let bIndex = balloonMonths.indexOf(i) + 1;
+                    desc.push(`Balao (${bIndex}/${b})`);
+                    valMonth += vBalao;
+                }
+                if (i === m) { desc.push(`Entrega das Chaves`); valMonth += vChaves; }
+
+                if (valMonth > 0) {
+                    csv += `${monthStr};${desc.join(" + ")};${app.formatMoney(valMonth)}\n`;
+                    totalProposta += valMonth;
+                }
+            }
+            
+            csv += `\nTOTAL DA PROPOSTA;;${app.formatMoney(totalProposta)}\n\n`;
             csv += "Observacao: Correcao de INCC ate a entrega das chaves.\n";
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -885,7 +964,6 @@
             const parcelasSinal = elSinalParcelas ? (parseInt(elSinalParcelas.value) || 3) : 3;
             const showM = plan === 'mensal_20' || plan === 'misto_completo';
             const showB = plan === 'balao_20' || plan === 'misto_completo';
-            
             const m = simulator.getMonths();
             const b = simulator.getBalloons() || 1;
             const exp = state.tableExpanded; 
@@ -1007,7 +1085,6 @@
             const pMensal = parseFloat(document.getElementById('inpMensal').value) || 0;
             const pBalao = parseFloat(document.getElementById('inpBalao').value) || 0;
             const pChaves = 100 - pSinal - pMensal - pBalao;
-            
             const m = simulator.getMonths();
             const b = simulator.getBalloons() || 1;
 
