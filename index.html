@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V14</title>
+    <title>Madrid Casa Elevada | Premium V15</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -181,12 +181,13 @@
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 
+        /* CAIXA DE RESULTADOS UNIFICADA */
         .calc-results-box { background: var(--bg-input); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 20px; }
-        .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 13px; color: var(--text-secondary); align-items: center; }
-        .res-row strong { color: var(--text-main); font-weight: 700; font-size: 14px; }
-        .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); font-size: 15px; }
-        .res-total span { color: var(--text-main); font-weight: 800; }
-        .res-total strong { color: var(--brand-gold-dark); font-weight: 800; font-size: 18px; }
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .res-row strong { font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .res-total span { font-size: 14px; font-weight: 700; color: var(--text-main); }
+        .res-total strong { font-size: 14px; font-weight: 700; color: var(--brand-gold-dark); }
 
         .btn-primary { width: 100%; height: 50px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4); filter: brightness(1.05); }
@@ -355,9 +356,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal">...Carregando</option>
-                                <option value="balao_20" id="optBalao">...Carregando</option>
-                                <option value="misto_completo" id="optMisto">...Carregando</option>
+                                <option value="mensal_20" id="optMensal">15x Mensal (20%)</option>
+                                <option value="balao_20" id="optBalao">3x Balão (20%)</option>
+                                <option value="misto_completo" id="optMisto">15x Mensal (10%) + 3x Balão (10%)</option>
                             </select>
                         </div>
                         
@@ -556,7 +557,6 @@
             }
             
             const m = simulator.getMonths();
-            // ATUALIZAÇÃO DINÂMICA
             document.getElementById('optMensal').innerText = `${m}x Mensal (20%)`;
             document.getElementById('optBalao').innerText = `3x Balão (20%)`;
             document.getElementById('optMisto').innerText = `${m}x Mensal (10%) + 3x Balão (10%)`;
@@ -1052,7 +1052,7 @@
 
             let body = [];
             for (let f = 14; f >= 1; f--) {
-                if(f === 13) continue;
+                if (f === 13) continue;
                 let floorLabel = `${f < 10 ? '0'+f : f}° Pavto.`;
                 if (f > 1) {
                     let a03 = `${f}03`; let ar03 = state.units[a03] ? state.units[a03].areaTotal.toFixed(2) + 'm²' : '';
