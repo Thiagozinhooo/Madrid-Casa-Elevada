@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V25</title>
+    <title>Madrid Casa Elevada | Premium V26</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -120,7 +120,7 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO DE TELA CHEIA (Apenas Tabela agora) --- */
+        /* --- CONFIGURAÇÃO DE TELA CHEIA (Apenas Tabela) --- */
         .card.table-fullscreen { 
             position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; 
             z-index: 99999 !important; border-radius: 0 !important; margin: 0 !important; 
@@ -176,7 +176,7 @@
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 
-        /* CAIXA DE RESULTADOS UNIFICADA E BLINDADA */
+        /* --- BLINDAGEM: CAIXA DE RESULTADOS UNIFICADA --- */
         .calc-results-box { background: var(--bg-input); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 20px; }
         .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
         .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); align-items: center; }
@@ -232,7 +232,7 @@
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
+        /* MAPA ESPELHO */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -364,9 +364,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal">15x Mensal (20%)</option>
-                                <option value="balao_20" id="optBalao">3x Balão (20%)</option>
-                                <option value="misto_completo" id="optMisto">15x Mensal (10%) + 3x Balão (10%)</option>
+                                <option value="mensal_20" id="optMensal"></option>
+                                <option value="balao_20" id="optBalao"></option>
+                                <option value="misto_completo" id="optMisto"></option>
                             </select>
                         </div>
                         
@@ -466,9 +466,14 @@
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-list-ul"></i> Tabela Oficial</span>
                     <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap;">
+                        
                         <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only" style="width:auto; height:40px; padding: 0 15px; font-size: 11px; text-transform: uppercase; font-weight: 800;">
-                            <option value="disponivel">Ocultar Vendidos</option><option value="todos">Mostrar Todos</option><option value="vendido">Apenas Vendidos</option>
+                            <option value="todos">Todos os Status</option>
+                            <option value="livre">Disponíveis</option>
+                            <option value="reservado">Reservados</option>
+                            <option value="vendido">Vendidos</option>
                         </select>
+                        
                         <button onclick="app.toggleTable()" class="btn-outline" id="btnToggleTable" style="color: var(--brand-gold-dark); border-color: rgba(198, 162, 101, 0.4); height: 40px;">
                             <i class="fas fa-expand-arrows-alt"></i> Expandir Detalhes
                         </button>
@@ -569,6 +574,11 @@
             const logo = t==='dark' ? 'MADRID LOGO BRANCA-01.png' : 'MADRID LOGO MUSGO-01-01.png';
             document.getElementById('logoHeader').src = logo;
         },
+        toggleFullscreen: () => {
+            const c = document.getElementById('simulatorCard');
+            c.classList.toggle('card-fullscreen');
+            document.getElementById('mainHeader').classList.toggle('hidden-nav');
+        },
         togglePassword: () => {
             const inp = document.getElementById('loginPass');
             const icon = document.getElementById('togglePasswordIcon');
@@ -596,6 +606,7 @@
             const m = simulator.getMonths();
             const b = simulator.getBalloons();
             
+            // Garantindo que os textos sejam injetados ao carregar
             document.getElementById('optMensal').innerText = `${m}x Mensal (20%)`;
             document.getElementById('optBalao').innerText = `${b}x Balão (20%)`;
             document.getElementById('optMisto').innerText = `${m}x Mensal (10%) + ${b}x Balão (10%)`;
@@ -762,9 +773,6 @@
                 if (i >= inicioMensal && i < (inicioMensal + m) && pMensal > 0) vM = vMensal;
                 
                 if (balloonMonths.includes(i) && pBalao > 0) vB = vBalao;
-                
-                // Chaves no mês alvo final exato (Julho 2027), independente de i.
-                // Mas para fluir na tabela, colocamos a chave no indice M (distância até a entrega)
                 if (i === m) vC = vChaves;
 
                 let valMonth = vS + vM + vB + vC;
@@ -867,10 +875,8 @@
                 let vS = 0, vM = 0, vB = 0, vC = 0;
 
                 if (i < parcelasSinal && pSinal > 0) vS = vSinal;
-                
                 let inicioMensal = parcelasSinal;
                 if (i >= inicioMensal && i < (inicioMensal + m) && pMensal > 0) vM = vMensal;
-                
                 if (balloonMonths.includes(i) && pBalao > 0) vB = vBalao;
                 if (i === m) vC = vChaves;
 
@@ -1000,7 +1006,7 @@
         renderTable: () => {
             const tb = document.getElementById('salesTable');
             if(!tb) return;
-            const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'disponivel';
+            const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'todos';
             const plan = document.getElementById('selPlano').value;
             const elSinalParcelas = document.getElementById('selSinalParcelas');
             const parcelasSinal = elSinalParcelas ? (parseInt(elSinalParcelas.value) || 3) : 3;
@@ -1036,7 +1042,9 @@
                 if(st === 'vendido') totalVend += finalPrice;
                 if(st === 'livre') countLivre++;
 
-                if((filter=='disponivel' && st=='vendido') || (filter=='vendido' && st!='vendido')) return;
+                // LÓGICA DO FILTRO AJUSTADA:
+                if (!state.isAdmin && st === 'vendido') return; // Corretor nunca vê vendidos
+                if (state.isAdmin && filter !== 'todos' && st !== filter) return; // Gestor filtra o que quiser
 
                 let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
                 let pSinal = parseFloat(document.getElementById('inpSinal').value)||10;
@@ -1115,7 +1123,7 @@
             doc.setFont("helvetica", "bold"); doc.text("Validade da Tabela: a partir de 01/01/2026", 14, 42);
 
             let tableBody = [];
-            const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'disponivel';
+            const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'todos';
             const plan = document.getElementById('selPlano').value;
             const elSinalParcelas = document.getElementById('selSinalParcelas');
             const parcelasSinal = elSinalParcelas ? (parseInt(elSinalParcelas.value) || 3) : 3;
@@ -1146,8 +1154,9 @@
             Object.keys(state.units).sort((a,b)=>b-a).forEach(u => {
                 let d = state.units[u];
                 let st = state.statusMap[u] || 'livre';
-                if (filter === 'disponivel' && st === 'vendido') return;
-                if (filter === 'vendido' && st !== 'vendido') return;
+                
+                if (!state.isAdmin && st === 'vendido') return;
+                if (state.isAdmin && filter !== 'todos' && st !== filter) return;
 
                 let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
                 let price = d.valor * state.globalMultiplier;
