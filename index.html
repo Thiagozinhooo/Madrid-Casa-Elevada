@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Final</title>
+    <title>Madrid Casa Elevada | Premium V14</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -355,9 +355,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal">15x Mensal (20%)</option>
-                                <option value="balao_20" id="optBalao">3x Balão (20%)</option>
-                                <option value="misto_completo" id="optMisto">15x Mensal (10%) + 3x Balão (10%)</option>
+                                <option value="mensal_20" id="optMensal">...Carregando</option>
+                                <option value="balao_20" id="optBalao">...Carregando</option>
+                                <option value="misto_completo" id="optMisto">...Carregando</option>
                             </select>
                         </div>
                         
@@ -476,10 +476,10 @@
     const EMAILS_GESTOR = ["thiago.tsuk@gmail.com","baumann.inc2@gmail.com","bellavista.financeiro@gmail.com","marcal.bellavista@gmail.com"];
 
     const DEFAULT_UNITS = {
-        1304: { tipo: '1 Suíte', area: 108.22, areaTotal: 114.69, esc: '49', areaEsc: 6.47, vagas: '27A/27B', pav: 'SUB', valor: 1162993.37 },
-        1303: { tipo: '3 Suítes', area: 125.20, areaTotal: 133.12, esc: '3', areaEsc: 7.92, vagas: '49A/49B', pav: 'TER', valor: 1364121.93 },
-        1302: { tipo: '3 Suítes', area: 125.20, areaTotal: 133.27, esc: '2', areaEsc: 8.07, vagas: '48A/48B', pav: 'TER', valor: 1377461.60 },
-        1301: { tipo: '1 Suíte', area: 108.22, areaTotal: 115.32, esc: '45', areaEsc: 7.10, vagas: '26A/26B', pav: 'SUB', valor: 1181147.21 },
+        1404: { tipo: '1 Suíte', area: 108.22, areaTotal: 114.69, esc: '49', areaEsc: 6.47, vagas: '27A/27B', pav: 'SUB', valor: 1162993.37 },
+        1403: { tipo: '3 Suítes', area: 125.20, areaTotal: 133.12, esc: '3', areaEsc: 7.92, vagas: '49A/49B', pav: 'TER', valor: 1364121.93 },
+        1402: { tipo: '3 Suítes', area: 125.20, areaTotal: 133.27, esc: '2', areaEsc: 8.07, vagas: '48A/48B', pav: 'TER', valor: 1377461.60 },
+        1401: { tipo: '1 Suíte', area: 108.22, areaTotal: 115.32, esc: '45', areaEsc: 7.10, vagas: '26A/26B', pav: 'SUB', valor: 1181147.21 },
         1204: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.46, esc: '8', areaEsc: 5.24, vagas: '25A/25B', pav: 'SUB', valor: 1142527.48 },
         1203: { tipo: '3 Suítes', area: 125.20, areaTotal: 131.14, esc: '44', areaEsc: 5.94, vagas: '5A/5B', pav: 'SUB', valor: 1335992.06 },
         1202: { tipo: '3 Suítes', area: 125.20, areaTotal: 131.67, esc: '50', areaEsc: 6.47, vagas: '6A/6B', pav: 'SUB', valor: 1352369.52 },
@@ -550,10 +550,13 @@
         init: () => {
             const s = document.getElementById('selAndar'); 
             s.innerHTML='<option value="">Selecione...</option>';
-            for(let i=1; i<=13; i++) s.innerHTML+=`<option value="${i}">${i}º Andar</option>`;
+            for(let i=1; i<=14; i++) {
+                if(i===13) continue;
+                s.innerHTML+=`<option value="${i}">${i}º Andar</option>`;
+            }
             
             const m = simulator.getMonths();
-            // ATUALIZAÇÃO DINÂMICA DO JAVASCRIPT GARANTIDA
+            // ATUALIZAÇÃO DINÂMICA
             document.getElementById('optMensal').innerText = `${m}x Mensal (20%)`;
             document.getElementById('optBalao').innerText = `3x Balão (20%)`;
             document.getElementById('optMisto').innerText = `${m}x Mensal (10%) + 3x Balão (10%)`;
@@ -793,7 +796,8 @@
             const c = document.getElementById('buildingFacade');
             if(!c) return;
             c.innerHTML = '';
-            for(let f=13; f>=1; f--){
+            for(let f=14; f>=1; f--){
+                if (f === 13) continue;
                 let row = document.createElement('div'); row.className='map-floor';
                 row.innerHTML=`<div class="floor-indicator">${f}º</div>`;
                 if(f > 1) {
@@ -1047,7 +1051,8 @@
             doc.text(new Date().toLocaleDateString('pt-BR'), 196, 24, { align: 'right' });
 
             let body = [];
-            for (let f = 13; f >= 1; f--) {
+            for (let f = 14; f >= 1; f--) {
+                if(f === 13) continue;
                 let floorLabel = `${f < 10 ? '0'+f : f}° Pavto.`;
                 if (f > 1) {
                     let a03 = `${f}03`; let ar03 = state.units[a03] ? state.units[a03].areaTotal.toFixed(2) + 'm²' : '';
@@ -1111,7 +1116,7 @@
             database.ref('madrid_data').on('value', (snap) => {
                 const data = snap.val();
                 if(data) {
-                    if (data.units && data.units['1304'] && data.units['1304'].tipo) { 
+                    if (data.units && data.units['1404'] && data.units['1404'].tipo) { 
                         state.units = data.units; 
                     } else { 
                         database.ref('madrid_data/units').set(DEFAULT_UNITS); 
@@ -1132,7 +1137,7 @@
         forceSync: () => {
             if(confirm("Tem certeza que deseja forçar a sincronização de todos os dados bases (Áreas, Tipologia, Vagas) para o Firebase?\n\nOs status de 'Vendido' não serão apagados.")) {
                 database.ref('madrid_data/units').set(DEFAULT_UNITS).then(() => {
-                    alert("Banco de dados sincronizado com sucesso! Pode verificar o seu Firebase.");
+                    alert("Banco de dados sincronizado com sucesso! O 13º andar foi removido e o 14º adicionado.");
                 }).catch(e => alert("Erro ao sincronizar. Verifique as regras do Firebase."));
             }
         },
