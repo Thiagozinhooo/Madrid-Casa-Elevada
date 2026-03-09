@@ -20,13 +20,11 @@
     <style>
         /* --- DESIGN SYSTEM LUXURY & PREMIUM --- */
         :root {
-            /* Paleta Oficial Madrid */
             --brand-primary: #1F3324; 
             --brand-secondary: #2E4A35; 
             --brand-gold: #C5A065;
             --brand-gold-dark: #A68550;
             
-            /* Tons de Fundo e Cartões */
             --bg-body: #F8F9F8; 
             --bg-card: #FFFFFF; 
             --bg-input: #F4F6F4; 
@@ -34,17 +32,14 @@
             --border-color: #E2E6E0; 
             --glass-bg: rgba(255, 255, 255, 0.95);
             
-            /* Textos */
             --text-main: #1C241E; 
             --text-secondary: #6A736C; 
             --text-muted: #A3ACA5; 
             
-            /* Status */
             --st-livre-bg: #E8F0EA; --st-livre-txt: #27402B; 
             --st-res-bg: #FDF5E6; --st-res-txt: #A1814A; 
             --st-vend-bg: #F5E6E6; --st-vend-txt: #8A3333; 
 
-            /* Profundidade e Sombras Premium */
             --shadow-sm: 0 4px 10px rgba(31, 51, 36, 0.05);
             --shadow-card: 0 10px 30px rgba(31, 51, 36, 0.06), 0 2px 8px rgba(0,0,0,0.02);
             --radius-card: 16px;
@@ -71,17 +66,15 @@
             overflow-x: hidden; transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* --- TRAVA DE SEGURANÇA (GESTOR VS CORRETOR) --- */
         body:not([data-admin="true"]) .admin-only { display: none !important; }
         .hidden { display: none !important; }
 
-        /* CUSTOM SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--brand-gold); }
 
-        /* TELA DE LOGIN UNIFICADA */
+        /* TELA DE LOGIN */
         #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
         .login-side-visual { flex: 1.5; background: #000; display: none; position: relative; overflow: hidden; }
         @media(min-width: 1024px) { .login-side-visual { display: block; } }
@@ -104,7 +97,6 @@
         .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.6s forwards; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
         
-        /* CABEÇALHO FLUTUANTE */
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 30px; margin-bottom: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); transition: opacity 0.3s; }
         .header-logo { height: 35px; width: auto; object-fit: contain; }
         .hidden-nav { display: none !important; }
@@ -114,46 +106,25 @@
         .btn-icon { width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 13px; }
         .btn-icon:hover { background: var(--brand-primary); color: var(--brand-gold); }
 
-        /* GRID PRINCIPAL */
         .grid-main { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 30px; align-items: start; }
-        
         .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 30px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); margin-bottom: 30px; }
-        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--bg-hover); flex-wrap: wrap; gap: 10px; }
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA --- */
         .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
         
         .card.table-fullscreen { 
-            position: fixed !important; 
-            inset: 0 !important; 
-            width: 100vw !important; 
-            height: 100vh !important; 
-            z-index: 99999 !important; 
-            border-radius: 0 !important; 
-            margin: 0 !important; 
-            padding: clamp(15px, 3vw, 30px) !important; 
-            background: var(--bg-body) !important; 
-            display: flex !important; 
-            flex-direction: column !important; 
-            box-sizing: border-box !important;
+            position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; 
+            z-index: 99999 !important; border-radius: 0 !important; margin: 0 !important; 
+            padding: clamp(15px, 3vw, 30px) !important; background: var(--bg-body) !important; 
+            display: flex !important; flex-direction: column !important; box-sizing: border-box !important;
         }
         .card.table-fullscreen .card-header { flex-shrink: 0; margin-bottom: 15px; }
-        .card.table-fullscreen .table-wrapper { 
-            flex: 1 1 auto !important; 
-            min-height: 0 !important; 
-            min-width: 0 !important;  
-            width: 100% !important;
-            overflow: auto !important; 
-            border-radius: var(--radius-md); 
-            border: 1px solid var(--border-color); 
-            box-shadow: var(--shadow-card); 
-        }
+        .card.table-fullscreen .table-wrapper { flex: 1 1 auto !important; min-height: 0 !important; min-width: 0 !important; width: 100% !important; overflow: auto !important; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-card); }
         .card.table-fullscreen #salesTable th { position: sticky; top: 0; z-index: 20; background: var(--brand-primary); color: var(--brand-gold); border-bottom: none; font-size: 10px; }
 
-        /* PAINEL DE GESTÃO (PREMIUM DARK) */
+        /* PAINEL GESTOR */
         .premium-admin-card { background: linear-gradient(135deg, var(--brand-primary) 0%, #0d1710 100%); color: white; border: none; position: relative; overflow: hidden; box-shadow: 0 15px 35px -10px rgba(31, 51, 36, 0.5); }
         .premium-admin-card::before { content: ''; position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(197,160,101,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
         
@@ -183,7 +154,7 @@
         .btn-reset { width: 100%; height: 36px; margin-top: 15px; background: transparent; color: #D98888; border: 1px dashed rgba(217, 136, 136, 0.3); border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.2s; letter-spacing: 1px; }
         .btn-reset:hover { background: rgba(217, 136, 136, 0.1); border-color: #D98888; }
 
-        /* CONTROLS (Simulador) */
+        /* CONTROLS */
         .control-label { display: block; font-size: 10px; font-weight: 800; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
         .control-input { width: 100%; height: 46px; padding: 0 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 600; font-size: 13px; font-family: inherit; transition: 0.3s; appearance: none; }
         .control-input:focus { border-color: var(--brand-gold); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(197, 160, 101, 0.1); }
@@ -208,7 +179,7 @@
         .btn-outline { height: 40px; padding: 0 18px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
 
-        /* --- TABELA OFICIAL (COMPACTA E ALINHADA) --- */
+        /* TABELA */
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); }
         
@@ -216,19 +187,14 @@
         
         #salesTable th { 
             background: var(--bg-input); color: var(--text-secondary); 
-            padding: 14px 12px; 
-            text-align: left; border-bottom: 1px solid var(--border-color); 
+            padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--border-color); 
             font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; 
-            white-space: nowrap; font-size: 10px; 
-            position: sticky; top: 0; z-index: 10; 
+            white-space: nowrap; font-size: 10px; position: sticky; top: 0; z-index: 10; 
         }
-        
         #salesTable td { 
-            padding: 14px 12px; 
-            border-bottom: 1px solid var(--border-color); text-align: left; 
-            color: var(--text-main); vertical-align: middle; 
-            white-space: nowrap; font-weight: 500; font-size: 12px; 
-            transition: background 0.2s;
+            padding: 14px 12px; border-bottom: 1px solid var(--border-color); text-align: left; 
+            color: var(--text-main); vertical-align: middle; white-space: nowrap; 
+            font-weight: 500; font-size: 12px; transition: background 0.2s;
         }
         
         #salesTable tr:last-child td { border-bottom: none; }
@@ -244,7 +210,7 @@
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
+        /* MAPA ESPELHO */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -267,28 +233,9 @@
         .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;}
         .dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
 
-        /* --- RESPONSIVIDADE --- */
-        @media(max-width: 1100px) { 
-            .grid-main { grid-template-columns: 1fr; } 
-            .card-fullscreen { grid-template-columns: 1fr; display: block; padding: 20px; }
-        }
-
-        @media(max-width: 768px) {
-            .app-layout { padding: 15px 10px; }
-            .card { padding: 20px; margin-bottom: 20px; }
-            .header { padding: 15px; margin-bottom: 20px; border-radius: 16px; }
-            .user-badge { max-width: 120px; } 
-            .card-header { flex-direction: column; align-items: flex-start; gap: 15px; }
-            .card-header > div, .card-header > button { width: 100%; justify-content: flex-start; }
-            .sim-grid-3 { grid-template-columns: 1fr; gap: 15px; } 
-        }
-
-        @media print { 
-            .no-print { display: none !important; } 
-            body { background: white; }
-            .app-layout { display: block; opacity: 1; padding: 0; max-width: 100%; } 
-            .card { box-shadow: none; border: none; padding: 0; margin: 0; } 
-        }
+        @media(max-width: 1100px) { .grid-main { grid-template-columns: 1fr; } .card-fullscreen { grid-template-columns: 1fr; display: block; padding: 20px; } }
+        @media(max-width: 768px) { .app-layout { padding: 15px 10px; } .card { padding: 20px; margin-bottom: 20px; } .header { padding: 15px; margin-bottom: 20px; border-radius: 16px; } .user-badge { max-width: 120px; } .card-header { flex-direction: column; align-items: flex-start; gap: 15px; } .card-header > div, .card-header > button { width: 100%; justify-content: flex-start; } .sim-grid-3 { grid-template-columns: 1fr; gap: 15px; } }
+        @media print { .no-print { display: none !important; } body { background: white; } .app-layout { display: block; opacity: 1; padding: 0; max-width: 100%; } .card { box-shadow: none; border: none; padding: 0; margin: 0; } }
     </style>
 </head>
 <body>
@@ -299,16 +246,13 @@
         <img src="IMG 02 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
         <img src="IMG 15 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
     </div>
-    
     <div class="login-panel">
         <button onclick="ui.toggleTheme()" class="toggle-theme-login" title="Modo Escuro"><i class="fas fa-moon" id="iconLogin"></i></button>
         <div class="login-box">
             <img src="MADRID LOGO BRANCA-01.png" alt="Madrid Casa Elevada" class="login-logo">
-            
             <input type="email" id="loginEmail" class="inp-login" placeholder="E-mail de Acesso">
             <input type="password" id="loginPass" class="inp-login" placeholder="Sua Senha">
             <button onclick="auth.login()" class="btn-login">Entrar no Sistema</button>
-            
             <p id="loginError" style="color:#D98888; display:none; margin-top:15px; font-size:11px; background:rgba(217, 136, 136, 0.15); padding:10px; border-radius:8px; border: 1px solid rgba(217, 136, 136, 0.3); font-weight: 600;"></p>
         </div>
     </div>
@@ -319,26 +263,21 @@
         <img id="logoHeader" src="MADRID LOGO MUSGO-01-01.png" alt="Madrid" class="header-logo">
         <div class="user-controls">
             <span id="userBadge" class="user-badge" title="Usuário Logado">...</span>
-            
             <button onclick="ui.toggleTheme()" class="btn-icon" title="Modo Escuro"><i class="fas fa-moon" id="iconApp"></i></button>
             <button onclick="auth.logout()" class="btn-icon" title="Sair"><i class="fas fa-sign-out-alt"></i></button>
         </div>
     </header>
 
     <div class="grid-main">
-        
         <aside>
-            
             <div id="adminPanel" class="card premium-admin-card admin-only no-print">
                 <div class="card-header" style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; margin-bottom: 20px;">
                     <span class="card-title" style="color: white;"><i class="fas fa-crown" style="color: var(--brand-gold);"></i> Gestão Premium</span>
                 </div>
-                
                 <div class="admin-kpi-main">
                     <span>VGV Global da Tabela</span>
                     <div id="kpiTotal">...</div>
                 </div>
-                
                 <div class="admin-kpi-grid">
                     <div class="admin-kpi-box">
                         <span>Vendido</span>
@@ -350,7 +289,6 @@
                         <strong id="kpiLivre" style="color: #8FBC9B; font-size: 22px;">...</strong>
                     </div>
                 </div>
-
                 <div class="admin-controls-panel">
                     <div class="admin-rates">
                         <div>INCC-DI: <strong id="valINCC">...</strong></div>
@@ -363,10 +301,8 @@
                     </div>
                     <div id="logReajuste" style="font-size: 9px; color: rgba(255,255,255,0.4); text-align: center; margin-top: 10px; font-weight: 600; min-height: 14px; letter-spacing: 0.5px;"></div>
                 </div>
-                
                 <button onclick="db.reset()" class="btn-reset">Resetar Reajustes da Tabela</button>
             </div>
-
 
             <div id="simulatorCard" class="card">
                 <div class="card-header">
@@ -461,25 +397,20 @@
                         <i class="fas fa-file-pdf"></i> PDF
                     </button>
                 </div>
-                
                 <div id="adminMapHint" class="admin-only" style="text-align:center; font-size:10px; color:var(--brand-gold-dark); margin-bottom:20px; background: rgba(198, 162, 101, 0.1); padding: 10px; border-radius: 8px; font-weight: 700; letter-spacing: 0.5px; border: 1px solid rgba(198, 162, 101, 0.2);">
                     <i class="fas fa-mouse-pointer" style="margin-right: 5px;"></i> Clique nas unidades para alterar o status
                 </div>
-
                 <div class="visual-map-container">
                     <div class="map-container-inner">
                         <div class="building-roof"></div>
-                        
                         <div class="map-header">
                             <div class="floor-indicator" style="opacity: 0;"></div>
                             <div class="group-label">3 SUÍTES</div>
                             <div class="unit-spacer"></div>
                             <div class="group-label">1 SUÍTE</div>
                         </div>
-                        
                         <div id="buildingFacade" style="display:flex; flex-direction:column; gap:10px;"></div>
                     </div>
-                    
                     <div class="map-legend">
                         <div class="legend-item"><span class="dot" style="background:var(--st-livre-bg);"></span> Livre</div>
                         <div class="legend-item"><span class="dot" style="background:var(--st-res-bg);"></span> Reservado</div>
@@ -505,7 +436,6 @@
                         </button>
                     </div>
                 </div>
-                
                 <div class="table-wrapper">
                     <table id="salesTable"></table>
                 </div>
@@ -515,16 +445,10 @@
 </div>
 
 <script>
-    // --- 1. LISTA OFICIAL DE GESTORES ---
-    const EMAILS_GESTOR = [
-        "thiago.tsuk@gmail.com",
-        "baumann.inc2@gmail.com",
-        "bellavista.financeiro@gmail.com",
-        "marcal.bellavista@gmail.com"
-    ];
+    const EMAILS_GESTOR = ["thiago.tsuk@gmail.com","baumann.inc2@gmail.com","bellavista.financeiro@gmail.com","marcal.bellavista@gmail.com"];
 
-    // --- 2. DADOS ESTÁTICOS (TABELA ZERO) ---
-    const DB_REAL = {
+    // A TABELA AGORA É O DEFAULT_UNITS. O FIREBASE VAI SUGAR ISSO NA PRIMEIRA VEZ E PASSAR A LER DE LÁ.
+    const DEFAULT_UNITS = {
         1304: { area: 108.22, areaTotal: 114.69, esc: '49', areaEsc: 6.47, vagas: '27A/27B', pav: 'SUB', valor: 1162993.37 },
         1303: { area: 125.20, areaTotal: 133.12, esc: '3', areaEsc: 7.92, vagas: '49A/49B', pav: 'TER', valor: 1364121.93 },
         1302: { area: 125.20, areaTotal: 133.27, esc: '2', areaEsc: 8.07, vagas: '48A/48B', pav: 'TER', valor: 1377461.60 },
@@ -577,7 +501,6 @@
         101: { area: 135.30, areaTotal: 140.14, esc: '4', areaEsc: 4.84, vagas: '50A/50B', pav: 'TER', valor: 1145686.47 }
     };
 
-    // --- 3. CONFIGURAÇÃO FIREBASE ---
     const firebaseConfig = {
       apiKey: "AIzaSyAMoE5JkohMp632zSUSublIuSx_JL1rxv4",
       authDomain: "madrid-casa-elevada.firebaseapp.com",
@@ -591,17 +514,12 @@
     const database = firebase.database();
     
     let state = { 
-        isAdmin: false, 
-        user: '', 
-        statusMap: {}, 
-        globalMultiplier: 1,
-        previousMultiplier: 1,
-        lastPriceUpdate: null, 
-        lastSaleUpdate: null,
-        tableExpanded: false // Começa com a tabela resumida
+        isAdmin: false, user: '', statusMap: {}, 
+        globalMultiplier: 1, previousMultiplier: 1, lastPriceUpdate: null, lastSaleUpdate: null,
+        tableExpanded: false,
+        units: DEFAULT_UNITS // Inicializa com default preventivamente
     };
     
-    // --- 4. LÓGICA DO SIMULADOR ---
     const simulator = {
         init: () => {
             const s = document.getElementById('selAndar'); 
@@ -622,8 +540,8 @@
             const s = document.getElementById('selUnidade'); 
             s.innerHTML = '<option value="">Selecione...</option>';
             let first = null;
-            Object.keys(DB_REAL).forEach(u => {
-                let d = DB_REAL[u];
+            Object.keys(state.units).forEach(u => {
+                let d = state.units[u];
                 let t = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
                 let st = state.statusMap[u] || 'livre';
 
@@ -638,9 +556,7 @@
             if(first) { s.value = first; simulator.selectUnit(); }
             else { simulator.calculate(); }
         },
-        selectUnit: () => {
-            simulator.calculate();
-        },
+        selectUnit: () => { simulator.calculate(); },
         updatePlan: () => {
             const p = document.getElementById('selPlano').value;
             const inpM = document.getElementById('inpMensal');
@@ -654,8 +570,8 @@
         },
         calculate: () => {
             const u = document.getElementById('selUnidade').value;
-            if(!u) return;
-            let price = DB_REAL[u].valor * state.globalMultiplier;
+            if(!u || !state.units[u]) return;
+            let price = state.units[u].valor * state.globalMultiplier;
             document.getElementById('displayTotal').innerText = app.formatMoney(price);
             
             let pSinal = parseFloat(document.getElementById('inpSinal').value)||0;
@@ -690,28 +606,17 @@
         }
     };
 
-    // --- 5. AUTENTICAÇÃO ---
     const auth = {
         login: () => {
             const e = document.getElementById('loginEmail').value.trim();
             const p = document.getElementById('loginPass').value;
-            
-            if(!e || !p) {
-                document.getElementById('loginError').innerText = "Por favor, preencha o e-mail e a senha.";
-                document.getElementById('loginError').style.display = 'block';
-                return;
-            }
-            
-            firebase.auth().signInWithEmailAndPassword(e, p).catch(err => {
-                document.getElementById('loginError').innerText = "Acesso Negado: Verifique seu e-mail e senha.";
-                document.getElementById('loginError').style.display = 'block';
-            });
+            if(!e || !p) { document.getElementById('loginError').innerText = "Preencha e-mail e senha."; document.getElementById('loginError').style.display = 'block'; return; }
+            firebase.auth().signInWithEmailAndPassword(e, p).catch(err => { document.getElementById('loginError').innerText = "Acesso Negado: Verifique seu e-mail e senha."; document.getElementById('loginError').style.display = 'block'; });
         },
         logout: () => firebase.auth().signOut().then(() => location.reload()),
         initApp: () => {
             document.getElementById('loginOverlay').style.display='none';
             document.getElementById('app').style.display='block';
-            
             const badge = document.getElementById('userBadge');
             
             if(state.isAdmin) {
@@ -721,19 +626,16 @@
                 document.body.removeAttribute('data-admin');
                 badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px; color: var(--brand-gold);"></i> Corretor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
             }
-            
             db.load();
             app.init();
         }
     };
 
-    // --- 6. APP PRINCIPAL ---
     const app = {
         init: () => {
             ui.toggleFullscreen = () => { document.getElementById('simulatorCard').classList.toggle('card-fullscreen'); };
             app.fetchAPIs();
             simulator.init();
-            app.renderAll(); 
         },
         renderAll: () => {
             app.renderFacade();
@@ -742,16 +644,8 @@
         },
         formatMoney: (v) => v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}),
         fetchAPIs: async () => {
-            try {
-                const r = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.192/dados/ultimos/1?formato=json');
-                const d = await r.json();
-                if(d.length) document.getElementById('valINCC').innerText = d[0].valor.replace('.',',') + '%';
-            } catch(e) {}
-            try {
-                const r = await fetch('https://economia.awesomeapi.com.br/last/USD-BRL');
-                const d = await r.json();
-                document.getElementById('valDolar').innerText = 'R$ ' + parseFloat(d.USDBRL.bid).toFixed(2);
-            } catch(e) {}
+            try { const r = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.192/dados/ultimos/1?formato=json'); const d = await r.json(); if(d.length) document.getElementById('valINCC').innerText = d[0].valor.replace('.',',') + '%'; } catch(e) {}
+            try { const r = await fetch('https://economia.awesomeapi.com.br/last/USD-BRL'); const d = await r.json(); document.getElementById('valDolar').innerText = 'R$ ' + parseFloat(d.USDBRL.bid).toFixed(2); } catch(e) {}
         },
         renderFacade: () => {
             const c = document.getElementById('buildingFacade');
@@ -782,15 +676,8 @@
             if(!state.isAdmin) return;
             const curr = state.statusMap[apt] || 'livre';
             const next = curr === 'livre' ? 'reservado' : (curr === 'reservado' ? 'vendido' : 'livre');
-            
-            database.ref('madrid_data/statusMap/' + apt).set(next).catch(error => {
-                alert("🔴 O Firebase bloqueou a gravação! Vá ao painel do Firebase > Realtime Database > Regras (Rules) e coloque '.write': 'auth != null'.");
-                console.error("Erro Firebase:", error);
-            });
-            if(next === 'vendido') {
-                const now = new Date().toLocaleString('pt-BR');
-                database.ref('madrid_data/lastSaleUpdate').set(now);
-            }
+            database.ref('madrid_data/statusMap/' + apt).set(next).catch(error => alert("🔴 Firebase bloqueou a gravação! Ajuste as regras (Rules) para '.write': 'auth != null'."));
+            if(next === 'vendido') { database.ref('madrid_data/lastSaleUpdate').set(new Date().toLocaleString('pt-BR')); }
         },
         selectApt: (apt) => {
             document.getElementById('selAndar').value = Math.floor(apt/100);
@@ -798,14 +685,11 @@
             document.getElementById('selUnidade').value = apt;
             simulator.selectUnit();
         },
-        
-        /* FUNÇÃO PARA EXPANDIR E COLOCAR A TABELA EM TELA CHEIA (COM TRAVA DE ALINHAMENTO) */
         toggleTable: () => {
             state.tableExpanded = !state.tableExpanded;
             const btn = document.getElementById('btnToggleTable');
             const tableCard = document.getElementById('tableCard');
             const header = document.getElementById('mainHeader');
-            
             if(state.tableExpanded) {
                 btn.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> Fechar Tela Cheia';
                 tableCard.classList.add('table-fullscreen');
@@ -819,23 +703,18 @@
             }
             app.renderTable();
         },
-        
-        /* A TABELA INTELIGENTE (Resumida ou Expandida) */
         renderTable: () => {
             const tb = document.getElementById('salesTable');
             if(!tb) return;
-            
             const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'disponivel';
             const plan = document.getElementById('selPlano').value;
             const elSinalParcelas = document.getElementById('selSinalParcelas');
             const parcelasSinal = elSinalParcelas ? (parseInt(elSinalParcelas.value) || 3) : 3;
-            
             const showM = plan === 'mensal_20' || plan === 'misto_completo';
             const showB = plan === 'balao_20' || plan === 'misto_completo';
             const m = simulator.getMonths();
             const exp = state.tableExpanded; 
 
-            // CABEÇALHOS CONDICIONAIS
             let html = `<thead><tr>
                 <th>Unidade</th>
                 ${exp ? '<th>Tipologia</th>' : ''}
@@ -853,10 +732,9 @@
 
             let totalVGV = 0, totalVend = 0, countLivre = 0;
 
-            Object.keys(DB_REAL).sort((a,b)=>b-a).forEach(u => {
-                let d = DB_REAL[u];
+            Object.keys(state.units).sort((a,b)=>b-a).forEach(u => {
+                let d = state.units[u];
                 let st = state.statusMap[u] || 'livre';
-                
                 let finalPrice = d.valor * state.globalMultiplier; 
                 
                 totalVGV += finalPrice;
@@ -906,42 +784,28 @@
         },
         
         applyGlobalAdjustment: () => {
-            const valInput = document.getElementById('globalAdjust').value;
-            if(!valInput) return alert("Digite um valor de reajuste (ex: 0.72)");
-            
-            const val = parseFloat(valInput);
-            if(isNaN(val) || val === 0) return;
-
-            const factor = 1 + (val / 100);
-            const newMultiplier = state.globalMultiplier * factor;
-
-            database.ref('madrid_data/globalMultiplier').set(newMultiplier).catch(e => alert("Erro Firebase: Regras de segurança bloqueando a ação."));
+            const val = parseFloat(document.getElementById('globalAdjust').value);
+            if(isNaN(val) || val === 0) return alert("Digite um valor de reajuste (ex: 0.72)");
+            const newMultiplier = state.globalMultiplier * (1 + (val / 100));
+            database.ref('madrid_data/globalMultiplier').set(newMultiplier).catch(e => alert("Erro Firebase"));
             database.ref('madrid_data/previousMultiplier').set(state.globalMultiplier);
-            
-            const now = new Date().toLocaleString('pt-BR');
-            database.ref('madrid_data/lastPriceUpdate').set(`${now} (+${val}%)`);
-            
+            database.ref('madrid_data/lastPriceUpdate').set(`${new Date().toLocaleString('pt-BR')} (+${val}%)`);
             document.getElementById('globalAdjust').value = '';
         },
-        
         undoGlobalAdjustment: () => {
             if (state.previousMultiplier && state.previousMultiplier !== state.globalMultiplier) {
-                if(confirm(`Tem certeza que deseja desfazer o último reajuste e voltar a tabela para os preços anteriores?`)) {
+                if(confirm(`Desfazer último reajuste?`)) {
                     database.ref('madrid_data/globalMultiplier').set(state.previousMultiplier);
                     database.ref('madrid_data/previousMultiplier').set(state.previousMultiplier);
-                    const now = new Date().toLocaleString('pt-BR');
-                    database.ref('madrid_data/lastPriceUpdate').set(`${now} (Desfeito)`);
+                    database.ref('madrid_data/lastPriceUpdate').set(`${new Date().toLocaleString('pt-BR')} (Desfeito)`);
                 }
-            } else {
-                alert("Não há nenhuma alteração recente para desfazer no momento.");
-            }
+            } else alert("Não há reajuste para desfazer.");
         },
         
-        /* O PDF CONTINUA COM TODAS AS INFORMAÇÕES */
         downloadTablePDF: () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF('l', 'mm', 'a4');
-            const brandPrimary = [23, 42, 28]; // Tom Verde Musgo no PDF
+            const brandPrimary = [23, 42, 28];
             
             try { doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 45, 18); } catch (e) {
                 doc.setFontSize(22); doc.setTextColor(...brandPrimary); doc.text("MADRID", 14, 20);
@@ -977,15 +841,14 @@
 
             if (showM) colHeaders.push(`MENSAIS (${m}X)\n${pMensal}%`);
             if (showB) colHeaders.push(`BALÕES (3X)\n${pBalao}%`);
-            
             colHeaders.push("VGV ATUAL");
             colHeaders.push(`ENTREGA DE CHAVE\n${pChaves}%`);
 
             let idxVGV = colHeaders.length - 2;
             let idxChaves = colHeaders.length - 1;
 
-            Object.keys(DB_REAL).sort((a,b)=>b-a).forEach(u => {
-                let d = DB_REAL[u];
+            Object.keys(state.units).sort((a,b)=>b-a).forEach(u => {
+                let d = state.units[u];
                 let st = state.statusMap[u] || 'livre';
                 if (filter === 'disponivel' && st === 'vendido') return;
                 if (filter === 'vendido' && st !== 'vendido') return;
@@ -1008,7 +871,6 @@
                 if (showB) row.push(app.formatMoney(vBalao));
                 row.push(app.formatMoney(price));
                 row.push(app.formatMoney(vChaves));
-                
                 tableBody.push(row);
             });
 
@@ -1025,12 +887,6 @@
                 margin: { top: 45, bottom: 10, left: 14, right: 14 }
             });
 
-            const pageCount = doc.internal.getNumberOfPages();
-            for(let i = 1; i <= pageCount; i++) {
-                doc.setPage(i); doc.setFontSize(7); doc.setTextColor(150);
-                doc.text(`Página ${i} de ${pageCount}`, 282, 205, { align: 'right' });
-                doc.text("Gerado pelo Sistema Madrid Casa Elevada", 14, 205);
-            }
             doc.save('Tabela_Madrid_Oficial.pdf');
         },
 
@@ -1039,9 +895,7 @@
             const doc = new jsPDF('p', 'mm', 'a4');
             const brandPrimary = [23, 42, 28];
             
-            try { 
-                doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 45, 16); 
-            } catch(e) {
+            try { doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 45, 16); } catch(e) {
                 doc.setFontSize(22); doc.setTextColor(...brandPrimary); doc.text("MADRID", 14, 20);
             }
             doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
@@ -1053,14 +907,14 @@
             for (let f = 13; f >= 1; f--) {
                 let floorLabel = `${f < 10 ? '0'+f : f}° Pavto.`;
                 if (f > 1) {
-                    let a03 = `${f}03`; let ar03 = DB_REAL[a03] ? DB_REAL[a03].areaTotal.toFixed(2) + 'm²' : '';
-                    let a02 = `${f}02`; let ar02 = DB_REAL[a02] ? DB_REAL[a02].areaTotal.toFixed(2) + 'm²' : '';
-                    let a01 = `${f}01`; let ar01 = DB_REAL[a01] ? DB_REAL[a01].areaTotal.toFixed(2) + 'm²' : '';
-                    let a04 = `${f}04`; let ar04 = DB_REAL[a04] ? DB_REAL[a04].areaTotal.toFixed(2) + 'm²' : '';
+                    let a03 = `${f}03`; let ar03 = state.units[a03] ? state.units[a03].areaTotal.toFixed(2) + 'm²' : '';
+                    let a02 = `${f}02`; let ar02 = state.units[a02] ? state.units[a02].areaTotal.toFixed(2) + 'm²' : '';
+                    let a01 = `${f}01`; let ar01 = state.units[a01] ? state.units[a01].areaTotal.toFixed(2) + 'm²' : '';
+                    let a04 = `${f}04`; let ar04 = state.units[a04] ? state.units[a04].areaTotal.toFixed(2) + 'm²' : '';
                     body.push([ floorLabel, `Apto ${a03}\n${ar03}`, `Apto ${a02}\n${ar02}`, `Apto ${a01}\n${ar01}`, `Apto ${a04}\n${ar04}` ]);
                 } else {
-                    let a102 = `102`; let ar102 = DB_REAL[a102] ? DB_REAL[a102].areaTotal.toFixed(2) + 'm²' : '';
-                    let a101 = `101`; let ar101 = DB_REAL[a101] ? DB_REAL[a101].areaTotal.toFixed(2) + 'm²' : '';
+                    let a102 = `102`; let ar102 = state.units[a102] ? state.units[a102].areaTotal.toFixed(2) + 'm²' : '';
+                    let a101 = `101`; let ar101 = state.units[a101] ? state.units[a101].areaTotal.toFixed(2) + 'm²' : '';
                     body.push([ floorLabel, { content: `Apto ${a102}\n${ar102}`, colSpan: 2 }, { content: `Apto ${a101}\n${ar101}`, colSpan: 2 } ]);
                 }
             }
@@ -1080,38 +934,28 @@
                 },
                 didParseCell: function(data) {
                     if (data.section === 'body') {
-                        if (data.column.index === 0) {
-                            data.cell.styles.fillColor = [245, 245, 245]; data.cell.styles.textColor = [80, 80, 80]; return;
-                        }
+                        if (data.column.index === 0) { data.cell.styles.fillColor = [245, 245, 245]; data.cell.styles.textColor = [80, 80, 80]; return; }
                         let raw = data.cell.raw.content ? data.cell.raw.content : data.cell.raw;
                         let aptMatch = raw.match(/Apto (\d+)/);
                         if(aptMatch) {
                             let apt = aptMatch[1];
                             let st = state.statusMap[apt] || 'livre';
-                            if (st === 'livre') {
-                                data.cell.styles.fillColor = [232, 240, 234]; data.cell.styles.textColor = [39, 64, 43];
-                            } else if (st === 'reservado') {
-                                data.cell.styles.fillColor = [253, 245, 230]; data.cell.styles.textColor = [161, 129, 74];
-                            } else if (st === 'vendido') {
-                                data.cell.styles.fillColor = [245, 230, 230]; data.cell.styles.textColor = [138, 51, 51];
-                            }
+                            if (st === 'livre') { data.cell.styles.fillColor = [232, 240, 234]; data.cell.styles.textColor = [39, 64, 43]; } 
+                            else if (st === 'reservado') { data.cell.styles.fillColor = [253, 245, 230]; data.cell.styles.textColor = [161, 129, 74]; } 
+                            else if (st === 'vendido') { data.cell.styles.fillColor = [245, 230, 230]; data.cell.styles.textColor = [138, 51, 51]; }
                         }
                     }
                 }
             });
 
             let finalY = doc.lastAutoTable.finalY + 10;
-            
             doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(50);
             doc.text("LEGENDA:", 14, finalY + 4);
             doc.setFont("helvetica", "bold"); doc.setFontSize(9);
-            
             doc.setFillColor(232, 240, 234); doc.rect(36, finalY, 5, 5, 'F');
             doc.setTextColor(39, 64, 43); doc.text("DISPONÍVEL", 43, finalY + 4);
-            
             doc.setFillColor(253, 245, 230); doc.rect(70, finalY, 5, 5, 'F');
             doc.setTextColor(161, 129, 74); doc.text("RESERVADO", 77, finalY + 4);
-
             doc.setFillColor(245, 230, 230); doc.rect(106, finalY, 5, 5, 'F');
             doc.setTextColor(138, 51, 51); doc.text("VENDIDO", 113, finalY + 4);
 
@@ -1124,44 +968,27 @@
             database.ref('madrid_data').on('value', (snap) => {
                 const data = snap.val();
                 if(data) {
+                    if (data.units) { state.units = data.units; } 
+                    else { database.ref('madrid_data/units').set(DEFAULT_UNITS); }
                     state.statusMap = data.statusMap || {};
                     state.globalMultiplier = data.globalMultiplier || 1;
                     state.previousMultiplier = data.previousMultiplier || 1;
                     state.lastPriceUpdate = data.lastPriceUpdate || null;
                     state.lastSaleUpdate = data.lastSaleUpdate || null;
+                } else {
+                    database.ref('madrid_data/units').set(DEFAULT_UNITS);
                 }
                 app.renderAll();
             });
         },
-        updateStatus: (apt, next) => {
-            database.ref('madrid_data/statusMap/' + apt).set(next).catch(error => {
-                alert("🔴 O Firebase bloqueou a gravação! Vá ao painel do Firebase > Realtime Database > Regras (Rules) e coloque '.write': 'auth != null'.");
-                console.error("Erro Firebase:", error);
-            });
-            if(next === 'vendido') {
-                const now = new Date().toLocaleString('pt-BR');
-                database.ref('madrid_data/lastSaleUpdate').set(now);
-            }
-        },
-        updateAdjust: (newMult, prevMult, appliedVal) => {
-            const now = new Date().toLocaleString('pt-BR');
-            let logMsg = appliedVal === "Desfeito" ? `${now} (Desfeito)` : `${now} (+${appliedVal}%)`;
-            
-            database.ref('madrid_data/globalMultiplier').set(newMult).catch(e => alert("Erro ao salvar: Verifique as regras do Firebase."));
-            database.ref('madrid_data/previousMultiplier').set(prevMult);
-            database.ref('madrid_data/lastPriceUpdate').set(logMsg);
-        },
         reset: () => {
-            const confirmWord = prompt('⚠️ ATENÇÃO: Esta ação vai ZERAR todos os reajustes da tabela e voltar aos preços originais!\n\nOs status das unidades (vendidas/reservadas) NÃO serão apagados.\n\nSe tem certeza, digite a palavra "ZERAR" abaixo (em maiúsculo):');
-            
+            const confirmWord = prompt('⚠️ ATENÇÃO: ZERAR REAJUSTES E VOLTAR AOS PREÇOS ORIGINAIS!\n\nSe tem certeza, digite a palavra "ZERAR" abaixo (em maiúsculo):');
             if(confirmWord === 'ZERAR') {
                 database.ref('madrid_data/globalMultiplier').set(1);
                 database.ref('madrid_data/previousMultiplier').set(1);
                 database.ref('madrid_data/lastPriceUpdate').set(null);
-                alert("Tabela de preços resetada com sucesso! As unidades vendidas continuam a salvo.");
-            } else if (confirmWord !== null) {
-                alert("Ação cancelada. A palavra não confere.");
-            }
+                alert("Tabela de preços resetada com sucesso! As unidades vendidas e as áreas no banco de dados continuam a salvo.");
+            } else if (confirmWord !== null) { alert("Ação cancelada."); }
         }
     };
 
@@ -1174,11 +1001,6 @@
         updateAssets: (t) => {
             const logo = t==='dark' ? 'MADRID LOGO BRANCA-01.png' : 'MADRID LOGO MUSGO-01-01.png';
             document.getElementById('logoHeader').src = logo;
-        },
-        toggleFullscreen: () => {
-            const c = document.getElementById('simulatorCard');
-            c.classList.toggle('card-fullscreen');
-            document.getElementById('mainHeader').classList.toggle('hidden-nav');
         }
     };
 
