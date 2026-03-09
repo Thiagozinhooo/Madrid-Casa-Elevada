@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V18</title>
+    <title>Madrid Casa Elevada | Premium V19</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,11 +20,13 @@
     <style>
         /* --- DESIGN SYSTEM LUXURY & PREMIUM --- */
         :root {
+            /* Paleta Oficial Madrid */
             --brand-primary: #1F3324; 
             --brand-secondary: #2E4A35; 
             --brand-gold: #C5A065;
             --brand-gold-dark: #A68550;
             
+            /* Tons de Fundo e Cartões */
             --bg-body: #F8F9F8; 
             --bg-card: #FFFFFF; 
             --bg-input: #F4F6F4; 
@@ -32,14 +34,17 @@
             --border-color: #E2E6E0; 
             --glass-bg: rgba(255, 255, 255, 0.95);
             
+            /* Textos */
             --text-main: #1C241E; 
             --text-secondary: #6A736C; 
             --text-muted: #A3ACA5; 
             
+            /* Status */
             --st-livre-bg: #E8F0EA; --st-livre-txt: #27402B; 
             --st-res-bg: #FDF5E6; --st-res-txt: #A1814A; 
             --st-vend-bg: #F5E6E6; --st-vend-txt: #8A3333; 
 
+            /* Profundidade e Sombras Premium */
             --shadow-sm: 0 4px 10px rgba(31, 51, 36, 0.05);
             --shadow-card: 0 10px 30px rgba(31, 51, 36, 0.06), 0 2px 8px rgba(0,0,0,0.02);
             --radius-card: 16px;
@@ -66,9 +71,11 @@
             overflow-x: hidden; transition: background-color 0.4s ease, color 0.4s ease;
         }
 
+        /* --- TRAVA DE SEGURANÇA (GESTOR VS CORRETOR) --- */
         body:not([data-admin="true"]) .admin-only { display: none !important; }
         .hidden { display: none !important; }
 
+        /* CUSTOM SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
@@ -97,6 +104,7 @@
         .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.6s forwards; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
         
+        /* CABEÇALHO FLUTUANTE */
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 30px; margin-bottom: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); transition: opacity 0.3s; }
         .header-logo { height: 35px; width: auto; object-fit: contain; }
         .hidden-nav { display: none !important; }
@@ -106,13 +114,16 @@
         .btn-icon { width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 13px; }
         .btn-icon:hover { background: var(--brand-primary); color: var(--brand-gold); }
 
+        /* GRID PRINCIPAL */
         .grid-main { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 30px; align-items: start; }
+        
         .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 30px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); margin-bottom: 30px; }
+        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--bg-hover); flex-wrap: wrap; gap: 10px; }
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* TELA CHEIA */
+        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA --- */
         .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
         
         .card.table-fullscreen { 
@@ -125,7 +136,7 @@
         .card.table-fullscreen .table-wrapper { flex: 1 1 auto !important; min-height: 0 !important; min-width: 0 !important; width: 100% !important; overflow: auto !important; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-card); }
         .card.table-fullscreen #salesTable th { position: sticky; top: 0; z-index: 20; background: var(--brand-primary); color: var(--brand-gold); border-bottom: none; font-size: 10px; }
 
-        /* PAINEL GESTOR */
+        /* PAINEL DE GESTÃO (PREMIUM DARK) */
         .premium-admin-card { background: linear-gradient(135deg, var(--brand-primary) 0%, #0d1710 100%); color: white; border: none; position: relative; overflow: hidden; box-shadow: 0 15px 35px -10px rgba(31, 51, 36, 0.5); }
         .premium-admin-card::before { content: ''; position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(197,160,101,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
         
@@ -196,7 +207,7 @@
         .btn-outline { height: 40px; padding: 0 18px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
 
-        /* TABELA OFICIAL */
+        /* --- TABELA OFICIAL --- */
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); }
         
@@ -581,14 +592,21 @@
 
                 if(andar && Math.floor(u/100) != parseInt(andar)) return;
                 if(type && t !== type) return;
-                if(!state.isAdmin && st === 'vendido') return;
+                
+                // NOVO FILTRO: APENAS UNIDADES LIVRES (ESCONDE VENDIDOS E RESERVADOS)
+                if(st !== 'livre') return;
 
                 if(!first) first = u;
                 let price = d.valor * state.globalMultiplier;
                 s.innerHTML += `<option value="${u}">Apto ${u} (${t}) - ${app.formatMoney(price)}</option>`;
             });
-            if(first) { s.value = first; simulator.selectUnit(); }
-            else { simulator.calculate(); }
+            if(first) { 
+                s.value = first; 
+                simulator.selectUnit(); 
+            } else { 
+                document.getElementById('displayTotal').innerText = 'R$ 0,00';
+                document.getElementById('calcResults').classList.add('hidden');
+            }
         },
         selectUnit: () => { simulator.calculate(); },
         updatePlan: () => {
@@ -681,7 +699,7 @@
             doc.text(`Vagas de Garagem: ${d.vagas}`, 14, 72);
 
             doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
-            doc.text(`Valor Total de Tabela: ${app.formatMoney(price)}`, 14, 85);
+            doc.text(`Valor Total: ${app.formatMoney(price)}`, 14, 85);
 
             let planBody = [];
             planBody.push([`Ato/Sinal (${parcelasSinal}x de ${pSinal}%)`, app.formatMoney(vSinal)]);
@@ -732,7 +750,7 @@
             csv += `Tipologia;${tipo}\n`;
             csv += `Area Privativa;${d.area} m2\n`;
             csv += `Vagas;${d.vagas}\n`;
-            csv += `Valor Total de Tabela;${app.formatMoney(price)}\n\n`;
+            csv += `Valor Total;${app.formatMoney(price)}\n\n`;
             
             csv += "FLUXO DE PAGAMENTO;VALOR DA PARCELA\n";
             csv += `Ato/Sinal (${parcelasSinal}x);${app.formatMoney(vSinal)}\n`;
