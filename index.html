@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V22</title>
+    <title>Madrid Casa Elevada | Premium V23</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -116,7 +116,7 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA --- */
+        /* --- CONFIGURAÇÃO DE TELA CHEIA --- */
         .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
         
         .card.table-fullscreen { 
@@ -230,7 +230,7 @@
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO */
+        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -357,9 +357,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal">15x Mensal (20%)</option>
-                                <option value="balao_20" id="optBalao">3x Balão (20%)</option>
-                                <option value="misto_completo" id="optMisto">15x Mensal (10%) + 3x Balão (10%)</option>
+                                <option value="mensal_20" id="optMensal">...Carregando</option>
+                                <option value="balao_20" id="optBalao">...Carregando</option>
+                                <option value="misto_completo" id="optMisto">...Carregando</option>
                             </select>
                         </div>
                         
@@ -561,7 +561,6 @@
                 s.innerHTML+=`<option value="${i}">${i}º Andar</option>`;
             }
             
-            // INJETA O TEXTO CORRETO E ATUALIZADO DIRETO NO HTML ASSIM QUE O SITE ABRE
             const m = simulator.getMonths();
             const b = simulator.getBalloons();
             
@@ -571,7 +570,8 @@
         },
         getMonths: () => {
             const now = new Date();
-            const target = new Date('2027-06-01');
+            // Data alvo: Julho de 2027 (Mês index 6 no JS)
+            const target = new Date(2027, 6, 1); 
             return Math.max(1, (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth()));
         },
         getBalloons: () => {
@@ -591,9 +591,7 @@
 
                 if(andar && Math.floor(u/100) != parseInt(andar)) return;
                 if(type && t !== type) return;
-                
-                // NOVO FILTRO: APENAS UNIDADES LIVRES (ESCONDE VENDIDOS E RESERVADOS)
-                if(st !== 'livre') return;
+                if(st !== 'livre') return; 
 
                 if(!first) first = u;
                 let price = d.valor * state.globalMultiplier;
@@ -653,7 +651,6 @@
             document.getElementById('calcResults').classList.remove('hidden');
         },
         
-        // --- FUNÇÃO PARA GERAR O PDF COM A TABELA MÊS A MÊS ---
         saveProposalPDF: () => {
             const u = document.getElementById('selUnidade').value;
             if(!u || !state.units[u]) return;
@@ -704,9 +701,9 @@
             doc.text(`Vagas de Garagem: ${d.vagas}`, 14, 72);
 
             doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
-            doc.text(`Valor Total: ${app.formatMoney(price)}`, 14, 85);
+            doc.text(`Valor Total de Tabela: ${app.formatMoney(price)}`, 14, 85);
 
-            // LOGICA DA TABELA MÊS A MÊS
+            // LOGICA DA TABELA MÊS A MÊS EM COLUNAS
             let scheduleBody = [];
             let currentDate = new Date();
             let startMonth = currentDate.getMonth(); 
@@ -716,58 +713,67 @@
             if (pBalao > 0 && b > 0) {
                 let step = Math.floor(m / b);
                 for(let i=1; i<=b; i++) {
-                    balloonMonths.push(i * step - 1); 
+                    balloonMonths.push(i * step); 
                 }
             }
 
-            let totalProposta = 0;
+            let totalSinalCol = 0, totalMensalCol = 0, totalBalaoCol = 0, totalChavesCol = 0, totalProposta = 0;
+            let totalIter = Math.max(m, parcelasSinal);
 
-            for (let i = 0; i <= m; i++) {
+            for (let i = 0; i <= totalIter; i++) {
                 let rowDate = new Date(startYear, startMonth + i, 1);
                 let monthStr = rowDate.toLocaleDateString('pt-BR', { month: '2-digit', year: 'numeric' });
                 
-                let desc = [];
-                let valMonth = 0;
+                let vS = 0, vM = 0, vB = 0, vC = 0;
 
-                if (i < parcelasSinal && pSinal > 0) {
-                    desc.push(`Sinal (${i+1}/${parcelasSinal})`);
-                    valMonth += vSinal;
-                }
-                
-                if (i < m && pMensal > 0) {
-                    desc.push(`Mensal (${i+1}/${m})`);
-                    valMonth += vMensal;
-                }
+                // Sinal a partir de hoje
+                if (i < parcelasSinal && pSinal > 0) vS = vSinal;
+                // Mensais a partir do mês que vem (i=1) até a entrega (i=m)
+                if (i > 0 && i <= m && pMensal > 0) vM = vMensal;
+                // Balões distribuídos
+                if (balloonMonths.includes(i) && pBalao > 0) vB = vBalao;
+                // Chave na data final da obra
+                if (i === m) vC = vChaves;
 
-                if (balloonMonths.includes(i) && pBalao > 0) {
-                    let bIndex = balloonMonths.indexOf(i) + 1;
-                    desc.push(`Balão (${bIndex}/${b})`);
-                    valMonth += vBalao;
-                }
-
-                if (i === m) {
-                    desc.push(`Entrega das Chaves`);
-                    valMonth += vChaves;
-                }
+                let valMonth = vS + vM + vB + vC;
 
                 if (valMonth > 0) {
-                    scheduleBody.push([ monthStr, desc.join(" + "), app.formatMoney(valMonth) ]);
+                    scheduleBody.push([ 
+                        monthStr, 
+                        vS > 0 ? app.formatMoney(vS) : "-", 
+                        vM > 0 ? app.formatMoney(vM) : "-", 
+                        vB > 0 ? app.formatMoney(vB) : "-", 
+                        vC > 0 ? app.formatMoney(vC) : "-", 
+                        app.formatMoney(valMonth) 
+                    ]);
+                    totalSinalCol += vS;
+                    totalMensalCol += vM;
+                    totalBalaoCol += vB;
+                    totalChavesCol += vC;
                     totalProposta += valMonth;
                 }
             }
             
-            scheduleBody.push([{ content: 'TOTAL DA PROPOSTA', colSpan: 2, styles: { halign: 'right', fontStyle: 'bold' } }, { content: app.formatMoney(totalProposta), styles: { fontStyle: 'bold', textColor: brandPrimary } }]);
+            // LINHA FINAL DE TOTAIS
+            scheduleBody.push([
+                { content: 'TOTAL GERAL', styles: { halign: 'right', fontStyle: 'bold' } }, 
+                { content: app.formatMoney(totalSinalCol), styles: { fontStyle: 'bold' } },
+                { content: app.formatMoney(totalMensalCol), styles: { fontStyle: 'bold' } },
+                { content: app.formatMoney(totalBalaoCol), styles: { fontStyle: 'bold' } },
+                { content: app.formatMoney(totalChavesCol), styles: { fontStyle: 'bold', textColor: brandGold } },
+                { content: app.formatMoney(totalProposta), styles: { fontStyle: 'bold', textColor: brandPrimary } }
+            ]);
 
             doc.autoTable({
                 startY: 95,
-                head: [["MÊS/VENCIMENTO", "COMPOSIÇÃO DA PARCELA", "VALOR A PAGAR"]],
+                head: [["MÊS/ANO", "SINAL", "MENSAIS", "BALÕES", "CHAVES", "TOTAL MÊS"]],
                 body: scheduleBody,
                 theme: 'grid',
-                headStyles: { fillColor: brandPrimary, textColor: 255, fontStyle: 'bold', fontSize: 10 },
-                styles: { fontSize: 9, cellPadding: 4, textColor: [50, 50, 50] },
+                headStyles: { fillColor: brandPrimary, textColor: 255, fontStyle: 'bold', fontSize: 9, halign: 'center' },
+                styles: { fontSize: 8, cellPadding: 4, textColor: [50, 50, 50], halign: 'center' },
                 columnStyles: { 
-                    0: { halign: 'center', fontStyle: 'bold' },
-                    2: { fontStyle: 'bold', halign: 'right', textColor: brandPrimary } 
+                    0: { fontStyle: 'bold' },
+                    5: { fontStyle: 'bold', textColor: brandPrimary } 
                 }
             });
 
@@ -808,7 +814,7 @@
             csv += `Vagas;${d.vagas}\n`;
             csv += `Valor Total de Tabela;${app.formatMoney(price)}\n\n`;
             
-            csv += "MES/VENCIMENTO;COMPOSICAO DA PARCELA;VALOR A PAGAR\n";
+            csv += "MES/ANO;SINAL;MENSAIS;BALOES;CHAVES;TOTAL DO MES\n";
 
             let currentDate = new Date();
             let startMonth = currentDate.getMonth(); 
@@ -817,33 +823,38 @@
             let balloonMonths = [];
             if (pBalao > 0 && b > 0) {
                 let step = Math.floor(m / b);
-                for(let i=1; i<=b; i++) balloonMonths.push(i * step - 1); 
+                for(let i=1; i<=b; i++) {
+                    balloonMonths.push(i * step); 
+                }
             }
 
-            let totalProposta = 0;
-            for (let i = 0; i <= m; i++) {
+            let totalSinalCol = 0, totalMensalCol = 0, totalBalaoCol = 0, totalChavesCol = 0, totalProposta = 0;
+            let totalIter = Math.max(m, parcelasSinal);
+
+            for (let i = 0; i <= totalIter; i++) {
                 let rowDate = new Date(startYear, startMonth + i, 1);
                 let monthStr = rowDate.toLocaleDateString('pt-BR', { month: '2-digit', year: 'numeric' });
                 
-                let desc = [];
-                let valMonth = 0;
+                let vS = 0, vM = 0, vB = 0, vC = 0;
 
-                if (i < parcelasSinal && pSinal > 0) { desc.push(`Sinal (${i+1}/${parcelasSinal})`); valMonth += vSinal; }
-                if (i < m && pMensal > 0) { desc.push(`Mensal (${i+1}/${m})`); valMonth += vMensal; }
-                if (balloonMonths.includes(i) && pBalao > 0) {
-                    let bIndex = balloonMonths.indexOf(i) + 1;
-                    desc.push(`Balao (${bIndex}/${b})`);
-                    valMonth += vBalao;
-                }
-                if (i === m) { desc.push(`Entrega das Chaves`); valMonth += vChaves; }
+                if (i < parcelasSinal && pSinal > 0) vS = vSinal;
+                if (i > 0 && i <= m && pMensal > 0) vM = vMensal;
+                if (balloonMonths.includes(i) && pBalao > 0) vB = vBalao;
+                if (i === m) vC = vChaves;
+
+                let valMonth = vS + vM + vB + vC;
 
                 if (valMonth > 0) {
-                    csv += `${monthStr};${desc.join(" + ")};${app.formatMoney(valMonth)}\n`;
+                    csv += `${monthStr};${vS > 0 ? app.formatMoney(vS) : "-"};${vM > 0 ? app.formatMoney(vM) : "-"};${vB > 0 ? app.formatMoney(vB) : "-"};${vC > 0 ? app.formatMoney(vC) : "-"};${app.formatMoney(valMonth)}\n`;
+                    totalSinalCol += vS;
+                    totalMensalCol += vM;
+                    totalBalaoCol += vB;
+                    totalChavesCol += vC;
                     totalProposta += valMonth;
                 }
             }
             
-            csv += `\nTOTAL DA PROPOSTA;;${app.formatMoney(totalProposta)}\n\n`;
+            csv += `\nTOTAL GERAL;${app.formatMoney(totalSinalCol)};${app.formatMoney(totalMensalCol)};${app.formatMoney(totalBalaoCol)};${app.formatMoney(totalChavesCol)};${app.formatMoney(totalProposta)}\n\n`;
             csv += "Observacao: Correcao de INCC ate a entrega das chaves.\n";
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -964,6 +975,7 @@
             const parcelasSinal = elSinalParcelas ? (parseInt(elSinalParcelas.value) || 3) : 3;
             const showM = plan === 'mensal_20' || plan === 'misto_completo';
             const showB = plan === 'balao_20' || plan === 'misto_completo';
+            
             const m = simulator.getMonths();
             const b = simulator.getBalloons() || 1;
             const exp = state.tableExpanded; 
@@ -1085,6 +1097,7 @@
             const pMensal = parseFloat(document.getElementById('inpMensal').value) || 0;
             const pBalao = parseFloat(document.getElementById('inpBalao').value) || 0;
             const pChaves = 100 - pSinal - pMensal - pBalao;
+            
             const m = simulator.getMonths();
             const b = simulator.getBalloons() || 1;
 
