@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium Final</title>
+    <title>Madrid Casa Elevada | Premium V16</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -123,7 +123,7 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO DE TELA CHEIA --- */
+        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA --- */
         .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
         
         .card.table-fullscreen { 
@@ -181,15 +181,15 @@
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 
-        /* --- CORREÇÃO: CAIXA DE RESULTADOS UNIFICADA --- */
+        /* CAIXA DE RESULTADOS UNIFICADA */
         .calc-results-box { background: var(--bg-input); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 20px; }
         .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
-        /* Forçando mesmo tamanho e peso para TODOS os textos e valores normais */
+        /* TUDO com 15px e bold, todos os textos e valores normais */
         .res-row span, .res-row strong { font-size: 15px; font-weight: 700; color: var(--text-main); }
         .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); align-items: center; }
-        /* Forçando o mesmo tamanho e peso para a linha final (Chaves) */
+        /* TUDO com 15px e bold, e TODOS com a mesma cor */
         .res-total span { font-size: 15px; font-weight: 700; color: var(--text-main); }
-        .res-total strong { font-size: 15px; font-weight: 700; color: var(--brand-gold-dark); }
+        .res-total strong { font-size: 15px; font-weight: 700; color: var(--text-main); }
 
         .btn-primary { width: 100%; height: 50px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4); filter: brightness(1.05); }
@@ -914,7 +914,7 @@
                     ${showM ? `<td>${app.formatMoney(vMensal)}</td>` : ''}
                     ${showB ? `<td>${app.formatMoney(vBalao)}</td>` : ''}
                     <td style="font-weight:800">${app.formatMoney(finalPrice)}</td>
-                    <td style="font-weight:700; color:var(--brand-gold-dark);">${app.formatMoney(vChaves)}</td>
+                    <td style="font-weight:700; color:var(--text-main);">${app.formatMoney(vChaves)}</td>
                     ${exp ? `<td class="admin-only"><span class="badge">${stLabel}</span></td>` : ''}
                     ${exp ? btn : ''}
                 </tr>`;
