@@ -123,7 +123,7 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA --- */
+        /* --- CONFIGURAÇÃO DE TELA CHEIA --- */
         .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
         
         .card.table-fullscreen { 
@@ -188,8 +188,11 @@
         .res-total span { color: var(--text-main); font-weight: 800; }
         .res-total strong { color: var(--brand-gold-dark); font-weight: 800; font-size: 18px; }
 
-        .btn-primary { width: 100%; height: 50px; margin-top: 20px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); }
+        .btn-primary { width: 100%; height: 50px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4); filter: brightness(1.05); }
+        
+        .btn-secondary { width: 100%; height: 50px; background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(31, 51, 36, 0.3); }
+        .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(31, 51, 36, 0.4); filter: brightness(1.1); }
         
         .btn-outline { height: 40px; padding: 0 18px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
@@ -225,7 +228,7 @@
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
+        /* MAPA ESPELHO */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -402,9 +405,15 @@
                             </div>
                         </div>
 
-                        <button onclick="simulator.sendWhatsApp()" class="btn-primary">
-                            <i class="fab fa-whatsapp" style="font-size: 18px;"></i> Enviar Proposta
-                        </button>
+                        <div style="display: flex; gap: 10px; margin-top: 25px;">
+                            <button onclick="simulator.saveProposalPDF()" class="btn-primary" style="flex: 1; margin-top: 0;">
+                                <i class="fas fa-file-pdf" style="font-size: 16px;"></i> Salvar PDF
+                            </button>
+                            <button onclick="simulator.saveProposalExcel()" class="btn-secondary" style="flex: 1; margin-top: 0;">
+                                <i class="fas fa-file-excel" style="font-size: 16px;"></i> Salvar Excel
+                            </button>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -466,7 +475,6 @@
 <script>
     const EMAILS_GESTOR = ["thiago.tsuk@gmail.com","baumann.inc2@gmail.com","bellavista.financeiro@gmail.com","marcal.bellavista@gmail.com"];
 
-    // TABELA BASE (AGORA COM A TIPOLOGIA EXPLICITAMENTE INCLUÍDA)
     const DEFAULT_UNITS = {
         1304: { tipo: '1 Suíte', area: 108.22, areaTotal: 114.69, esc: '49', areaEsc: 6.47, vagas: '27A/27B', pav: 'SUB', valor: 1162993.37 },
         1303: { tipo: '3 Suítes', area: 125.20, areaTotal: 133.12, esc: '3', areaEsc: 7.92, vagas: '49A/49B', pav: 'TER', valor: 1364121.93 },
@@ -616,11 +624,131 @@
             document.getElementById('resChaves').innerText = app.formatMoney(price * pChaves/100);
             document.getElementById('calcResults').classList.remove('hidden');
         },
-        sendWhatsApp: () => {
+        
+        // --- NOVAS FUNÇÕES PARA SALVAR A PROPOSTA ---
+        saveProposalPDF: () => {
             const u = document.getElementById('selUnidade').value;
-            if(!u) return;
-            const val = document.getElementById('displayTotal').innerText;
-            window.open(`https://wa.me/?text=Olá! Gostaria de proposta para a unidade ${u} do Madrid. Valor: ${val}`, '_blank');
+            if(!u || !state.units[u]) return;
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const brandPrimary = [31, 51, 36]; 
+            const brandGold = [197, 160, 101]; 
+
+            let d = state.units[u];
+            let price = d.valor * state.globalMultiplier;
+            let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
+            
+            let pSinal = parseFloat(document.getElementById('inpSinal').value)||0;
+            let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
+            let pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
+            let parcelasSinal = parseInt(document.getElementById('selSinalParcelas').value) || 3;
+            let m = simulator.getMonths();
+            
+            let vSinal = (price * pSinal/100)/parcelasSinal;
+            let vMensal = m > 0 ? (price * pMensal/100)/m : 0;
+            let vBalao = (price * pBalao/100)/3;
+            let vChaves = price * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
+
+            // CABEÇALHO DO PDF DA PROPOSTA
+            try { doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 15, 50, 20); } 
+            catch (e) { doc.setFontSize(24); doc.setTextColor(...brandPrimary); doc.text("MADRID", 14, 25); }
+            
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.setTextColor(...brandGold);
+            doc.text("PROPOSTA COMERCIAL", 196, 25, { align: 'right' });
+            
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, 196, 31, { align: 'right' });
+
+            doc.setDrawColor(200, 200, 200);
+            doc.line(14, 40, 196, 40);
+
+            // INFORMAÇÕES DO APARTAMENTO
+            doc.setFont("helvetica", "bold"); doc.setFontSize(14); doc.setTextColor(...brandPrimary);
+            doc.text(`APARTAMENTO ${u}`, 14, 52);
+
+            doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(50, 50, 50);
+            doc.text(`Tipologia: ${tipo}`, 14, 60);
+            doc.text(`Área Privativa: ${d.area} m²`, 14, 66);
+            doc.text(`Vagas de Garagem: ${d.vagas}`, 14, 72);
+
+            // VALOR TOTAL
+            doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
+            doc.text(`Valor Total de Tabela: ${app.formatMoney(price)}`, 14, 85);
+
+            // TABELA DO FLUXO DE PAGAMENTO
+            let planBody = [];
+            planBody.push([`Ato/Sinal (${parcelasSinal}x de ${pSinal}%)`, app.formatMoney(vSinal)]);
+            if (pMensal > 0) planBody.push([`Mensais (${m}x de ${pMensal}%)`, app.formatMoney(vMensal)]);
+            if (pBalao > 0) planBody.push([`Balões (3x de ${pBalao}%)`, app.formatMoney(vBalao)]);
+            planBody.push([`Entrega das Chaves (${100 - pSinal - pMensal - pBalao}%)`, app.formatMoney(vChaves)]);
+
+            doc.autoTable({
+                startY: 95,
+                head: [["FLUXO DE PAGAMENTO", "VALOR DA PARCELA"]],
+                body: planBody,
+                theme: 'grid',
+                headStyles: { fillColor: brandPrimary, textColor: 255, fontStyle: 'bold', fontSize: 11 },
+                styles: { fontSize: 11, cellPadding: 5, textColor: [50, 50, 50] },
+                columnStyles: { 1: { fontStyle: 'bold', halign: 'right', textColor: brandGold } }
+            });
+
+            // RODAPÉ
+            let finalY = doc.lastAutoTable.finalY + 15;
+            doc.setFontSize(8); doc.setTextColor(120, 120, 120);
+            const textObs = "Observação: As parcelas serão reajustadas mensalmente pelo INCC (Índice Nacional da Construção Civil) até a data prevista de entrega do empreendimento; após a entrega da obra, parcelas não pagas serão reajustadas pelo IPCA + 1% a.m. As despesas para financiamento do imóvel são de responsabilidade do Adquirente.";
+            doc.text(doc.splitTextToSize(textObs, 182), 14, finalY);
+
+            doc.save(`Proposta_Madrid_Apto_${u}.pdf`);
+        },
+
+        saveProposalExcel: () => {
+            const u = document.getElementById('selUnidade').value;
+            if(!u || !state.units[u]) return;
+            
+            let d = state.units[u];
+            let price = d.valor * state.globalMultiplier;
+            let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
+            
+            let pSinal = parseFloat(document.getElementById('inpSinal').value)||0;
+            let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
+            let pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
+            let parcelasSinal = parseInt(document.getElementById('selSinalParcelas').value) || 3;
+            let m = simulator.getMonths();
+            
+            let vSinal = (price * pSinal/100)/parcelasSinal;
+            let vMensal = m > 0 ? (price * pMensal/100)/m : 0;
+            let vBalao = (price * pBalao/100)/3;
+            let vChaves = price * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
+
+            // CRIAÇÃO DO ARQUIVO CSV COM BOM PARA O EXCEL LER ACENTOS CORRETAMENTE
+            let csv = "\uFEFF"; 
+            csv += "PROPOSTA COMERCIAL - MADRID CASA ELEVADA\n\n";
+            csv += `Unidade;${u}\n`;
+            csv += `Tipologia;${tipo}\n`;
+            csv += `Area Privativa;${d.area} m2\n`;
+            csv += `Vagas;${d.vagas}\n`;
+            csv += `Valor Total de Tabela;${app.formatMoney(price)}\n\n`;
+            
+            csv += "FLUXO DE PAGAMENTO;VALOR DA PARCELA\n";
+            csv += `Ato/Sinal (${parcelasSinal}x);${app.formatMoney(vSinal)}\n`;
+            if(pMensal > 0) csv += `Mensais (${m}x);${app.formatMoney(vMensal)}\n`;
+            if(pBalao > 0) csv += `Baloes (3x);${app.formatMoney(vBalao)}\n`;
+            csv += `Entrega das Chaves;${app.formatMoney(vChaves)}\n\n`;
+            
+            csv += "Observacao: Correcao de INCC ate a entrega das chaves.\n";
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Proposta_Madrid_Apto_${u}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     };
 
@@ -987,7 +1115,6 @@
             database.ref('madrid_data').on('value', (snap) => {
                 const data = snap.val();
                 if(data) {
-                    // SE O FIREBASE AINDA NÃO TEM A TIPOLOGIA SALVA, ELE PUXA DO CÓDIGO FONTE E FORÇA A GRAVAÇÃO
                     if (data.units && data.units['1304'] && data.units['1304'].tipo) { 
                         state.units = data.units; 
                     } else { 
@@ -1033,6 +1160,11 @@
         updateAssets: (t) => {
             const logo = t==='dark' ? 'MADRID LOGO BRANCA-01.png' : 'MADRID LOGO MUSGO-01-01.png';
             document.getElementById('logoHeader').src = logo;
+        },
+        toggleFullscreen: () => {
+            const c = document.getElementById('simulatorCard');
+            c.classList.toggle('card-fullscreen');
+            document.getElementById('mainHeader').classList.toggle('hidden-nav');
         }
     };
 
