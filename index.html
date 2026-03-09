@@ -20,11 +20,13 @@
     <style>
         /* --- DESIGN SYSTEM LUXURY & PREMIUM --- */
         :root {
+            /* Paleta Oficial Madrid */
             --brand-primary: #1F3324; 
             --brand-secondary: #2E4A35; 
             --brand-gold: #C5A065;
             --brand-gold-dark: #A68550;
             
+            /* Tons de Fundo e Cartões */
             --bg-body: #F8F9F8; 
             --bg-card: #FFFFFF; 
             --bg-input: #F4F6F4; 
@@ -32,14 +34,17 @@
             --border-color: #E2E6E0; 
             --glass-bg: rgba(255, 255, 255, 0.95);
             
+            /* Textos */
             --text-main: #1C241E; 
             --text-secondary: #6A736C; 
             --text-muted: #A3ACA5; 
             
+            /* Status */
             --st-livre-bg: #E8F0EA; --st-livre-txt: #27402B; 
             --st-res-bg: #FDF5E6; --st-res-txt: #A1814A; 
             --st-vend-bg: #F5E6E6; --st-vend-txt: #8A3333; 
 
+            /* Profundidade e Sombras Premium */
             --shadow-sm: 0 4px 10px rgba(31, 51, 36, 0.05);
             --shadow-card: 0 10px 30px rgba(31, 51, 36, 0.06), 0 2px 8px rgba(0,0,0,0.02);
             --radius-card: 16px;
@@ -66,15 +71,17 @@
             overflow-x: hidden; transition: background-color 0.4s ease, color 0.4s ease;
         }
 
+        /* --- TRAVA DE SEGURANÇA (GESTOR VS CORRETOR) --- */
         body:not([data-admin="true"]) .admin-only { display: none !important; }
         .hidden { display: none !important; }
 
+        /* CUSTOM SCROLLBAR */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--brand-gold); }
 
-        /* TELA DE LOGIN */
+        /* TELA DE LOGIN UNIFICADA */
         #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
         .login-side-visual { flex: 1.5; background: #000; display: none; position: relative; overflow: hidden; }
         @media(min-width: 1024px) { .login-side-visual { display: block; } }
@@ -97,6 +104,7 @@
         .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.6s forwards; }
         @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
         
+        /* CABEÇALHO FLUTUANTE */
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 30px; margin-bottom: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); transition: opacity 0.3s; }
         .header-logo { height: 35px; width: auto; object-fit: contain; }
         .hidden-nav { display: none !important; }
@@ -106,12 +114,16 @@
         .btn-icon { width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 13px; }
         .btn-icon:hover { background: var(--brand-primary); color: var(--brand-gold); }
 
+        /* GRID PRINCIPAL */
         .grid-main { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 30px; align-items: start; }
+        
         .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 30px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); margin-bottom: 30px; }
+        
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid var(--bg-hover); flex-wrap: wrap; gap: 10px; }
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
+        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA --- */
         .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
         
         .card.table-fullscreen { 
@@ -124,7 +136,7 @@
         .card.table-fullscreen .table-wrapper { flex: 1 1 auto !important; min-height: 0 !important; min-width: 0 !important; width: 100% !important; overflow: auto !important; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-card); }
         .card.table-fullscreen #salesTable th { position: sticky; top: 0; z-index: 20; background: var(--brand-primary); color: var(--brand-gold); border-bottom: none; font-size: 10px; }
 
-        /* PAINEL GESTOR */
+        /* PAINEL DE GESTÃO (PREMIUM DARK) */
         .premium-admin-card { background: linear-gradient(135deg, var(--brand-primary) 0%, #0d1710 100%); color: white; border: none; position: relative; overflow: hidden; box-shadow: 0 15px 35px -10px rgba(31, 51, 36, 0.5); }
         .premium-admin-card::before { content: ''; position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(197,160,101,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
         
@@ -153,8 +165,11 @@
         
         .btn-reset { width: 100%; height: 36px; margin-top: 15px; background: transparent; color: #D98888; border: 1px dashed rgba(217, 136, 136, 0.3); border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.2s; letter-spacing: 1px; }
         .btn-reset:hover { background: rgba(217, 136, 136, 0.1); border-color: #D98888; }
+        
+        .btn-sync { width: 100%; height: 36px; margin-top: 10px; background: rgba(59, 130, 246, 0.1); color: #60A5FA; border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.2s; letter-spacing: 1px; }
+        .btn-sync:hover { background: rgba(59, 130, 246, 0.2); border-color: #60A5FA; }
 
-        /* CONTROLS */
+        /* CONTROLS (Simulador) */
         .control-label { display: block; font-size: 10px; font-weight: 800; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
         .control-input { width: 100%; height: 46px; padding: 0 15px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 600; font-size: 13px; font-family: inherit; transition: 0.3s; appearance: none; }
         .control-input:focus { border-color: var(--brand-gold); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(197, 160, 101, 0.1); }
@@ -179,7 +194,7 @@
         .btn-outline { height: 40px; padding: 0 18px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
 
-        /* TABELA */
+        /* --- TABELA OFICIAL --- */
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); }
         
@@ -210,7 +225,7 @@
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO */
+        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -301,6 +316,10 @@
                     </div>
                     <div id="logReajuste" style="font-size: 9px; color: rgba(255,255,255,0.4); text-align: center; margin-top: 10px; font-weight: 600; min-height: 14px; letter-spacing: 0.5px;"></div>
                 </div>
+                
+                <button onclick="db.forceSync()" class="btn-sync" title="Injeta a estrutura completa de apartamentos no Firebase">
+                    <i class="fas fa-database"></i> Sincronizar Banco (Firebase)
+                </button>
                 <button onclick="db.reset()" class="btn-reset">Resetar Reajustes da Tabela</button>
             </div>
 
@@ -447,58 +466,58 @@
 <script>
     const EMAILS_GESTOR = ["thiago.tsuk@gmail.com","baumann.inc2@gmail.com","bellavista.financeiro@gmail.com","marcal.bellavista@gmail.com"];
 
-    // A TABELA AGORA É O DEFAULT_UNITS. O FIREBASE VAI SUGAR ISSO NA PRIMEIRA VEZ E PASSAR A LER DE LÁ.
+    // TABELA BASE (AGORA COM A TIPOLOGIA EXPLICITAMENTE INCLUÍDA)
     const DEFAULT_UNITS = {
-        1304: { area: 108.22, areaTotal: 114.69, esc: '49', areaEsc: 6.47, vagas: '27A/27B', pav: 'SUB', valor: 1162993.37 },
-        1303: { area: 125.20, areaTotal: 133.12, esc: '3', areaEsc: 7.92, vagas: '49A/49B', pav: 'TER', valor: 1364121.93 },
-        1302: { area: 125.20, areaTotal: 133.27, esc: '2', areaEsc: 8.07, vagas: '48A/48B', pav: 'TER', valor: 1377461.60 },
-        1301: { area: 108.22, areaTotal: 115.32, esc: '45', areaEsc: 7.10, vagas: '26A/26B', pav: 'SUB', valor: 1181147.21 },
-        1204: { area: 108.22, areaTotal: 113.46, esc: '8', areaEsc: 5.24, vagas: '25A/25B', pav: 'SUB', valor: 1142527.48 },
-        1203: { area: 125.20, areaTotal: 131.14, esc: '44', areaEsc: 5.94, vagas: '5A/5B', pav: 'SUB', valor: 1335992.06 },
-        1202: { area: 125.20, areaTotal: 131.67, esc: '50', areaEsc: 6.47, vagas: '6A/6B', pav: 'SUB', valor: 1352369.52 },
-        1201: { area: 108.22, areaTotal: 113.47, esc: '22', areaEsc: 5.25, vagas: '24A/24B', pav: 'SUB', valor: 1155724.94 },
-        1104: { area: 108.22, areaTotal: 113.34, esc: '21', areaEsc: 5.12, vagas: '23A/23B', pav: 'SUB', valor: 1130935.12 },
-        1103: { area: 125.20, areaTotal: 130.43, esc: '1', areaEsc: 5.23, vagas: '7A/7B', pav: 'SUB', valor: 1318014.79 },
-        1102: { area: 125.20, areaTotal: 130.44, esc: '48', areaEsc: 5.24, vagas: '8A/8B', pav: 'SUB', valor: 1330235.28 },
-        1101: { area: 108.22, areaTotal: 113.40, esc: '26', areaEsc: 5.18, vagas: '47A/47B', pav: 'TER', valor: 1144532.29 },
-        1004: { area: 108.22, areaTotal: 113.33, esc: '36', areaEsc: 5.11, vagas: '46A/46B', pav: 'TER', valor: 1120222.13 },
-        1003: { area: 125.20, areaTotal: 130.31, esc: '18', areaEsc: 5.11, vagas: '9A/9B', pav: 'SUB', valor: 1304754.08 },
-        1002: { area: 125.20, areaTotal: 130.31, esc: '17', areaEsc: 5.11, vagas: '10A/10B', pav: 'SUB', valor: 1316894.63 },
-        1001: { area: 108.22, areaTotal: 113.33, esc: '35', areaEsc: 5.11, vagas: '45A/45B', pav: 'TER', valor: 1133339.64 },
-        904: { area: 108.22, areaTotal: 113.21, esc: '46', areaEsc: 4.99, vagas: '44A/44B', pav: 'TER', valor: 1108629.77 },
-        903: { area: 125.20, areaTotal: 130.24, esc: '14', areaEsc: 5.04, vagas: '11A/11B', pav: 'SUB', valor: 1291893.08 },
-        902: { area: 125.20, areaTotal: 130.26, esc: '7', areaEsc: 5.06, vagas: '12A/12B', pav: 'SUB', valor: 1304193.51 },
-        901: { area: 108.22, areaTotal: 113.24, esc: '30', areaEsc: 5.02, vagas: '43A/43B', pav: 'TER', valor: 1121987.11 },
-        804: { area: 108.22, areaTotal: 113.17, esc: '47', areaEsc: 4.95, vagas: '42A/42B', pav: 'TER', valor: 1097676.95 },
-        803: { area: 125.20, areaTotal: 130.18, esc: '23', areaEsc: 4.98, vagas: '13A/13B', pav: 'SUB', valor: 1279112.02 },
-        802: { area: 125.20, areaTotal: 130.18, esc: '41', areaEsc: 4.98, vagas: '14A/14B', pav: 'SUB', valor: 1291252.56 },
-        801: { area: 108.22, areaTotal: 113.18, esc: '40', areaEsc: 4.96, vagas: '41A/41B', pav: 'TER', valor: 1110874.40 },
-        704: { area: 108.22, areaTotal: 113.12, esc: '12', areaEsc: 4.90, vagas: '40A/40B', pav: 'TER', valor: 1086644.18 },
-        703: { area: 125.20, areaTotal: 130.10, esc: '6', areaEsc: 4.90, vagas: '15A/15B', pav: 'SUB', valor: 1266171.07 },
-        702: { area: 125.20, areaTotal: 130.12, esc: '31', areaEsc: 4.92, vagas: '16A/16B', pav: 'SUB', valor: 1278471.50 },
-        701: { area: 108.22, areaTotal: 113.12, esc: '9', areaEsc: 4.90, vagas: '39A/39B', pav: 'TER', valor: 1099761.70 },
-        604: { area: 108.22, areaTotal: 113.12, esc: '19', areaEsc: 4.90, vagas: '38A/38B', pav: 'TER', valor: 1076011.13 },
-        603: { area: 125.20, areaTotal: 130.10, esc: '15', areaEsc: 4.90, vagas: '4A/4B', pav: 'SUB', valor: 1253869.66 },
-        602: { area: 125.20, areaTotal: 130.10, esc: '13', areaEsc: 4.90, vagas: '3A/3B', pav: 'SUB', valor: 1266010.21 },
-        601: { area: 108.22, areaTotal: 113.12, esc: '16', areaEsc: 4.90, vagas: '37A/37B', pav: 'TER', valor: 1089128.64 },
-        504: { area: 108.22, areaTotal: 113.12, esc: '27', areaEsc: 4.90, vagas: '36A/36B', pav: 'TER', valor: 1065378.07 },
-        503: { area: 125.20, areaTotal: 130.10, esc: '24', areaEsc: 4.90, vagas: '2A/2B', pav: 'SUB', valor: 1241568.25 },
-        502: { area: 125.20, areaTotal: 130.10, esc: '20', areaEsc: 4.90, vagas: '1A/1B', pav: 'SUB', valor: 1253708.80 },
-        501: { area: 108.22, areaTotal: 113.12, esc: '25', areaEsc: 4.90, vagas: '29A/29B', pav: 'TER', valor: 1078495.58 },
-        404: { area: 108.22, areaTotal: 113.12, esc: '33', areaEsc: 4.90, vagas: '30A/30B', pav: 'TER', valor: 1054745.02 },
-        403: { area: 125.20, areaTotal: 130.10, esc: '29', areaEsc: 4.90, vagas: '17A/17B', pav: 'SUB', valor: 1229266.84 },
-        402: { area: 125.20, areaTotal: 130.10, esc: '28', areaEsc: 4.90, vagas: '18A/18B', pav: 'SUB', valor: 1241407.39 },
-        401: { area: 108.22, areaTotal: 113.12, esc: '32', areaEsc: 4.90, vagas: '31A/31B', pav: 'TER', valor: 1067862.53 },
-        304: { area: 108.22, areaTotal: 113.12, esc: '39', areaEsc: 4.90, vagas: '32A/32B', pav: 'TER', valor: 1044111.96 },
-        303: { area: 125.20, areaTotal: 130.10, esc: '37', areaEsc: 4.90, vagas: '19A/19B', pav: 'SUB', valor: 1216965.43 },
-        302: { area: 125.20, areaTotal: 130.10, esc: '34', areaEsc: 4.90, vagas: '20A/20B', pav: 'SUB', valor: 1229105.98 },
-        301: { area: 108.22, areaTotal: 113.12, esc: '38', areaEsc: 4.90, vagas: '33A/33B', pav: 'TER', valor: 1057229.47 },
-        204: { area: 108.22, areaTotal: 112.91, esc: '11', areaEsc: 4.69, vagas: '34A/34B', pav: 'TER', valor: 1031800.13 },
-        203: { area: 125.20, areaTotal: 130.06, esc: '5', areaEsc: 4.86, vagas: '21A/21B', pav: 'SUB', valor: 1204344.25 },
-        202: { area: 125.20, areaTotal: 130.10, esc: '42', areaEsc: 4.90, vagas: '22A/22B', pav: 'SUB', valor: 1216804.57 },
-        201: { area: 108.22, areaTotal: 112.92, esc: '10', areaEsc: 4.70, vagas: '35A/35B', pav: 'TER', valor: 1044997.58 },
-        102: { area: 158.30, areaTotal: 162.50, esc: '43', areaEsc: 4.20, vagas: '51A/51B', pav: 'TER', valor: 1328751.12 },
-        101: { area: 135.30, areaTotal: 140.14, esc: '4', areaEsc: 4.84, vagas: '50A/50B', pav: 'TER', valor: 1145686.47 }
+        1304: { tipo: '1 Suíte', area: 108.22, areaTotal: 114.69, esc: '49', areaEsc: 6.47, vagas: '27A/27B', pav: 'SUB', valor: 1162993.37 },
+        1303: { tipo: '3 Suítes', area: 125.20, areaTotal: 133.12, esc: '3', areaEsc: 7.92, vagas: '49A/49B', pav: 'TER', valor: 1364121.93 },
+        1302: { tipo: '3 Suítes', area: 125.20, areaTotal: 133.27, esc: '2', areaEsc: 8.07, vagas: '48A/48B', pav: 'TER', valor: 1377461.60 },
+        1301: { tipo: '1 Suíte', area: 108.22, areaTotal: 115.32, esc: '45', areaEsc: 7.10, vagas: '26A/26B', pav: 'SUB', valor: 1181147.21 },
+        1204: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.46, esc: '8', areaEsc: 5.24, vagas: '25A/25B', pav: 'SUB', valor: 1142527.48 },
+        1203: { tipo: '3 Suítes', area: 125.20, areaTotal: 131.14, esc: '44', areaEsc: 5.94, vagas: '5A/5B', pav: 'SUB', valor: 1335992.06 },
+        1202: { tipo: '3 Suítes', area: 125.20, areaTotal: 131.67, esc: '50', areaEsc: 6.47, vagas: '6A/6B', pav: 'SUB', valor: 1352369.52 },
+        1201: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.47, esc: '22', areaEsc: 5.25, vagas: '24A/24B', pav: 'SUB', valor: 1155724.94 },
+        1104: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.34, esc: '21', areaEsc: 5.12, vagas: '23A/23B', pav: 'SUB', valor: 1130935.12 },
+        1103: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.43, esc: '1', areaEsc: 5.23, vagas: '7A/7B', pav: 'SUB', valor: 1318014.79 },
+        1102: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.44, esc: '48', areaEsc: 5.24, vagas: '8A/8B', pav: 'SUB', valor: 1330235.28 },
+        1101: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.40, esc: '26', areaEsc: 5.18, vagas: '47A/47B', pav: 'TER', valor: 1144532.29 },
+        1004: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.33, esc: '36', areaEsc: 5.11, vagas: '46A/46B', pav: 'TER', valor: 1120222.13 },
+        1003: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.31, esc: '18', areaEsc: 5.11, vagas: '9A/9B', pav: 'SUB', valor: 1304754.08 },
+        1002: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.31, esc: '17', areaEsc: 5.11, vagas: '10A/10B', pav: 'SUB', valor: 1316894.63 },
+        1001: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.33, esc: '35', areaEsc: 5.11, vagas: '45A/45B', pav: 'TER', valor: 1133339.64 },
+        904: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.21, esc: '46', areaEsc: 4.99, vagas: '44A/44B', pav: 'TER', valor: 1108629.77 },
+        903: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.24, esc: '14', areaEsc: 5.04, vagas: '11A/11B', pav: 'SUB', valor: 1291893.08 },
+        902: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.26, esc: '7', areaEsc: 5.06, vagas: '12A/12B', pav: 'SUB', valor: 1304193.51 },
+        901: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.24, esc: '30', areaEsc: 5.02, vagas: '43A/43B', pav: 'TER', valor: 1121987.11 },
+        804: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.17, esc: '47', areaEsc: 4.95, vagas: '42A/42B', pav: 'TER', valor: 1097676.95 },
+        803: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.18, esc: '23', areaEsc: 4.98, vagas: '13A/13B', pav: 'SUB', valor: 1279112.02 },
+        802: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.18, esc: '41', areaEsc: 4.98, vagas: '14A/14B', pav: 'SUB', valor: 1291252.56 },
+        801: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.18, esc: '40', areaEsc: 4.96, vagas: '41A/41B', pav: 'TER', valor: 1110874.40 },
+        704: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.12, esc: '12', areaEsc: 4.90, vagas: '40A/40B', pav: 'TER', valor: 1086644.18 },
+        703: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.10, esc: '6', areaEsc: 4.90, vagas: '15A/15B', pav: 'SUB', valor: 1266171.07 },
+        702: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.12, esc: '31', areaEsc: 4.92, vagas: '16A/16B', pav: 'SUB', valor: 1278471.50 },
+        701: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.12, esc: '9', areaEsc: 4.90, vagas: '39A/39B', pav: 'TER', valor: 1099761.70 },
+        604: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.12, esc: '19', areaEsc: 4.90, vagas: '38A/38B', pav: 'TER', valor: 1076011.13 },
+        603: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.10, esc: '15', areaEsc: 4.90, vagas: '4A/4B', pav: 'SUB', valor: 1253869.66 },
+        602: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.10, esc: '13', areaEsc: 4.90, vagas: '3A/3B', pav: 'SUB', valor: 1266010.21 },
+        601: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.12, esc: '16', areaEsc: 4.90, vagas: '37A/37B', pav: 'TER', valor: 1089128.64 },
+        504: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.12, esc: '27', areaEsc: 4.90, vagas: '36A/36B', pav: 'TER', valor: 1065378.07 },
+        503: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.10, esc: '24', areaEsc: 4.90, vagas: '2A/2B', pav: 'SUB', valor: 1241568.25 },
+        502: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.10, esc: '20', areaEsc: 4.90, vagas: '1A/1B', pav: 'SUB', valor: 1253708.80 },
+        501: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.12, esc: '25', areaEsc: 4.90, vagas: '29A/29B', pav: 'TER', valor: 1078495.58 },
+        404: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.12, esc: '33', areaEsc: 4.90, vagas: '30A/30B', pav: 'TER', valor: 1054745.02 },
+        403: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.10, esc: '29', areaEsc: 4.90, vagas: '17A/17B', pav: 'SUB', valor: 1229266.84 },
+        402: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.10, esc: '28', areaEsc: 4.90, vagas: '18A/18B', pav: 'SUB', valor: 1241407.39 },
+        401: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.12, esc: '32', areaEsc: 4.90, vagas: '31A/31B', pav: 'TER', valor: 1067862.53 },
+        304: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.12, esc: '39', areaEsc: 4.90, vagas: '32A/32B', pav: 'TER', valor: 1044111.96 },
+        303: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.10, esc: '37', areaEsc: 4.90, vagas: '19A/19B', pav: 'SUB', valor: 1216965.43 },
+        302: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.10, esc: '34', areaEsc: 4.90, vagas: '20A/20B', pav: 'SUB', valor: 1229105.98 },
+        301: { tipo: '1 Suíte', area: 108.22, areaTotal: 113.12, esc: '38', areaEsc: 4.90, vagas: '33A/33B', pav: 'TER', valor: 1057229.47 },
+        204: { tipo: '1 Suíte', area: 108.22, areaTotal: 112.91, esc: '11', areaEsc: 4.69, vagas: '34A/34B', pav: 'TER', valor: 1031800.13 },
+        203: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.06, esc: '5', areaEsc: 4.86, vagas: '21A/21B', pav: 'SUB', valor: 1204344.25 },
+        202: { tipo: '3 Suítes', area: 125.20, areaTotal: 130.10, esc: '42', areaEsc: 4.90, vagas: '22A/22B', pav: 'SUB', valor: 1216804.57 },
+        201: { tipo: '1 Suíte', area: 108.22, areaTotal: 112.92, esc: '10', areaEsc: 4.70, vagas: '35A/35B', pav: 'TER', valor: 1044997.58 },
+        102: { tipo: '3 Suítes', area: 158.30, areaTotal: 162.50, esc: '43', areaEsc: 4.20, vagas: '51A/51B', pav: 'TER', valor: 1328751.12 },
+        101: { tipo: '3 Suítes', area: 135.30, areaTotal: 140.14, esc: '4', areaEsc: 4.84, vagas: '50A/50B', pav: 'TER', valor: 1145686.47 }
     };
 
     const firebaseConfig = {
@@ -516,8 +535,7 @@
     let state = { 
         isAdmin: false, user: '', statusMap: {}, 
         globalMultiplier: 1, previousMultiplier: 1, lastPriceUpdate: null, lastSaleUpdate: null,
-        tableExpanded: false,
-        units: DEFAULT_UNITS // Inicializa com default preventivamente
+        tableExpanded: false, units: DEFAULT_UNITS
     };
     
     const simulator = {
@@ -542,7 +560,7 @@
             let first = null;
             Object.keys(state.units).forEach(u => {
                 let d = state.units[u];
-                let t = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
+                let t = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
                 let st = state.statusMap[u] || 'livre';
 
                 if(andar && Math.floor(u/100) != parseInt(andar)) return;
@@ -743,7 +761,7 @@
 
                 if((filter=='disponivel' && st=='vendido') || (filter=='vendido' && st!='vendido')) return;
 
-                let tipo = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
+                let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
                 let pSinal = parseFloat(document.getElementById('inpSinal').value)||10;
                 let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
                 let pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
@@ -853,7 +871,7 @@
                 if (filter === 'disponivel' && st === 'vendido') return;
                 if (filter === 'vendido' && st !== 'vendido') return;
 
-                let tipo = (d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte';
+                let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
                 let price = d.valor * state.globalMultiplier;
                 let vEntrada = (price * (pSinal/100)) / parcelasSinal;
                 let vMensal = (price * (pMensal/100)) / m;
@@ -895,7 +913,8 @@
             const doc = new jsPDF('p', 'mm', 'a4');
             const brandPrimary = [23, 42, 28];
             
-            try { doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 45, 16); } catch(e) {
+            try { 
+                doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 45, 16); } catch(e) {
                 doc.setFontSize(22); doc.setTextColor(...brandPrimary); doc.text("MADRID", 14, 20);
             }
             doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
@@ -968,8 +987,13 @@
             database.ref('madrid_data').on('value', (snap) => {
                 const data = snap.val();
                 if(data) {
-                    if (data.units) { state.units = data.units; } 
-                    else { database.ref('madrid_data/units').set(DEFAULT_UNITS); }
+                    // SE O FIREBASE AINDA NÃO TEM A TIPOLOGIA SALVA, ELE PUXA DO CÓDIGO FONTE E FORÇA A GRAVAÇÃO
+                    if (data.units && data.units['1304'] && data.units['1304'].tipo) { 
+                        state.units = data.units; 
+                    } else { 
+                        database.ref('madrid_data/units').set(DEFAULT_UNITS); 
+                        state.units = DEFAULT_UNITS;
+                    }
                     state.statusMap = data.statusMap || {};
                     state.globalMultiplier = data.globalMultiplier || 1;
                     state.previousMultiplier = data.previousMultiplier || 1;
@@ -977,9 +1001,17 @@
                     state.lastSaleUpdate = data.lastSaleUpdate || null;
                 } else {
                     database.ref('madrid_data/units').set(DEFAULT_UNITS);
+                    state.units = DEFAULT_UNITS;
                 }
                 app.renderAll();
             });
+        },
+        forceSync: () => {
+            if(confirm("Tem certeza que deseja forçar a sincronização de todos os dados bases (Áreas, Tipologia, Vagas) para o Firebase?\n\nOs status de 'Vendido' não serão apagados.")) {
+                database.ref('madrid_data/units').set(DEFAULT_UNITS).then(() => {
+                    alert("Banco de dados sincronizado com sucesso! Pode verificar o seu Firebase.");
+                }).catch(e => alert("Erro ao sincronizar. Verifique as regras do Firebase."));
+            }
         },
         reset: () => {
             const confirmWord = prompt('⚠️ ATENÇÃO: ZERAR REAJUSTES E VOLTAR AOS PREÇOS ORIGINAIS!\n\nSe tem certeza, digite a palavra "ZERAR" abaixo (em maiúsculo):');
