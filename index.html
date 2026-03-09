@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V26</title>
+    <title>Madrid Casa Elevada | Premium V27</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -176,7 +176,7 @@
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 
-        /* --- BLINDAGEM: CAIXA DE RESULTADOS UNIFICADA --- */
+        /* CAIXA DE RESULTADOS UNIFICADA E BLINDADA */
         .calc-results-box { background: var(--bg-input); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 20px; }
         .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
         .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); align-items: center; }
@@ -232,7 +232,7 @@
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO */
+        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -468,7 +468,7 @@
                     <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap;">
                         
                         <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only" style="width:auto; height:40px; padding: 0 15px; font-size: 11px; text-transform: uppercase; font-weight: 800;">
-                            <option value="todos">Todos os Status</option>
+                            <option value="todos">Todos</option>
                             <option value="livre">Disponíveis</option>
                             <option value="reservado">Reservados</option>
                             <option value="vendido">Vendidos</option>
@@ -606,7 +606,6 @@
             const m = simulator.getMonths();
             const b = simulator.getBalloons();
             
-            // Garantindo que os textos sejam injetados ao carregar
             document.getElementById('optMensal').innerText = `${m}x Mensal (20%)`;
             document.getElementById('optBalao').innerText = `${b}x Balão (20%)`;
             document.getElementById('optMisto').innerText = `${m}x Mensal (10%) + ${b}x Balão (10%)`;
@@ -768,7 +767,6 @@
                 let vS = 0, vM = 0, vB = 0, vC = 0;
 
                 if (i < parcelasSinal && pSinal > 0) vS = vSinal;
-                // Mensais começam 1 mês após o término do sinal
                 let inicioMensal = parcelasSinal;
                 if (i >= inicioMensal && i < (inicioMensal + m) && pMensal > 0) vM = vMensal;
                 
@@ -1042,9 +1040,9 @@
                 if(st === 'vendido') totalVend += finalPrice;
                 if(st === 'livre') countLivre++;
 
-                // LÓGICA DO FILTRO AJUSTADA:
-                if (!state.isAdmin && st === 'vendido') return; // Corretor nunca vê vendidos
-                if (state.isAdmin && filter !== 'todos' && st !== filter) return; // Gestor filtra o que quiser
+                // APLICAÇÃO DO FILTRO COM AS NOMENCLATURAS NOVAS
+                if (!state.isAdmin && st === 'vendido') return; // Corretor não vê vendido
+                if (state.isAdmin && filter !== 'todos' && st !== filter) return; // Gestor vê o filtro escolhido
 
                 let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
                 let pSinal = parseFloat(document.getElementById('inpSinal').value)||10;
@@ -1308,6 +1306,23 @@
                 database.ref('madrid_data/lastPriceUpdate').set(null);
                 alert("Tabela de preços resetada com sucesso! As unidades vendidas e as áreas no banco de dados continuam a salvo.");
             } else if (confirmWord !== null) { alert("Ação cancelada."); }
+        }
+    };
+
+    const ui = {
+        toggleTheme: () => {
+            const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', next);
+            ui.updateAssets(next);
+        },
+        updateAssets: (t) => {
+            const logo = t==='dark' ? 'MADRID LOGO BRANCA-01.png' : 'MADRID LOGO MUSGO-01-01.png';
+            document.getElementById('logoHeader').src = logo;
+        },
+        toggleFullscreen: () => {
+            const c = document.getElementById('simulatorCard');
+            c.classList.toggle('card-fullscreen');
+            document.getElementById('mainHeader').classList.toggle('hidden-nav');
         }
     };
 
