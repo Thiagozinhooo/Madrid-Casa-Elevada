@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V24</title>
+    <title>Madrid Casa Elevada | Premium V25</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -88,7 +88,6 @@
         .inp-login { width: 100%; height: 48px; padding: 0 15px; border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-btn); margin-bottom: 15px; background: rgba(0,0,0,0.2); color: white; font-family: inherit; font-size: 13px; transition: all 0.3s; }
         .inp-login:focus { background: rgba(0,0,0,0.4); border-color: var(--brand-gold); }
         
-        /* CSS PARA O BOTÃO DE MOSTRAR SENHA */
         .password-wrapper { position: relative; width: 100%; }
         .toggle-password { position: absolute; right: 15px; top: 24px; transform: translateY(-50%); cursor: pointer; color: rgba(255,255,255,0.5); font-size: 15px; transition: 0.3s; z-index: 10; }
         .toggle-password:hover { color: var(--brand-gold); }
@@ -121,9 +120,7 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO BLINDADA DE TELA CHEIA --- */
-        .card.card-fullscreen { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 99999; border-radius: 0; margin: 0; padding: 40px; overflow-y: auto; background: var(--bg-body); display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-content: center; box-sizing: border-box; }
-        
+        /* --- CONFIGURAÇÃO DE TELA CHEIA (Apenas Tabela agora) --- */
         .card.table-fullscreen { 
             position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; 
             z-index: 99999 !important; border-radius: 0 !important; margin: 0 !important; 
@@ -258,7 +255,7 @@
         .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;}
         .dot { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); }
 
-        @media(max-width: 1100px) { .grid-main { grid-template-columns: 1fr; } .card-fullscreen { grid-template-columns: 1fr; display: block; padding: 20px; } }
+        @media(max-width: 1100px) { .grid-main { grid-template-columns: 1fr; } }
         @media(max-width: 768px) { .app-layout { padding: 15px 10px; } .card { padding: 20px; margin-bottom: 20px; } .header { padding: 15px; margin-bottom: 20px; border-radius: 16px; } .user-badge { max-width: 120px; } .card-header { flex-direction: column; align-items: flex-start; gap: 15px; } .card-header > div, .card-header > button { width: 100%; justify-content: flex-start; } .sim-grid-3 { grid-template-columns: 1fr; gap: 15px; } }
         @media print { .no-print { display: none !important; } body { background: white; } .app-layout { display: block; opacity: 1; padding: 0; max-width: 100%; } .card { box-shadow: none; border: none; padding: 0; margin: 0; } }
     </style>
@@ -342,7 +339,6 @@
             <div id="simulatorCard" class="card">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-calculator"></i> Simulador</span>
-                    <button onclick="ui.toggleFullscreen()" class="btn-icon" style="border: 1px solid var(--border-color); width: 32px; height: 32px;" title="Tela Cheia"><i class="fas fa-expand" id="iconFullscreen"></i></button>
                 </div>
                 
                 <div class="sim-content-wrapper" style="display:contents;">
@@ -573,12 +569,6 @@
             const logo = t==='dark' ? 'MADRID LOGO BRANCA-01.png' : 'MADRID LOGO MUSGO-01-01.png';
             document.getElementById('logoHeader').src = logo;
         },
-        toggleFullscreen: () => {
-            const c = document.getElementById('simulatorCard');
-            c.classList.toggle('card-fullscreen');
-            document.getElementById('mainHeader').classList.toggle('hidden-nav');
-        },
-        // FUNÇÃO NOVA PARA MOSTRAR/OCULTAR SENHA
         togglePassword: () => {
             const inp = document.getElementById('loginPass');
             const icon = document.getElementById('togglePasswordIcon');
@@ -603,11 +593,15 @@
                 s.innerHTML+=`<option value="${i}">${i}º Andar</option>`;
             }
             
-            // Textos já fixados no HTML
+            const m = simulator.getMonths();
+            const b = simulator.getBalloons();
+            
+            document.getElementById('optMensal').innerText = `${m}x Mensal (20%)`;
+            document.getElementById('optBalao').innerText = `${b}x Balão (20%)`;
+            document.getElementById('optMisto').innerText = `${m}x Mensal (10%) + ${b}x Balão (10%)`;
         },
         getMonths: () => {
             const now = new Date();
-            // Data alvo: Julho de 2027
             const target = new Date(2027, 6, 1); 
             return Math.max(1, (target.getFullYear() - now.getFullYear()) * 12 + (target.getMonth() - now.getMonth()));
         },
@@ -762,13 +756,15 @@
                 
                 let vS = 0, vM = 0, vB = 0, vC = 0;
 
-                // Regra: Sinal
                 if (i < parcelasSinal && pSinal > 0) vS = vSinal;
-                // Regra: Mensais 1 mês após o primeiro sinal (i=1)
-                if (i > 0 && i <= m && pMensal > 0) vM = vMensal;
-                // Regra: Balões intercalados
+                // Mensais começam 1 mês após o término do sinal
+                let inicioMensal = parcelasSinal;
+                if (i >= inicioMensal && i < (inicioMensal + m) && pMensal > 0) vM = vMensal;
+                
                 if (balloonMonths.includes(i) && pBalao > 0) vB = vBalao;
-                // Regra: Chaves
+                
+                // Chaves no mês alvo final exato (Julho 2027), independente de i.
+                // Mas para fluir na tabela, colocamos a chave no indice M (distância até a entrega)
                 if (i === m) vC = vChaves;
 
                 let valMonth = vS + vM + vB + vC;
@@ -871,7 +867,10 @@
                 let vS = 0, vM = 0, vB = 0, vC = 0;
 
                 if (i < parcelasSinal && pSinal > 0) vS = vSinal;
-                if (i > 0 && i <= m && pMensal > 0) vM = vMensal;
+                
+                let inicioMensal = parcelasSinal;
+                if (i >= inicioMensal && i < (inicioMensal + m) && pMensal > 0) vM = vMensal;
+                
                 if (balloonMonths.includes(i) && pBalao > 0) vB = vBalao;
                 if (i === m) vC = vChaves;
 
@@ -928,7 +927,6 @@
 
     const app = {
         init: () => {
-            ui.toggleFullscreen = () => { document.getElementById('simulatorCard').classList.toggle('card-fullscreen'); };
             app.fetchAPIs();
             simulator.init();
         },
@@ -1008,7 +1006,6 @@
             const parcelasSinal = elSinalParcelas ? (parseInt(elSinalParcelas.value) || 3) : 3;
             const showM = plan === 'mensal_20' || plan === 'misto_completo';
             const showB = plan === 'balao_20' || plan === 'misto_completo';
-            
             const m = simulator.getMonths();
             const b = simulator.getBalloons() || 1;
             const exp = state.tableExpanded; 
