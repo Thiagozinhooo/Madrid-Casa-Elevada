@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V32</title>
+    <title>Madrid Casa Elevada | Premium V28</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,9 +107,10 @@
         .btn-modal { width: 100%; height: 46px; border-radius: var(--radius-btn); background: #D98888; color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: 0.3s; }
         .btn-modal:hover { background: #C47272; transform: translateY(-2px); }
 
-        /* APP LAYOUT - ANIMAÇÃO REMOVIDA PARA EVITAR TELA BRANCA */
+        /* APP LAYOUT - ANIMAÇÃO REMOVIDA */
         .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; }
         
+        /* CABEÇALHO FLUTUANTE */
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 30px; margin-bottom: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); transition: opacity 0.3s; }
         .header-logo { height: 35px; width: auto; object-fit: contain; }
         .hidden-nav { display: none !important; }
@@ -119,6 +120,7 @@
         .btn-icon { width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 13px; }
         .btn-icon:hover { background: var(--brand-primary); color: var(--brand-gold); }
 
+        /* GRID PRINCIPAL */
         .grid-main { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 30px; align-items: start; }
         
         .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 30px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); margin-bottom: 30px; }
@@ -127,6 +129,7 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
+        /* TELA CHEIA (Apenas Tabela) */
         .card.table-fullscreen { 
             position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; 
             z-index: 99999 !important; border-radius: 0 !important; margin: 0 !important; 
@@ -182,20 +185,19 @@
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 
-        /* CAIXA DE RESULTADOS UNIFICADA E CORRIGIDA PARA MODO ESCURO */
+        /* CAIXA DE RESULTADOS UNIFICADA E BLINDADA */
         .calc-results-box { background: var(--bg-input); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 20px; }
         .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
         .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); align-items: center; }
         
-        /* A COR AQUI AGORA USA A VARIÁVEL DE TEMA PARA FUNCIONAR NO MODO ESCURO */
         .calc-results-box span, 
         .calc-results-box strong,
         .res-row span, 
         .res-row strong,
         .res-total span, 
         .res-total strong { 
-            font-size: 15px !important; 
-            font-weight: 800 !important; 
+            font-size: 16px !important; 
+            font-weight: 700 !important; 
             color: var(--text-main) !important; 
         }
 
@@ -379,9 +381,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal">15x Mensal (20%)</option>
-                                <option value="balao_20" id="optBalao">3x Balão (20%)</option>
-                                <option value="misto_completo" id="optMisto">15x Mensal (10%) + 3x Balão (10%)</option>
+                                <option value="mensal_20" id="optMensal"></option>
+                                <option value="balao_20" id="optBalao"></option>
+                                <option value="misto_completo" id="optMisto"></option>
                             </select>
                         </div>
                         
@@ -1101,8 +1103,11 @@
                 if(st === 'vendido') totalVend += finalPrice;
                 if(st === 'livre') countLivre++;
 
-                if (!state.isAdmin && st === 'vendido') return; 
-                if (state.isAdmin && filter !== 'todos' && st !== filter) return;
+                // --- LÓGICA DE FILTRO BLINDADA ---
+                // Corretor SÓ vê o que for "livre" (esconde reservado e vendido)
+                if (!state.isAdmin && st !== 'livre') return; 
+                // Gestor obedece à escolha da caixinha (todos, livre, reservado, vendido)
+                if (state.isAdmin && filter !== 'todos' && st !== filter) return; 
 
                 let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
                 let pSinal = parseFloat(document.getElementById('inpSinal').value)||10;
@@ -1213,7 +1218,8 @@
                 let d = state.units[u];
                 let st = state.statusMap[u] || 'livre';
                 
-                if (!state.isAdmin && st === 'vendido') return;
+                // IGUAL À TABELA: Corretor só vê livre. Gestor vê o filtro.
+                if (!state.isAdmin && st !== 'livre') return; 
                 if (state.isAdmin && filter !== 'todos' && st !== filter) return;
 
                 let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
@@ -1376,7 +1382,7 @@
     };
 
     window.onload = () => {
-        ui.initTheme(); // CARREGA O TEMA SALVO ASSIM QUE ABRIR A JANELA
+        ui.initTheme();
         
         firebase.auth().onAuthStateChanged((u) => {
             try {
