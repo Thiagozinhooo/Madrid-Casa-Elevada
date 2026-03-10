@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V30</title>
+    <title>Madrid Casa Elevada | Premium V31</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -97,18 +97,17 @@
 
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 44px; height: 44px; border-radius: 50%; color: var(--brand-gold); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
-        /* --- JANELA DE ERRO DE LOGIN (MODAL) --- */
+        /* --- JANELA DE ERRO DE LOGIN E ALERTAS GERAIS (MODAL) --- */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 1; transition: 0.3s; }
         .modal-overlay.hidden { display: none !important; opacity: 0; }
         .modal-box { background: var(--bg-card); width: 90%; max-width: 360px; border-radius: var(--radius-card); padding: 30px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.5); border: 1px solid var(--border-color); }
         .modal-icon { font-size: 45px; color: #D98888; margin-bottom: 15px; }
         .modal-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0 0 10px 0; }
         .modal-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 25px; line-height: 1.5; font-weight: 500; word-break: break-word; }
-        
         .btn-modal { width: 100%; height: 46px; border-radius: var(--radius-btn); background: #D98888; color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: 0.3s; }
         .btn-modal:hover { background: #C47272; transform: translateY(-2px); }
 
-        /* --- APP LAYOUT (ANIMAÇÃO REMOVIDA PARA EVITAR TELA BRANCA) --- */
+        /* APP LAYOUT - ANIMAÇÃO REMOVIDA */
         .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; }
         
         /* CABEÇALHO FLUTUANTE */
@@ -186,6 +185,20 @@
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 
+        /* --- BLINDAGEM CSS TOTAL PARA A CAIXA DE RESULTADOS --- */
+        #calcResults { background: var(--bg-input) !important; padding: 20px !important; border-radius: var(--radius-md) !important; border: 1px solid var(--border-color) !important; margin-top: 20px !important; }
+        #calcResults div { font-family: 'Plus Jakarta Sans', sans-serif !important; }
+        #calcResults span, 
+        #calcResults strong { 
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 15px !important; 
+            font-weight: 700 !important; 
+            color: #1C241E !important; /* Cor exata forçada */
+            text-transform: none !important;
+        }
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
+        .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #A3ACA5; align-items: center; }
+
         .btn-primary { width: 100%; height: 50px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4); filter: brightness(1.05); }
         
@@ -259,9 +272,9 @@
 <div id="errorModal" class="modal-overlay hidden">
     <div class="modal-box">
         <i class="fas fa-exclamation-circle modal-icon"></i>
-        <h3 class="modal-title">Erro de Autenticação</h3>
-        <p class="modal-text" id="errorModalText">O e-mail ou a senha informados estão incorretos.</p>
-        <button class="btn-modal" onclick="ui.closeError()">Tentar Novamente</button>
+        <h3 class="modal-title" id="errorModalTitle">Aviso</h3>
+        <p class="modal-text" id="errorModalText">Ocorreu um erro.</p>
+        <button class="btn-modal" onclick="ui.closeError()">Entendi</button>
     </div>
 </div>
 
@@ -288,7 +301,7 @@
     </div>
 </div>
 
-<div id="app" class="app-layout">
+<div id="app" class="app-layout" style="opacity: 1 !important; visibility: visible !important;">
     <header id="mainHeader" class="header no-print">
         <img id="logoHeader" src="MADRID LOGO MUSGO-01-01.png" alt="Madrid" class="header-logo">
         <div class="user-controls">
@@ -366,9 +379,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal">15x Mensal (20%)</option>
-                                <option value="balao_20" id="optBalao">3x Balão (20%)</option>
-                                <option value="misto_completo" id="optMisto">15x Mensal (10%) + 3x Balão (10%)</option>
+                                <option value="mensal_20" id="optMensal"></option>
+                                <option value="balao_20" id="optBalao"></option>
+                                <option value="misto_completo" id="optMisto"></option>
                             </select>
                         </div>
                         
@@ -401,22 +414,22 @@
                             </div>
                         </div>
 
-                        <div id="calcResults" class="hidden" style="background: #F4F6F4; padding: 20px; border-radius: 8px; border: 1px solid #E2E6E0; margin-top: 20px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-                                <span id="lblSinal" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">Ato/Sinal (3x)</span>
-                                <strong id="resSinal" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">...</strong>
+                        <div id="calcResults" class="hidden" style="background: #F4F6F4 !important; padding: 20px !important; border-radius: 8px !important; border: 1px solid #E2E6E0 !important; margin-top: 20px !important;">
+                            <div class="res-row">
+                                <span id="lblSinal">Ato/Sinal (3x)</span>
+                                <strong id="resSinal">...</strong>
                             </div>
-                            <div id="rowMensal" style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-                                <span id="lblMensal" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">Mensais (16x)</span>
-                                <strong id="resMensal" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">...</strong>
+                            <div id="rowMensal" class="res-row">
+                                <span id="lblMensal">Mensais (16x)</span>
+                                <strong id="resMensal">...</strong>
                             </div>
-                            <div id="rowBalao" style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
-                                <span id="lblBalao" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">Balões (3x)</span>
-                                <strong id="resBalao" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">...</strong>
+                            <div id="rowBalao" class="res-row">
+                                <span id="lblBalao">Balões (3x)</span>
+                                <strong id="resBalao">...</strong>
                             </div>
-                            <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #A3ACA5; align-items: center;">
-                                <span style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">Entrega da Chave</span>
-                                <strong id="resChaves" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">...</strong>
+                            <div class="res-total">
+                                <span>Entrega da Chave</span>
+                                <strong id="resChaves">...</strong>
                             </div>
                         </div>
 
@@ -470,7 +483,7 @@
                     <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap;">
                         
                         <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only" style="width:auto; height:40px; padding: 0 15px; font-size: 11px; text-transform: uppercase; font-weight: 800;">
-                            <option value="todos">Todos</option>
+                            <option value="todos">Todos os Status</option>
                             <option value="livre">Disponíveis</option>
                             <option value="reservado">Reservados</option>
                             <option value="vendido">Vendidos</option>
@@ -594,7 +607,8 @@
                 icon.classList.add('fa-eye');
             }
         },
-        showError: (msg) => {
+        showError: (msg, title="Erro de Autenticação") => {
+            document.getElementById('errorModalTitle').innerText = title;
             document.getElementById('errorModalText').innerText = msg;
             document.getElementById('errorModal').classList.remove('hidden');
         },
@@ -933,32 +947,53 @@
             });
         },
         logout: () => firebase.auth().signOut().then(() => location.reload()),
+        
+        // TENTATIVA BLINDADA E COM ALERTA DE ERRO
         initApp: () => {
-            document.getElementById('loginOverlay').style.display='none';
-            document.getElementById('app').style.display='block';
-            const badge = document.getElementById('userBadge');
-            
-            if(state.isAdmin) {
-                document.body.setAttribute('data-admin', 'true');
-                badge.innerHTML = `<i class="fas fa-crown" style="margin-right:5px; color: var(--brand-gold);"></i> Gestor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
-            } else {
-                document.body.removeAttribute('data-admin');
-                badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px; color: var(--brand-gold);"></i> Corretor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
+            try {
+                document.getElementById('loginOverlay').style.display = 'none';
+                
+                const appDiv = document.getElementById('app');
+                appDiv.style.display = 'block';
+                appDiv.style.opacity = '1';
+                appDiv.style.visibility = 'visible';
+                
+                const badge = document.getElementById('userBadge');
+                
+                if(state.isAdmin) {
+                    document.body.setAttribute('data-admin', 'true');
+                    badge.innerHTML = `<i class="fas fa-crown" style="margin-right:5px; color: var(--brand-gold);"></i> Gestor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
+                } else {
+                    document.body.removeAttribute('data-admin');
+                    badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px; color: var(--brand-gold);"></i> Corretor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
+                }
+                
+                db.load();
+                app.init();
+                
+            } catch(e) {
+                ui.showError("Erro ao montar tela: " + e.message, "Erro Crítico no Sistema");
             }
-            db.load();
-            app.init();
         }
     };
 
     const app = {
         init: () => {
-            app.fetchAPIs();
-            simulator.init();
+            try {
+                app.fetchAPIs();
+                simulator.init();
+            } catch(e) {
+                ui.showError("Erro ao iniciar painéis: " + e.message);
+            }
         },
         renderAll: () => {
-            app.renderFacade();
-            app.renderTable(); 
-            if(document.getElementById('selUnidade').options.length <= 1) simulator.updateUnitList();
+            try {
+                app.renderFacade();
+                app.renderTable(); 
+                if(document.getElementById('selUnidade').options.length <= 1) simulator.updateUnitList();
+            } catch(e) {
+                ui.showError("Erro na renderização (Verifique console): " + e.message);
+            }
         },
         formatMoney: (v) => v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}),
         fetchAPIs: async () => {
@@ -995,7 +1030,7 @@
             if(!state.isAdmin) return;
             const curr = state.statusMap[apt] || 'livre';
             const next = curr === 'livre' ? 'reservado' : (curr === 'reservado' ? 'vendido' : 'livre');
-            database.ref('madrid_data/statusMap/' + apt).set(next).catch(error => alert("🔴 Firebase bloqueou a gravação! Ajuste as regras (Rules) para '.write': 'auth != null'."));
+            database.ref('madrid_data/statusMap/' + apt).set(next).catch(error => ui.showError("🔴 Firebase bloqueou a gravação! Ajuste as regras (Rules) para '.write': 'auth != null'."));
             if(next === 'vendido') { database.ref('madrid_data/lastSaleUpdate').set(new Date().toLocaleString('pt-BR')); }
         },
         selectApt: (apt) => {
@@ -1292,31 +1327,37 @@
     const db = {
         load: () => {
             database.ref('madrid_data').on('value', (snap) => {
-                const data = snap.val();
-                if(data) {
-                    if (data.units && data.units['1404'] && data.units['1404'].tipo) { 
-                        state.units = data.units; 
-                    } else { 
-                        database.ref('madrid_data/units').set(DEFAULT_UNITS); 
+                try {
+                    const data = snap.val();
+                    if(data) {
+                        if (data.units && data.units['1404'] && data.units['1404'].tipo) { 
+                            state.units = data.units; 
+                        } else { 
+                            database.ref('madrid_data/units').set(DEFAULT_UNITS); 
+                            state.units = DEFAULT_UNITS;
+                        }
+                        state.statusMap = data.statusMap || {};
+                        state.globalMultiplier = data.globalMultiplier || 1;
+                        state.previousMultiplier = data.previousMultiplier || 1;
+                        state.lastPriceUpdate = data.lastPriceUpdate || null;
+                        state.lastSaleUpdate = data.lastSaleUpdate || null;
+                    } else {
+                        database.ref('madrid_data/units').set(DEFAULT_UNITS);
                         state.units = DEFAULT_UNITS;
                     }
-                    state.statusMap = data.statusMap || {};
-                    state.globalMultiplier = data.globalMultiplier || 1;
-                    state.previousMultiplier = data.previousMultiplier || 1;
-                    state.lastPriceUpdate = data.lastPriceUpdate || null;
-                    state.lastSaleUpdate = data.lastSaleUpdate || null;
-                } else {
-                    database.ref('madrid_data/units').set(DEFAULT_UNITS);
-                    state.units = DEFAULT_UNITS;
+                    app.renderAll();
+                } catch(e) {
+                    ui.showError("Falha interna ao processar dados: " + e.message, "Erro de Banco de Dados");
                 }
-                app.renderAll();
+            }, (error) => {
+                ui.showError("A sua conta não tem permissão para ler os dados do Firebase. Vá ao painel do Firebase > Realtime Database > Regras, e garanta que está configurado como '.read': 'auth != null'. \n\nErro: " + error.message, "Acesso Negado (Firebase Rules)");
             });
         },
         forceSync: () => {
             if(confirm("Tem certeza que deseja forçar a sincronização de todos os dados bases (Áreas, Tipologia, Vagas) para o Firebase?\n\nOs status de 'Vendido' não serão apagados.")) {
                 database.ref('madrid_data/units').set(DEFAULT_UNITS).then(() => {
                     alert("Banco de dados sincronizado com sucesso! O 13º andar foi removido e o 14º adicionado.");
-                }).catch(e => alert("Erro ao sincronizar. Verifique as regras do Firebase."));
+                }).catch(e => ui.showError("Erro ao sincronizar. Verifique as regras do Firebase: " + e.message));
             }
         },
         reset: () => {
@@ -1332,11 +1373,15 @@
 
     window.onload = () => {
         firebase.auth().onAuthStateChanged((u) => {
-            if(u) { 
-                const userEmail = u.email.toLowerCase().trim();
-                state.isAdmin = EMAILS_GESTOR.some(e => e.toLowerCase().trim() === userEmail);
-                state.user = userEmail; 
-                auth.initApp(); 
+            try {
+                if(u) { 
+                    const userEmail = u.email ? u.email.toLowerCase().trim() : '';
+                    state.isAdmin = EMAILS_GESTOR.some(e => e.toLowerCase().trim() === userEmail);
+                    state.user = userEmail; 
+                    auth.initApp(); 
+                }
+            } catch(e) {
+                ui.showError("Erro fatal no processo de login: " + e.message, "Erro de Autenticação");
             }
         });
         ui.updateAssets('light');
