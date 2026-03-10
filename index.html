@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V29</title>
+    <title>Madrid Casa Elevada | Premium V30</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -100,8 +100,7 @@
         /* --- JANELA DE ERRO DE LOGIN (MODAL) --- */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 1; transition: 0.3s; }
         .modal-overlay.hidden { display: none !important; opacity: 0; }
-        .modal-box { background: var(--bg-card); width: 90%; max-width: 360px; border-radius: var(--radius-card); padding: 30px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.5); animation: popIn 0.3s ease; border: 1px solid var(--border-color); }
-        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-box { background: var(--bg-card); width: 90%; max-width: 360px; border-radius: var(--radius-card); padding: 30px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.5); border: 1px solid var(--border-color); }
         .modal-icon { font-size: 45px; color: #D98888; margin-bottom: 15px; }
         .modal-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0 0 10px 0; }
         .modal-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 25px; line-height: 1.5; font-weight: 500; word-break: break-word; }
@@ -109,8 +108,8 @@
         .btn-modal { width: 100%; height: 46px; border-radius: var(--radius-btn); background: #D98888; color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: 0.3s; }
         .btn-modal:hover { background: #C47272; transform: translateY(-2px); }
 
-        /* APP LAYOUT */
-        .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.6s forwards; }
+        /* --- APP LAYOUT (ANIMAÇÃO REMOVIDA PARA EVITAR TELA BRANCA) --- */
+        .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; }
         
         /* CABEÇALHO FLUTUANTE */
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 30px; margin-bottom: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); transition: opacity 0.3s; }
@@ -186,21 +185,6 @@
         .price-main { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; margin-top: 5px; color: white; }
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-
-        .calc-results-box { background: var(--bg-input); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border-color); margin-top: 20px; }
-        .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
-        .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); align-items: center; }
-        
-        .calc-results-box span, 
-        .calc-results-box strong,
-        .res-row span, 
-        .res-row strong,
-        .res-total span, 
-        .res-total strong { 
-            font-size: 16px !important; 
-            font-weight: 700 !important; 
-            color: var(--text-main) !important; 
-        }
 
         .btn-primary { width: 100%; height: 50px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4); filter: brightness(1.05); }
@@ -382,9 +366,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal"></option>
-                                <option value="balao_20" id="optBalao"></option>
-                                <option value="misto_completo" id="optMisto"></option>
+                                <option value="mensal_20" id="optMensal">15x Mensal (20%)</option>
+                                <option value="balao_20" id="optBalao">3x Balão (20%)</option>
+                                <option value="misto_completo" id="optMisto">15x Mensal (10%) + 3x Balão (10%)</option>
                             </select>
                         </div>
                         
@@ -417,22 +401,22 @@
                             </div>
                         </div>
 
-                        <div id="calcResults" class="calc-results-box hidden">
-                            <div class="res-row">
-                                <span id="lblSinal">Ato/Sinal (3x)</span>
-                                <strong id="resSinal">...</strong>
+                        <div id="calcResults" class="hidden" style="background: #F4F6F4; padding: 20px; border-radius: 8px; border: 1px solid #E2E6E0; margin-top: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+                                <span id="lblSinal" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">Ato/Sinal (3x)</span>
+                                <strong id="resSinal" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">...</strong>
                             </div>
-                            <div id="rowMensal" class="res-row">
-                                <span id="lblMensal">Mensais (16x)</span>
-                                <strong id="resMensal">...</strong>
+                            <div id="rowMensal" style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+                                <span id="lblMensal" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">Mensais (16x)</span>
+                                <strong id="resMensal" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">...</strong>
                             </div>
-                            <div id="rowBalao" class="res-row">
-                                <span id="lblBalao">Balões (3x)</span>
-                                <strong id="resBalao">...</strong>
+                            <div id="rowBalao" style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+                                <span id="lblBalao" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">Balões (3x)</span>
+                                <strong id="resBalao" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">...</strong>
                             </div>
-                            <div class="res-total">
-                                <span>Entrega da Chave</span>
-                                <strong id="resChaves">...</strong>
+                            <div style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #A3ACA5; align-items: center;">
+                                <span style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">Entrega da Chave</span>
+                                <strong id="resChaves" style="font-size: 16px !important; font-weight: 800 !important; color: #1C241E !important; font-family: 'Plus Jakarta Sans', sans-serif;">...</strong>
                             </div>
                         </div>
 
@@ -944,7 +928,7 @@
             
             firebase.auth().signInWithEmailAndPassword(e, p).catch(err => { 
                 btn.innerText = "Entrar no Sistema";
-                let msg = err.message; // Exibe o erro exato do Firebase para depuração
+                let msg = err.message; 
                 ui.showError("FIREBASE: " + msg);
             });
         },
