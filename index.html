@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V27</title>
+    <title>Madrid Casa Elevada | Premium V28</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -97,9 +97,20 @@
 
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 44px; height: 44px; border-radius: 50%; color: var(--brand-gold); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
+        /* --- JANELA DE ERRO DE LOGIN (MODAL) --- */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 1; transition: 0.3s; }
+        .modal-overlay.hidden { display: none !important; opacity: 0; }
+        .modal-box { background: var(--bg-card); width: 90%; max-width: 360px; border-radius: var(--radius-card); padding: 30px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.5); animation: popIn 0.3s ease; border: 1px solid var(--border-color); }
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-icon { font-size: 45px; color: #D98888; margin-bottom: 15px; }
+        .modal-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin: 0 0 10px 0; }
+        .modal-text { font-size: 13px; color: var(--text-secondary); margin-bottom: 25px; line-height: 1.5; font-weight: 500; }
+        
+        .btn-modal { width: 100%; height: 46px; border-radius: var(--radius-btn); background: #D98888; color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: 0.3s; }
+        .btn-modal:hover { background: #C47272; transform: translateY(-2px); }
+
         /* APP LAYOUT */
         .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; opacity: 0; animation: fadeIn 0.6s forwards; }
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(10px); } }
         
         /* CABEÇALHO FLUTUANTE */
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 30px; margin-bottom: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); transition: opacity 0.3s; }
@@ -120,7 +131,7 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* --- CONFIGURAÇÃO DE TELA CHEIA (Apenas Tabela) --- */
+        /* TELA CHEIA (Apenas Tabela) */
         .card.table-fullscreen { 
             position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; 
             z-index: 99999 !important; border-radius: 0 !important; margin: 0 !important; 
@@ -131,7 +142,7 @@
         .card.table-fullscreen .table-wrapper { flex: 1 1 auto !important; min-height: 0 !important; min-width: 0 !important; width: 100% !important; overflow: auto !important; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-card); }
         .card.table-fullscreen #salesTable th { position: sticky; top: 0; z-index: 20; background: var(--brand-primary); color: var(--brand-gold); border-bottom: none; font-size: 10px; }
 
-        /* PAINEL DE GESTÃO (PREMIUM DARK) */
+        /* PAINEL DE GESTÃO */
         .premium-admin-card { background: linear-gradient(135deg, var(--brand-primary) 0%, #0d1710 100%); color: white; border: none; position: relative; overflow: hidden; box-shadow: 0 15px 35px -10px rgba(31, 51, 36, 0.5); }
         .premium-admin-card::before { content: ''; position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(197,160,101,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
         
@@ -262,22 +273,19 @@
 </head>
 <body>
 
+<div id="errorModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <i class="fas fa-exclamation-circle modal-icon"></i>
+        <h3 class="modal-title">Erro de Autenticação</h3>
+        <p class="modal-text" id="errorModalText">O e-mail ou a senha informados estão incorretos. Por favor, tente novamente.</p>
+        <button class="btn-modal" onclick="ui.closeError()">Tentar Novamente</button>
+    </div>
+</div>
+
 <div id="loginOverlay">
     <div class="login-side-visual">
         <img src="IMG 01 - BANHEIRO SUITE.png" class="carousel-img active" alt="Madrid">
         <img src="IMG 02 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 03 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 04 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 05 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 06 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 07 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 08 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 09 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 10 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 11 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 12 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 13 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
-        <img src="IMG 14 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
         <img src="IMG 15 - BANHEIRO SUITE.png" class="carousel-img" alt="Madrid">
     </div>
     <div class="login-panel">
@@ -293,7 +301,6 @@
             </div>
 
             <button onclick="auth.login()" class="btn-login">Entrar no Sistema</button>
-            <p id="loginError" style="color:#D98888; display:none; margin-top:15px; font-size:11px; background:rgba(217, 136, 136, 0.15); padding:10px; border-radius:8px; border: 1px solid rgba(217, 136, 136, 0.3); font-weight: 600;"></p>
         </div>
     </div>
 </div>
@@ -565,8 +572,7 @@
       projectId: "madrid-casa-elevada",
       storageBucket: "madrid-casa-elevada.firebasestorage.app",
       messagingSenderId: "1056274692863",
-      appId: "1:1056274692863:web:ade2d7b08f8fee9d776aca",
-      measurementId: "G-14JZ9JE7FJ"
+      appId: "1:1056274692863:web:ade2d7b08f8fee9d776aca"
     };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
@@ -604,6 +610,13 @@
                 icon.classList.remove('fa-eye-slash');
                 icon.classList.add('fa-eye');
             }
+        },
+        showError: (msg) => {
+            document.getElementById('errorModalText').innerText = msg;
+            document.getElementById('errorModal').classList.remove('hidden');
+        },
+        closeError: () => {
+            document.getElementById('errorModal').classList.add('hidden');
         }
     };
     
@@ -921,8 +934,18 @@
         login: () => {
             const e = document.getElementById('loginEmail').value.trim();
             const p = document.getElementById('loginPass').value;
-            if(!e || !p) { document.getElementById('loginError').innerText = "Preencha e-mail e senha."; document.getElementById('loginError').style.display = 'block'; return; }
-            firebase.auth().signInWithEmailAndPassword(e, p).catch(err => { document.getElementById('loginError').innerText = "Acesso Negado: Verifique seu e-mail e senha."; document.getElementById('loginError').style.display = 'block'; });
+            if(!e || !p) { 
+                ui.showError("Preencha o e-mail e a senha para continuar.");
+                return; 
+            }
+            firebase.auth().signInWithEmailAndPassword(e, p).catch(err => { 
+                let msg = "Acesso Negado: O e-mail ou a senha informados estão incorretos.";
+                if (err.code === 'auth/network-request-failed') msg = "Erro de conexão: Verifique a sua internet ou configurações do Firebase.";
+                else if (err.code === 'auth/user-not-found') msg = "Este e-mail não está cadastrado no sistema.";
+                else if (err.code === 'auth/wrong-password') msg = "Senha incorreta. Tente novamente.";
+                else if (err.code === 'auth/too-many-requests') msg = "Muitas tentativas. A sua conta foi bloqueada temporariamente. Tente mais tarde.";
+                ui.showError(msg);
+            });
         },
         logout: () => firebase.auth().signOut().then(() => location.reload()),
         initApp: () => {
@@ -1017,6 +1040,7 @@
         renderTable: () => {
             const tb = document.getElementById('salesTable');
             if(!tb) return;
+            
             const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'todos';
             const plan = document.getElementById('selPlano').value;
             const elSinalParcelas = document.getElementById('selSinalParcelas');
@@ -1053,9 +1077,8 @@
                 if(st === 'vendido') totalVend += finalPrice;
                 if(st === 'livre') countLivre++;
 
-                // APLICAÇÃO DO FILTRO COM AS NOMENCLATURAS NOVAS
-                if (!state.isAdmin && st === 'vendido') return; // Corretor não vê vendido
-                if (state.isAdmin && filter !== 'todos' && st !== filter) return; // Gestor vê o filtro escolhido
+                if (!state.isAdmin && st === 'vendido') return; 
+                if (state.isAdmin && filter !== 'todos' && st !== filter) return;
 
                 let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
                 let pSinal = parseFloat(document.getElementById('inpSinal').value)||10;
@@ -1322,23 +1345,6 @@
         }
     };
 
-    const ui = {
-        toggleTheme: () => {
-            const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', next);
-            ui.updateAssets(next);
-        },
-        updateAssets: (t) => {
-            const logo = t==='dark' ? 'MADRID LOGO BRANCA-01.png' : 'MADRID LOGO MUSGO-01-01.png';
-            document.getElementById('logoHeader').src = logo;
-        },
-        toggleFullscreen: () => {
-            const c = document.getElementById('simulatorCard');
-            c.classList.toggle('card-fullscreen');
-            document.getElementById('mainHeader').classList.toggle('hidden-nav');
-        }
-    };
-
     window.onload = () => {
         firebase.auth().onAuthStateChanged((u) => {
             if(u) { 
@@ -1360,5 +1366,3 @@
 </script>
 </body>
 </html>
-
-
