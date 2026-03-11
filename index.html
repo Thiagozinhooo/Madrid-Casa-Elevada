@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V34</title>
+    <title>Madrid Casa Elevada | Premium V35</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,10 +92,14 @@
         .toggle-password { position: absolute; right: 15px; top: 24px; transform: translateY(-50%); cursor: pointer; color: rgba(255,255,255,0.5); font-size: 15px; transition: 0.3s; z-index: 10; }
         .toggle-password:hover { color: var(--brand-gold); }
 
-        .remember-wrapper { display: flex; align-items: center; justify-content: flex-start; gap: 8px; width: 100%; margin-bottom: 20px; padding-left: 5px; }
-        .remember-wrapper input[type="checkbox"] { cursor: pointer; accent-color: var(--brand-gold); width: 14px; height: 14px; margin: 0; }
-        .remember-wrapper label { font-size: 12px; color: rgba(255,255,255,0.7); cursor: pointer; font-weight: 500; letter-spacing: 0.5px; }
-        .remember-wrapper label:hover { color: white; }
+        .remember-wrapper { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 20px; padding: 0 5px; }
+        .remember-left { display: flex; align-items: center; gap: 8px; }
+        .remember-left input[type="checkbox"] { cursor: pointer; accent-color: var(--brand-gold); width: 14px; height: 14px; margin: 0; }
+        .remember-left label { font-size: 12px; color: rgba(255,255,255,0.7); cursor: pointer; font-weight: 500; letter-spacing: 0.5px; }
+        .remember-left label:hover { color: white; }
+        
+        .forgot-pass { color: var(--brand-gold); font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; transition: 0.2s; }
+        .forgot-pass:hover { color: white; text-decoration: underline; }
 
         .btn-login { width: 100%; height: 48px; border-radius: var(--radius-btn); background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.2); }
         .btn-login:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4); }
@@ -112,7 +116,15 @@
         .btn-modal { width: 100%; height: 46px; border-radius: var(--radius-btn); background: #D98888; color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: 0.3s; }
         .btn-modal:hover { background: #C47272; transform: translateY(-2px); }
 
-        /* APP LAYOUT - ANIMAÇÃO REMOVIDA PARA EVITAR TELA BRANCA */
+        /* NOTIFICAÇÕES (TOASTS) */
+        #toastContainer { position: fixed; bottom: 30px; right: 30px; z-index: 10001; display: flex; flex-direction: column; gap: 15px; }
+        .toast { padding: 15px 20px; border-radius: var(--radius-md); background: var(--bg-card); color: var(--text-main); font-weight: 700; box-shadow: var(--shadow-card); border-left: 4px solid var(--brand-gold); animation: slideInRight 0.3s ease forwards; display: flex; align-items: center; gap: 12px; font-size: 13px; border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
+        .toast.success { border-left-color: #8FBC9B; }
+        .toast.error { border-left-color: #D98888; }
+        @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOutToast { to { transform: translateY(20px); opacity: 0; } }
+
+        /* APP LAYOUT */
         .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; }
         
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 30px; margin-bottom: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); transition: opacity 0.3s; }
@@ -187,25 +199,20 @@
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 
-        /* CAIXA DE RESULTADOS COM CORES DINÂMICAS PARA MODO ESCURO E CLARO */
         #calcResults { padding: 20px !important; border-radius: 8px !important; margin-top: 20px !important; background: var(--bg-input) !important; border: 1px solid var(--border-color) !important; }
         #calcResults div { font-family: 'Plus Jakarta Sans', sans-serif !important; }
-        #calcResults span, 
-        #calcResults strong { 
-            font-family: 'Plus Jakarta Sans', sans-serif !important;
-            font-size: 15px !important; 
-            font-weight: 800 !important; 
-            color: var(--text-main) !important; 
-            text-transform: none !important;
-        }
+        #calcResults span, #calcResults strong { font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 15px !important; font-weight: 800 !important; color: var(--text-main) !important; text-transform: none !important; }
         .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
         .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); align-items: center; }
 
-        .btn-primary { width: 100%; height: 50px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); }
+        .btn-primary { height: 50px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4); filter: brightness(1.05); }
         
-        .btn-secondary { width: 100%; height: 50px; background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(31, 51, 36, 0.3); }
+        .btn-secondary { height: 50px; background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(31, 51, 36, 0.3); }
         .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(31, 51, 36, 0.4); filter: brightness(1.1); }
+
+        .btn-whatsapp { height: 50px; background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: white; border: none; border-radius: var(--radius-md); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+        .btn-whatsapp:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4); filter: brightness(1.05); }
         
         .btn-outline { height: 40px; padding: 0 18px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
@@ -216,18 +223,8 @@
         
         #salesTable { width: 100%; border-collapse: collapse; font-size: 12px; min-width: max-content; }
         
-        #salesTable th { 
-            background: var(--bg-input); color: var(--text-secondary); 
-            padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--border-color); 
-            font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; 
-            white-space: nowrap; font-size: 10px; position: sticky; top: 0; z-index: 10; 
-        }
-        #salesTable td { 
-            padding: 14px 12px; border-bottom: 1px solid var(--border-color); text-align: left; 
-            color: var(--text-main); vertical-align: middle; white-space: nowrap; 
-            font-weight: 500; font-size: 12px; transition: background 0.2s;
-        }
-        
+        #salesTable th { background: var(--bg-input); color: var(--text-secondary); padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; font-size: 10px; position: sticky; top: 0; z-index: 10; }
+        #salesTable td { padding: 14px 12px; border-bottom: 1px solid var(--border-color); text-align: left; color: var(--text-main); vertical-align: middle; white-space: nowrap; font-weight: 500; font-size: 12px; transition: background 0.2s; }
         #salesTable tr:last-child td { border-bottom: none; }
         #salesTable tr:hover td { background-color: var(--bg-hover); }
         
@@ -241,7 +238,7 @@
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO */
+        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -271,6 +268,8 @@
 </head>
 <body>
 
+<div id="toastContainer"></div>
+
 <div id="errorModal" class="modal-overlay hidden">
     <div class="modal-box">
         <i class="fas fa-exclamation-circle modal-icon"></i>
@@ -299,8 +298,11 @@
             </div>
 
             <div class="remember-wrapper">
-                <input type="checkbox" id="rememberMe">
-                <label for="rememberMe">Lembrar meu e-mail</label>
+                <div class="remember-left">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Lembrar meu e-mail</label>
+                </div>
+                <a href="#" onclick="auth.resetPassword()" class="forgot-pass">Esqueci a senha</a>
             </div>
 
             <button onclick="auth.login()" class="btn-login" id="btnLoginBtn">Entrar no Sistema</button>
@@ -365,6 +367,12 @@
                 
                 <div class="sim-content-wrapper" style="display:contents;">
                     <div class="sim-controls">
+                        
+                        <div style="margin-bottom:15px;">
+                            <label class="control-label">Nome do Cliente (Opcional)</label>
+                            <input type="text" id="inpClientName" class="control-input" placeholder="Ex: João Silva" oninput="ui.saveState()">
+                        </div>
+
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
                             <div>
                                 <label class="control-label">Andar</label>
@@ -441,11 +449,16 @@
                         </div>
 
                         <div style="display: flex; gap: 10px; margin-top: 25px;">
-                            <button onclick="simulator.saveProposalPDF()" class="btn-primary" style="flex: 1; margin-top: 0;">
+                            <button onclick="simulator.saveProposalPDF()" class="btn-primary" style="flex: 1;">
                                 <i class="fas fa-file-pdf" style="font-size: 16px;"></i> Salvar PDF
                             </button>
-                            <button onclick="simulator.saveProposalExcel()" class="btn-secondary" style="flex: 1; margin-top: 0;">
+                            <button onclick="simulator.saveProposalExcel()" class="btn-secondary" style="flex: 1;">
                                 <i class="fas fa-file-excel" style="font-size: 16px;"></i> Salvar Excel
+                            </button>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <button onclick="simulator.sendWhatsApp()" class="btn-whatsapp" style="width: 100%;">
+                                <i class="fab fa-whatsapp" style="font-size: 18px;"></i> Enviar Proposta por WhatsApp
                             </button>
                         </div>
 
@@ -602,11 +615,6 @@
             const logo = t==='dark' ? 'MADRID LOGO BRANCA-01.png' : 'MADRID LOGO MUSGO-01-01.png';
             document.getElementById('logoHeader').src = logo;
         },
-        toggleFullscreen: () => {
-            const c = document.getElementById('simulatorCard');
-            c.classList.toggle('card-fullscreen');
-            document.getElementById('mainHeader').classList.toggle('hidden-nav');
-        },
         togglePassword: () => {
             const inp = document.getElementById('loginPass');
             const icon = document.getElementById('togglePasswordIcon');
@@ -620,7 +628,7 @@
                 icon.classList.add('fa-eye');
             }
         },
-        showError: (msg, title="Erro de Autenticação") => {
+        showError: (msg, title="Aviso") => {
             document.getElementById('errorModalTitle').innerText = title;
             document.getElementById('errorModalText').innerText = msg;
             document.getElementById('errorModal').classList.remove('hidden');
@@ -628,13 +636,25 @@
         closeError: () => {
             document.getElementById('errorModal').classList.add('hidden');
         },
-        
-        // --- FUNÇÕES DE SALVAR E CARREGAR O ESTADO DO SITE ---
+        showToast: (msg, type='success') => {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            let icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            let color = type === 'success' ? '#8FBC9B' : '#D98888';
+            toast.innerHTML = `<i class="fas ${icon}" style="font-size:16px; color: ${color};"></i> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'fadeOutToast 0.3s forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        },
         saveState: () => {
             if (state.isLoading) return;
             const sAndar = document.getElementById('selAndar');
             if (!sAndar) return; 
             const stateObj = {
+                inpClientName: document.getElementById('inpClientName').value,
                 selAndar: sAndar.value,
                 selTypology: document.getElementById('selTypology').value,
                 selUnidade: document.getElementById('selUnidade').value,
@@ -646,12 +666,12 @@
             };
             localStorage.setItem('madrid_app_state', JSON.stringify(stateObj));
         },
-        
         loadState: () => {
             const saved = localStorage.getItem('madrid_app_state');
             if (saved) {
                 try {
                     const st = JSON.parse(saved);
+                    if (st.inpClientName) document.getElementById('inpClientName').value = st.inpClientName;
                     if (st.selAndar) document.getElementById('selAndar').value = st.selAndar;
                     if (st.selTypology) document.getElementById('selTypology').value = st.selTypology;
                     if (st.selPlano) document.getElementById('selPlano').value = st.selPlano;
@@ -659,9 +679,7 @@
                     if (st.inpSinal) document.getElementById('inpSinal').value = st.inpSinal;
                     if (st.tableFilter && document.getElementById('tableFilter')) document.getElementById('tableFilter').value = st.tableFilter;
                     
-                    if (st.tableExpanded === true) {
-                        app.toggleTable(true); 
-                    }
+                    if (st.tableExpanded === true) app.toggleTable(true); 
 
                     if(st.selPlano === 'mensal_20') { document.getElementById('inpMensal').value = 20; document.getElementById('inpBalao').value = 0; }
                     else if(st.selPlano === 'balao_20') { document.getElementById('inpMensal').value = 0; document.getElementById('inpBalao').value = 20; }
@@ -785,15 +803,11 @@
             ui.saveState();
         },
         
-        saveProposalPDF: () => {
+        sendWhatsApp: () => {
             const u = document.getElementById('selUnidade').value;
-            if(!u || !state.units[u]) return;
+            if(!u || !state.units[u]) { ui.showToast("Selecione uma unidade primeiro.", "error"); return; }
             
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'mm', 'a4');
-            const brandPrimary = [31, 51, 36]; 
-            const brandGold = [197, 160, 101]; 
-
+            let client = document.getElementById('inpClientName').value.trim();
             let d = state.units[u];
             let price = d.valor * state.globalMultiplier;
             let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
@@ -811,6 +825,59 @@
             let vBalao = (price * pBalao/100)/b;
             let vChaves = price * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
+            let validade = new Date();
+            validade.setDate(validade.getDate() + 5);
+            let validadeStr = validade.toLocaleDateString('pt-BR');
+
+            let msg = `Olá${client ? ' ' + client : ''}! Tudo bem? 🏢\n\n`;
+            msg += `Aqui está a simulação que preparei para você no *Madrid Casa Elevada*:\n\n`;
+            msg += `🔑 *Apartamento ${u}* (${tipo})\n`;
+            msg += `📐 Área Privativa: ${d.area} m²\n`;
+            msg += `🚗 Vagas: ${d.vagas}\n\n`;
+            msg += `💰 *Valor Total de Tabela:* ${app.formatMoney(price)}\n\n`;
+            msg += `🗓️ *Proposta de Pagamento:*\n`;
+            msg += `• Entrada/Sinal (${parcelasSinal}x): ${app.formatMoney(vSinal)}\n`;
+            if(pMensal > 0) msg += `• Mensais (${m}x): ${app.formatMoney(vMensal)}\n`;
+            if(pBalao > 0) msg += `• Balões (${b}x): ${app.formatMoney(vBalao)}\n`;
+            msg += `• Entrega das Chaves (Jul/2027): ${app.formatMoney(vChaves)}\n\n`;
+            msg += `⏳ _Proposta válida até: ${validadeStr}_\n\n`;
+            msg += `Qualquer dúvida, estou à disposição!`;
+
+            let url = `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        },
+
+        saveProposalPDF: () => {
+            const u = document.getElementById('selUnidade').value;
+            if(!u || !state.units[u]) { ui.showToast("Selecione uma unidade.", "error"); return; }
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const brandPrimary = [31, 51, 36]; 
+            const brandGold = [197, 160, 101]; 
+
+            let client = document.getElementById('inpClientName').value.trim();
+            let d = state.units[u];
+            let price = d.valor * state.globalMultiplier;
+            let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
+            
+            let pSinal = parseFloat(document.getElementById('inpSinal').value)||0;
+            let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
+            let pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
+            let parcelasSinal = parseInt(document.getElementById('selSinalParcelas').value) || 3;
+            
+            let m = simulator.getMonths();
+            let b = simulator.getBalloons() || 1;
+            
+            let vSinal = (price * pSinal/100)/parcelasSinal;
+            let vMensal = m > 0 ? (price * pMensal/100)/m : 0;
+            let vBalao = (price * pBalao/100)/b;
+            let vChaves = price * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
+
+            let validade = new Date();
+            validade.setDate(validade.getDate() + 5);
+            let validadeStr = validade.toLocaleDateString('pt-BR');
+
             try { doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 15, 50, 20); } 
             catch (e) { doc.setFontSize(24); doc.setTextColor(...brandPrimary); doc.text("MADRID", 14, 25); }
             
@@ -819,23 +886,32 @@
             doc.setTextColor(...brandGold);
             doc.text("PROPOSTA COMERCIAL", 196, 25, { align: 'right' });
             
-            doc.setFontSize(10);
-            doc.setTextColor(100, 100, 100);
-            doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, 196, 31, { align: 'right' });
+            if(client) {
+                doc.setFontSize(11);
+                doc.setTextColor(...brandPrimary);
+                doc.text(`Preparado para: ${client}`, 196, 31, { align: 'right' });
+                doc.setFontSize(9);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}  |  Válido até: ${validadeStr}`, 196, 36, { align: 'right' });
+            } else {
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}  |  Válido até: ${validadeStr}`, 196, 31, { align: 'right' });
+            }
 
             doc.setDrawColor(200, 200, 200);
-            doc.line(14, 40, 196, 40);
+            doc.line(14, 43, 196, 43);
 
             doc.setFont("helvetica", "bold"); doc.setFontSize(14); doc.setTextColor(...brandPrimary);
-            doc.text(`APARTAMENTO ${u}`, 14, 52);
+            doc.text(`APARTAMENTO ${u}`, 14, 54);
 
             doc.setFont("helvetica", "normal"); doc.setFontSize(11); doc.setTextColor(50, 50, 50);
-            doc.text(`Tipologia: ${tipo}`, 14, 60);
-            doc.text(`Área Privativa: ${d.area} m²`, 14, 66);
-            doc.text(`Vagas de Garagem: ${d.vagas}`, 14, 72);
+            doc.text(`Tipologia: ${tipo}`, 14, 62);
+            doc.text(`Área Privativa: ${d.area} m²`, 14, 68);
+            doc.text(`Vagas de Garagem: ${d.vagas}`, 14, 74);
 
             doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
-            doc.text(`Valor Total de Tabela: ${app.formatMoney(price)}`, 14, 85);
+            doc.text(`Valor Total de Tabela: ${app.formatMoney(price)}`, 14, 87);
 
             let scheduleBody = [];
             let currentDate = new Date();
@@ -845,9 +921,7 @@
             let balloonMonths = [];
             if (pBalao > 0 && b > 0) {
                 let step = Math.floor(m / b);
-                for(let i=1; i<=b; i++) {
-                    balloonMonths.push(i * step); 
-                }
+                for(let i=1; i<=b; i++) balloonMonths.push(i * step); 
             }
 
             let totalSinalCol = 0, totalMensalCol = 0, totalBalaoCol = 0, totalChavesCol = 0, totalProposta = 0;
@@ -895,7 +969,7 @@
             ]);
 
             doc.autoTable({
-                startY: 95,
+                startY: 97,
                 head: [["MÊS/ANO", "SINAL", "MENSAIS", "BALÕES", "CHAVES", "TOTAL MÊS"]],
                 body: scheduleBody,
                 theme: 'grid',
@@ -913,12 +987,14 @@
             doc.text(doc.splitTextToSize(textObs, 182), 14, finalY);
 
             doc.save(`Proposta_Madrid_Apto_${u}.pdf`);
+            ui.showToast("PDF gerado com sucesso!", "success");
         },
 
         saveProposalExcel: () => {
             const u = document.getElementById('selUnidade').value;
             if(!u || !state.units[u]) return;
             
+            let client = document.getElementById('inpClientName').value.trim();
             let d = state.units[u];
             let price = d.valor * state.globalMultiplier;
             let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
@@ -936,8 +1012,15 @@
             let vBalao = (price * pBalao/100)/b;
             let vChaves = price * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
+            let validade = new Date();
+            validade.setDate(validade.getDate() + 5);
+
             let csv = "\uFEFF"; 
-            csv += "PROPOSTA COMERCIAL - MADRID CASA ELEVADA\n\n";
+            csv += "PROPOSTA COMERCIAL - MADRID CASA ELEVADA\n";
+            if(client) csv += `Preparado para:;${client}\n`;
+            csv += `Gerado em:;${new Date().toLocaleDateString('pt-BR')}\n`;
+            csv += `Valido ate:;${validade.toLocaleDateString('pt-BR')}\n\n`;
+
             csv += `Unidade;${u}\n`;
             csv += `Tipologia;${tipo}\n`;
             csv += `Area Privativa;${d.area} m2\n`;
@@ -994,6 +1077,7 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            ui.showToast("Excel baixado com sucesso!", "success");
         }
     };
 
@@ -1019,8 +1103,21 @@
             
             firebase.auth().signInWithEmailAndPassword(e, p).catch(err => { 
                 btn.innerText = "Entrar no Sistema";
-                let msg = err.message; 
-                ui.showError("FIREBASE: " + msg);
+                let msg = "Acesso Negado: O e-mail ou a senha estão incorretos."; 
+                if (err.code === 'auth/network-request-failed') msg = "Erro de conexão. Verifique sua internet.";
+                ui.showError(msg);
+            });
+        },
+        resetPassword: () => {
+            const e = document.getElementById('loginEmail').value.trim();
+            if(!e) {
+                ui.showError("Digite o seu e-mail no campo acima e clique em 'Esqueci a senha' novamente.", "Recuperar Senha");
+                return;
+            }
+            firebase.auth().sendPasswordResetEmail(e).then(() => {
+                ui.showError("Foi enviado um link de recuperação para o e-mail: " + e + ".\n\nVerifique a sua caixa de entrada e também o Lixo Eletrônico (Spam).", "E-mail Enviado!");
+            }).catch(err => {
+                ui.showError("Erro ao enviar e-mail: " + err.message);
             });
         },
         logout: () => {
@@ -1147,6 +1244,7 @@
                 document.body.style.overflow = ''; 
             }
             app.renderTable();
+            ui.saveState();
         },
         renderTable: () => {
             const tb = document.getElementById('salesTable');
@@ -1229,27 +1327,30 @@
                 if(document.getElementById('logVenda')) document.getElementById('logVenda').innerText = state.lastSaleUpdate ? `Última venda:\n${state.lastSaleUpdate}` : '';
                 if(document.getElementById('logReajuste')) document.getElementById('logReajuste').innerText = state.lastPriceUpdate ? `Log: ${state.lastPriceUpdate}` : '';
             }
-            
             ui.saveState();
         },
         
         applyGlobalAdjustment: () => {
             const val = parseFloat(document.getElementById('globalAdjust').value);
-            if(isNaN(val) || val === 0) return alert("Digite um valor de reajuste (ex: 0.72)");
+            if(isNaN(val) || val === 0) return ui.showError("Digite um valor de reajuste válido (ex: 0.72)");
             const newMultiplier = state.globalMultiplier * (1 + (val / 100));
-            database.ref('madrid_data/globalMultiplier').set(newMultiplier).catch(e => alert("Erro Firebase"));
+            database.ref('madrid_data/globalMultiplier').set(newMultiplier)
+                .then(() => ui.showToast("Tabela reajustada com sucesso!", "success"))
+                .catch(e => ui.showToast("Erro Firebase ao reajustar", "error"));
+            
             database.ref('madrid_data/previousMultiplier').set(state.globalMultiplier);
             database.ref('madrid_data/lastPriceUpdate').set(`${new Date().toLocaleString('pt-BR')} (+${val}%)`);
             document.getElementById('globalAdjust').value = '';
         },
         undoGlobalAdjustment: () => {
             if (state.previousMultiplier && state.previousMultiplier !== state.globalMultiplier) {
-                if(confirm(`Desfazer último reajuste?`)) {
-                    database.ref('madrid_data/globalMultiplier').set(state.previousMultiplier);
+                if(confirm(`Tem a certeza que quer desfazer o último reajuste?`)) {
+                    database.ref('madrid_data/globalMultiplier').set(state.previousMultiplier)
+                        .then(() => ui.showToast("Reajuste desfeito com sucesso!", "success"));
                     database.ref('madrid_data/previousMultiplier').set(state.previousMultiplier);
                     database.ref('madrid_data/lastPriceUpdate').set(`${new Date().toLocaleString('pt-BR')} (Desfeito)`);
                 }
-            } else alert("Não há reajuste para desfazer.");
+            } else ui.showError("Não há nenhum reajuste na memória para desfazer.");
         },
         
         downloadTablePDF: () => {
@@ -1340,6 +1441,7 @@
             });
 
             doc.save('Tabela_Madrid_Oficial.pdf');
+            ui.showToast("Tabela Oficial gerada em PDF!", "success");
         },
 
         downloadEspelhoPDF: () => {
@@ -1414,6 +1516,7 @@
             doc.setTextColor(138, 51, 51); doc.text("VENDIDO", 113, finalY + 4);
 
             doc.save('Espelho_Vendas_Madrid.pdf');
+            ui.showToast("Espelho baixado em PDF!", "success");
         }
     };
 
@@ -1449,7 +1552,7 @@
         forceSync: () => {
             if(confirm("Tem certeza que deseja forçar a sincronização de todos os dados bases (Áreas, Tipologia, Vagas) para o Firebase?\n\nOs status de 'Vendido' não serão apagados.")) {
                 database.ref('madrid_data/units').set(DEFAULT_UNITS).then(() => {
-                    alert("Banco de dados sincronizado com sucesso! O 13º andar foi removido e o 14º adicionado.");
+                    ui.showToast("Banco sincronizado com sucesso!", "success");
                 }).catch(e => ui.showError("Erro ao sincronizar. Verifique as regras do Firebase: " + e.message));
             }
         },
@@ -1459,8 +1562,8 @@
                 database.ref('madrid_data/globalMultiplier').set(1);
                 database.ref('madrid_data/previousMultiplier').set(1);
                 database.ref('madrid_data/lastPriceUpdate').set(null);
-                alert("Tabela de preços resetada com sucesso! As unidades vendidas e as áreas no banco de dados continuam a salvo.");
-            } else if (confirmWord !== null) { alert("Ação cancelada."); }
+                ui.showToast("Tabela de preços resetada com sucesso!", "success");
+            } else if (confirmWord !== null) { ui.showToast("Ação cancelada pelo usuário.", "error"); }
         }
     };
 
