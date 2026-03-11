@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V35</title>
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <title>Madrid Casa Elevada | Premium V37</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -106,7 +111,7 @@
 
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 44px; height: 44px; border-radius: 50%; color: var(--brand-gold); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
-        /* MODAL DE ERRO */
+        /* MODAL DE ERRO E AVISOS GERAIS */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 1; transition: 0.3s; }
         .modal-overlay.hidden { display: none !important; opacity: 0; }
         .modal-box { background: var(--bg-card); width: 90%; max-width: 360px; border-radius: var(--radius-card); padding: 30px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.5); border: 1px solid var(--border-color); }
@@ -116,7 +121,7 @@
         .btn-modal { width: 100%; height: 46px; border-radius: var(--radius-btn); background: #D98888; color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: 0.3s; }
         .btn-modal:hover { background: #C47272; transform: translateY(-2px); }
 
-        /* NOTIFICAÇÕES (TOASTS) */
+        /* NOTIFICAÇÕES (TOASTS) FLUTUANTES */
         #toastContainer { position: fixed; bottom: 30px; right: 30px; z-index: 10001; display: flex; flex-direction: column; gap: 15px; }
         .toast { padding: 15px 20px; border-radius: var(--radius-md); background: var(--bg-card); color: var(--text-main); font-weight: 700; box-shadow: var(--shadow-card); border-left: 4px solid var(--brand-gold); animation: slideInRight 0.3s ease forwards; display: flex; align-items: center; gap: 12px; font-size: 13px; border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
         .toast.success { border-left-color: #8FBC9B; }
@@ -238,7 +243,7 @@
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
+        /* MAPA ESPELHO */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -394,9 +399,9 @@
                         <div style="margin-bottom:15px;">
                             <label class="control-label">Plano de Pagamento</label>
                             <select id="selPlano" class="control-input" onchange="simulator.updatePlan()">
-                                <option value="mensal_20" id="optMensal"></option>
-                                <option value="balao_20" id="optBalao"></option>
-                                <option value="misto_completo" id="optMisto"></option>
+                                <option value="mensal_20" id="optMensal">15x Mensal (20%)</option>
+                                <option value="balao_20" id="optBalao">3x Balão (20%)</option>
+                                <option value="misto_completo" id="optMisto">15x Mensal (10%) + 3x Balão (10%)</option>
                             </select>
                         </div>
                         
@@ -834,7 +839,10 @@
             msg += `🔑 *Apartamento ${u}* (${tipo})\n`;
             msg += `📐 Área Privativa: ${d.area} m²\n`;
             msg += `🚗 Vagas: ${d.vagas}\n\n`;
-            msg += `💰 *Valor Total de Tabela:* ${app.formatMoney(price)}\n\n`;
+            
+            // TEXTO ALTERADO COMO SOLICITADO
+            msg += `💰 *Valor do Investimento:* ${app.formatMoney(price)}\n\n`;
+            
             msg += `🗓️ *Proposta de Pagamento:*\n`;
             msg += `• Entrada/Sinal (${parcelasSinal}x): ${app.formatMoney(vSinal)}\n`;
             if(pMensal > 0) msg += `• Mensais (${m}x): ${app.formatMoney(vMensal)}\n`;
@@ -911,7 +919,9 @@
             doc.text(`Vagas de Garagem: ${d.vagas}`, 14, 74);
 
             doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
-            doc.text(`Valor Total de Tabela: ${app.formatMoney(price)}`, 14, 87);
+            
+            // TEXTO ALTERADO NO PDF
+            doc.text(`Valor do Investimento: ${app.formatMoney(price)}`, 14, 87);
 
             let scheduleBody = [];
             let currentDate = new Date();
@@ -921,7 +931,9 @@
             let balloonMonths = [];
             if (pBalao > 0 && b > 0) {
                 let step = Math.floor(m / b);
-                for(let i=1; i<=b; i++) balloonMonths.push(i * step); 
+                for(let i=1; i<=b; i++) {
+                    balloonMonths.push(i * step); 
+                }
             }
 
             let totalSinalCol = 0, totalMensalCol = 0, totalBalaoCol = 0, totalChavesCol = 0, totalProposta = 0;
@@ -1025,7 +1037,9 @@
             csv += `Tipologia;${tipo}\n`;
             csv += `Area Privativa;${d.area} m2\n`;
             csv += `Vagas;${d.vagas}\n`;
-            csv += `Valor Total de Tabela;${app.formatMoney(price)}\n\n`;
+            
+            // TEXTO ALTERADO NO EXCEL
+            csv += `Valor do Investimento;${app.formatMoney(price)}\n\n`;
             
             csv += "MES/ANO;SINAL;MENSAIS;BALOES;CHAVES;TOTAL DO MES\n";
 
