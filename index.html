@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Madrid Casa Elevada | Premium V33</title>
+    <title>Madrid Casa Elevada | Premium V34</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -92,7 +92,6 @@
         .toggle-password { position: absolute; right: 15px; top: 24px; transform: translateY(-50%); cursor: pointer; color: rgba(255,255,255,0.5); font-size: 15px; transition: 0.3s; z-index: 10; }
         .toggle-password:hover { color: var(--brand-gold); }
 
-        /* CSS DA CAIXINHA DE LEMBRAR E-MAIL (AGORA REINSERIDO) */
         .remember-wrapper { display: flex; align-items: center; justify-content: flex-start; gap: 8px; width: 100%; margin-bottom: 20px; padding-left: 5px; }
         .remember-wrapper input[type="checkbox"] { cursor: pointer; accent-color: var(--brand-gold); width: 14px; height: 14px; margin: 0; }
         .remember-wrapper label { font-size: 12px; color: rgba(255,255,255,0.7); cursor: pointer; font-weight: 500; letter-spacing: 0.5px; }
@@ -103,7 +102,7 @@
 
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 44px; height: 44px; border-radius: 50%; color: var(--brand-gold); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
-        /* MODAL DE ERRO E AVISOS GERAIS */
+        /* MODAL DE ERRO */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 1; transition: 0.3s; }
         .modal-overlay.hidden { display: none !important; opacity: 0; }
         .modal-box { background: var(--bg-card); width: 90%; max-width: 360px; border-radius: var(--radius-card); padding: 30px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.5); border: 1px solid var(--border-color); }
@@ -113,10 +112,9 @@
         .btn-modal { width: 100%; height: 46px; border-radius: var(--radius-btn); background: #D98888; color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: 0.3s; }
         .btn-modal:hover { background: #C47272; transform: translateY(-2px); }
 
-        /* APP LAYOUT - ANIMAÇÃO REMOVIDA */
+        /* APP LAYOUT - ANIMAÇÃO REMOVIDA PARA EVITAR TELA BRANCA */
         .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; }
         
-        /* CABEÇALHO FLUTUANTE */
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 30px; margin-bottom: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); transition: opacity 0.3s; }
         .header-logo { height: 35px; width: auto; object-fit: contain; }
         .hidden-nav { display: none !important; }
@@ -126,7 +124,6 @@
         .btn-icon { width: 34px; height: 34px; border-radius: 50%; border: none; background: var(--bg-hover); color: var(--text-main); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 13px; }
         .btn-icon:hover { background: var(--brand-primary); color: var(--brand-gold); }
 
-        /* GRID PRINCIPAL */
         .grid-main { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 30px; align-items: start; }
         
         .card { background: var(--bg-card); border-radius: var(--radius-card); padding: 30px; box-shadow: var(--shadow-card); border: 1px solid var(--border-color); margin-bottom: 30px; }
@@ -135,7 +132,6 @@
         .card-title { font-size: 14px; font-weight: 800; color: var(--text-main); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .card-title i { color: var(--brand-gold); font-size: 16px; }
 
-        /* TELA CHEIA (Apenas Tabela) */
         .card.table-fullscreen { 
             position: fixed !important; inset: 0 !important; width: 100vw !important; height: 100vh !important; 
             z-index: 99999 !important; border-radius: 0 !important; margin: 0 !important; 
@@ -191,7 +187,7 @@
         
         .sim-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 
-        /* CAIXA DE RESULTADOS COM CORES DINÂMICAS PARA FUNCIONAR NO MODO ESCURO E CLARO */
+        /* CAIXA DE RESULTADOS COM CORES DINÂMICAS PARA MODO ESCURO E CLARO */
         #calcResults { padding: 20px !important; border-radius: 8px !important; margin-top: 20px !important; background: var(--bg-input) !important; border: 1px solid var(--border-color) !important; }
         #calcResults div { font-family: 'Plus Jakarta Sans', sans-serif !important; }
         #calcResults span, 
@@ -245,7 +241,7 @@
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
+        /* MAPA ESPELHO */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -587,7 +583,7 @@
     let state = { 
         isAdmin: false, user: '', statusMap: {}, 
         globalMultiplier: 1, previousMultiplier: 1, lastPriceUpdate: null, lastSaleUpdate: null,
-        tableExpanded: false, units: DEFAULT_UNITS
+        tableExpanded: false, units: DEFAULT_UNITS, isLoading: true
     };
 
     const ui = {
@@ -631,6 +627,50 @@
         },
         closeError: () => {
             document.getElementById('errorModal').classList.add('hidden');
+        },
+        
+        // --- FUNÇÕES DE SALVAR E CARREGAR O ESTADO DO SITE ---
+        saveState: () => {
+            if (state.isLoading) return;
+            const sAndar = document.getElementById('selAndar');
+            if (!sAndar) return; 
+            const stateObj = {
+                selAndar: sAndar.value,
+                selTypology: document.getElementById('selTypology').value,
+                selUnidade: document.getElementById('selUnidade').value,
+                selPlano: document.getElementById('selPlano').value,
+                selSinalParcelas: document.getElementById('selSinalParcelas').value,
+                inpSinal: document.getElementById('inpSinal').value,
+                tableFilter: document.getElementById('tableFilter') ? document.getElementById('tableFilter').value : 'todos',
+                tableExpanded: state.tableExpanded
+            };
+            localStorage.setItem('madrid_app_state', JSON.stringify(stateObj));
+        },
+        
+        loadState: () => {
+            const saved = localStorage.getItem('madrid_app_state');
+            if (saved) {
+                try {
+                    const st = JSON.parse(saved);
+                    if (st.selAndar) document.getElementById('selAndar').value = st.selAndar;
+                    if (st.selTypology) document.getElementById('selTypology').value = st.selTypology;
+                    if (st.selPlano) document.getElementById('selPlano').value = st.selPlano;
+                    if (st.selSinalParcelas) document.getElementById('selSinalParcelas').value = st.selSinalParcelas;
+                    if (st.inpSinal) document.getElementById('inpSinal').value = st.inpSinal;
+                    if (st.tableFilter && document.getElementById('tableFilter')) document.getElementById('tableFilter').value = st.tableFilter;
+                    
+                    if (st.tableExpanded === true) {
+                        app.toggleTable(true); 
+                    }
+
+                    if(st.selPlano === 'mensal_20') { document.getElementById('inpMensal').value = 20; document.getElementById('inpBalao').value = 0; }
+                    else if(st.selPlano === 'balao_20') { document.getElementById('inpMensal').value = 0; document.getElementById('inpBalao').value = 20; }
+                    else if(st.selPlano === 'misto_completo') { document.getElementById('inpMensal').value = 10; document.getElementById('inpBalao').value = 10; }
+
+                    return st.selUnidade; 
+                } catch(e) { console.error(e); }
+            }
+            return null;
         }
     };
     
@@ -659,12 +699,17 @@
             let m = simulator.getMonths();
             return Math.max(1, Math.ceil(m / 6));
         },
-        updateUnitList: () => {
+        updateUnitList: (wantedUnit = null) => {
             const andar = document.getElementById('selAndar').value;
             const type = document.getElementById('selTypology').value;
             const s = document.getElementById('selUnidade'); 
+            
+            let currentSelected = wantedUnit || s.value;
             s.innerHTML = '<option value="">Selecione...</option>';
+            
             let first = null;
+            let found = false;
+
             Object.keys(state.units).forEach(u => {
                 let d = state.units[u];
                 let t = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
@@ -675,12 +720,18 @@
                 if(st !== 'livre') return; 
 
                 if(!first) first = u;
+                if(u == currentSelected) found = true;
+
                 let price = d.valor * state.globalMultiplier;
                 s.innerHTML += `<option value="${u}">Apto ${u} (${t}) - ${app.formatMoney(price)}</option>`;
             });
-            if(first) { 
+            
+            if(found) { 
+                s.value = currentSelected; 
+                simulator.calculate(); 
+            } else if(first) { 
                 s.value = first; 
-                simulator.selectUnit(); 
+                simulator.calculate(); 
             } else { 
                 document.getElementById('displayTotal').innerText = 'R$ 0,00';
                 document.getElementById('calcResults').classList.add('hidden');
@@ -730,6 +781,8 @@
             let pChaves = 100 - pSinal - pMensal - pBalao;
             document.getElementById('resChaves').innerText = app.formatMoney(price * pChaves/100);
             document.getElementById('calcResults').classList.remove('hidden');
+            
+            ui.saveState();
         },
         
         saveProposalPDF: () => {
@@ -999,6 +1052,8 @@
         }
     };
 
+    let isFirstLoad = true;
+
     const app = {
         init: () => {
             try {
@@ -1010,9 +1065,19 @@
         },
         renderAll: () => {
             try {
-                app.renderFacade();
-                app.renderTable(); 
-                if(document.getElementById('selUnidade').options.length <= 1) simulator.updateUnitList();
+                if (isFirstLoad) {
+                    state.isLoading = true;
+                    let wantedUnit = ui.loadState();
+                    app.renderFacade();
+                    simulator.updateUnitList(wantedUnit);
+                    app.renderTable();
+                    state.isLoading = false;
+                    isFirstLoad = false;
+                } else {
+                    app.renderFacade();
+                    app.renderTable(); 
+                    simulator.updateUnitList();
+                }
             } catch(e) {
                 ui.showError("Erro na renderização: " + e.message);
             }
@@ -1061,8 +1126,12 @@
             document.getElementById('selUnidade').value = apt;
             simulator.selectUnit();
         },
-        toggleTable: () => {
-            state.tableExpanded = !state.tableExpanded;
+        toggleTable: (forceState = null) => {
+            if (forceState !== null) {
+                state.tableExpanded = forceState;
+            } else {
+                state.tableExpanded = !state.tableExpanded;
+            }
             const btn = document.getElementById('btnToggleTable');
             const tableCard = document.getElementById('tableCard');
             const header = document.getElementById('mainHeader');
@@ -1160,6 +1229,8 @@
                 if(document.getElementById('logVenda')) document.getElementById('logVenda').innerText = state.lastSaleUpdate ? `Última venda:\n${state.lastSaleUpdate}` : '';
                 if(document.getElementById('logReajuste')) document.getElementById('logReajuste').innerText = state.lastPriceUpdate ? `Log: ${state.lastPriceUpdate}` : '';
             }
+            
+            ui.saveState();
         },
         
         applyGlobalAdjustment: () => {
@@ -1396,7 +1467,6 @@
     window.onload = () => {
         ui.initTheme();
         
-        // RECUPERA E PREENCHE O E-MAIL SALVO
         const savedEmail = localStorage.getItem('madrid_saved_email');
         if (savedEmail) {
             document.getElementById('loginEmail').value = savedEmail;
