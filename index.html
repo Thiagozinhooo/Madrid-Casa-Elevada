@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
-    <title>Madrid Casa Elevada | Premium V43</title>
+    <title>Madrid Casa Elevada | Premium V44</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -79,7 +79,6 @@
         ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--brand-gold); }
 
-        /* TELA DE LOGIN UNIFICADA */
         #loginOverlay { position: fixed; inset: 0; z-index: 9999; display: flex; background: var(--brand-primary); }
         .login-side-visual { flex: 1.5; background: #000; display: none; position: relative; overflow: hidden; }
         @media(min-width: 1024px) { .login-side-visual { display: block; } }
@@ -111,7 +110,6 @@
 
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 44px; height: 44px; border-radius: 50%; color: var(--brand-gold); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
-        /* MODAL DE ERRO E AVISOS GERAIS */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 1; transition: 0.3s; }
         .modal-overlay.hidden { display: none !important; opacity: 0; }
         .modal-box { background: var(--bg-card); width: 90%; max-width: 360px; border-radius: var(--radius-card); padding: 30px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.5); border: 1px solid var(--border-color); }
@@ -121,7 +119,6 @@
         .btn-modal { width: 100%; height: 46px; border-radius: var(--radius-btn); background: #D98888; color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: 0.3s; }
         .btn-modal:hover { background: #C47272; transform: translateY(-2px); }
 
-        /* NOTIFICAÇÕES (TOASTS) FLUTUANTES */
         #toastContainer { position: fixed; bottom: 30px; right: 30px; z-index: 10001; display: flex; flex-direction: column; gap: 15px; }
         .toast { padding: 15px 20px; border-radius: var(--radius-md); background: var(--bg-card); color: var(--text-main); font-weight: 700; box-shadow: var(--shadow-card); border-left: 4px solid var(--brand-gold); animation: slideInRight 0.3s ease forwards; display: flex; align-items: center; gap: 12px; font-size: 13px; border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
         .toast.success { border-left-color: #8FBC9B; }
@@ -129,7 +126,6 @@
         @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes fadeOutToast { to { transform: translateY(20px); opacity: 0; } }
 
-        /* APP LAYOUT */
         .app-layout { width: 100%; max-width: 1440px; margin: 0 auto; padding: 25px; display: none; }
         
         .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; padding: 15px 30px; margin-bottom: 30px; background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--border-color); border-radius: 50px; position: sticky; top: 15px; z-index: 100; box-shadow: var(--shadow-sm); transition: opacity 0.3s; }
@@ -158,7 +154,6 @@
         .card.table-fullscreen .card-header { flex-shrink: 0; margin-bottom: 15px; }
         .card.table-fullscreen .table-wrapper { flex: 1 1 auto !important; min-height: 0 !important; min-width: 0 !important; width: 100% !important; overflow: auto !important; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-card); }
         
-        /* PAINEL DE GESTÃO */
         .premium-admin-card { background: linear-gradient(135deg, var(--brand-primary) 0%, #0d1710 100%); color: white; border: none; position: relative; overflow: hidden; box-shadow: 0 15px 35px -10px rgba(31, 51, 36, 0.5); }
         .premium-admin-card::before { content: ''; position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(197,160,101,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
         
@@ -220,31 +215,13 @@
         .btn-outline { height: 40px; padding: 0 18px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
 
-        /* --- TABELA OFICIAL BLINDADA (FONTE, TAMANHO E COR PADRONIZADOS) --- */
+        /* TABELA OFICIAL BLINDADA */
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); }
         
         #salesTable { width: 100%; border-collapse: collapse; min-width: max-content; }
-        
-        #salesTable th { 
-            background: var(--bg-input); 
-            padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--border-color); 
-            text-transform: uppercase; white-space: nowrap; position: sticky; top: 0; z-index: 10; 
-            font-family: 'Plus Jakarta Sans', sans-serif !important; 
-            font-size: 13px !important; 
-            color: var(--text-main) !important; 
-            font-weight: 700 !important; 
-        }
-        
-        #salesTable td { 
-            padding: 14px 12px; border-bottom: 1px solid var(--border-color); text-align: left; 
-            vertical-align: middle; white-space: nowrap; transition: background 0.2s; 
-            font-family: 'Plus Jakarta Sans', sans-serif !important; 
-            font-size: 13px !important; 
-            color: var(--text-main) !important; 
-            font-weight: 500 !important; 
-        }
-        
+        #salesTable th { background: var(--bg-input); padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--border-color); text-transform: uppercase; white-space: nowrap; position: sticky; top: 0; z-index: 10; font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 13px !important; color: var(--text-main) !important; font-weight: 700 !important; }
+        #salesTable td { padding: 14px 12px; border-bottom: 1px solid var(--border-color); text-align: left; vertical-align: middle; white-space: nowrap; transition: background 0.2s; font-family: 'Plus Jakarta Sans', sans-serif !important; font-size: 13px !important; color: var(--text-main) !important; font-weight: 500 !important; }
         #salesTable tr:last-child td { border-bottom: none; }
         #salesTable tr:hover td { background-color: var(--bg-hover); }
         
@@ -329,7 +306,7 @@
     </div>
 </div>
 
-<div id="app" class="app-layout" style="opacity: 1 !important; visibility: visible !important;">
+<div id="appView" class="app-layout" style="opacity: 1 !important; visibility: visible !important;">
     <header id="mainHeader" class="header no-print">
         <img id="logoHeader" src="MADRID LOGO MUSGO-01-01.png" alt="Madrid" class="header-logo">
         <div class="user-controls">
@@ -367,8 +344,8 @@
                     </div>
                     <div class="admin-reajuste">
                         <input type="number" id="globalAdjust" step="0.1" placeholder="%">
-                        <button onclick="app.applyGlobalAdjustment()" class="btn-apply">Aplicar Fator</button>
-                        <button onclick="app.undoGlobalAdjustment()" class="btn-undo" title="Desfazer Último Reajuste"><i class="fas fa-undo"></i></button>
+                        <button onclick="coreApp.applyGlobalAdjustment()" class="btn-apply">Aplicar Fator</button>
+                        <button onclick="coreApp.undoGlobalAdjustment()" class="btn-undo" title="Desfazer Último Reajuste"><i class="fas fa-undo"></i></button>
                     </div>
                     <div id="logReajuste" style="font-size: 9px; color: rgba(255,255,255,0.4); text-align: center; margin-top: 10px; font-weight: 600; min-height: 14px; letter-spacing: 0.5px;"></div>
                 </div>
@@ -432,7 +409,7 @@
                         
                         <div style="margin-bottom:25px;">
                             <label class="control-label">Parcelas do Sinal (Ato)</label>
-                            <select id="selSinalParcelas" class="control-input" onchange="simulator.calculate(); app.renderTable();">
+                            <select id="selSinalParcelas" class="control-input" onchange="simulator.calculate(); coreApp.renderTable();">
                                 <option value="1">1x (À Vista)</option>
                                 <option value="2">2x</option>
                                 <option value="3" selected>3x</option>
@@ -488,7 +465,7 @@
                         </div>
                         <div style="margin-top: 10px;">
                             <button onclick="simulator.sendWhatsApp()" class="btn-whatsapp" style="width: 100%;">
-                                <i class="fab fa-whatsapp" style="font-size: 18px;"></i> Enviar Proposta por WhatsApp
+                                <i class="fab fa-whatsapp" style="font-size: 18px;"></i> Enviar Proposta
                             </button>
                         </div>
 
@@ -499,7 +476,7 @@
             <div class="card">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-building"></i> Mapa do Prédio</span>
-                    <button onclick="app.downloadEspelhoPDF()" class="admin-only btn-outline" style="height: 32px; padding: 0 12px; color: #D98888; border-color: rgba(217,136,136,0.3);">
+                    <button onclick="coreApp.downloadEspelhoPDF()" class="admin-only btn-outline" style="height: 32px; padding: 0 12px; color: #D98888; border-color: rgba(217,136,136,0.3);">
                         <i class="fas fa-file-pdf"></i> PDF
                     </button>
                 </div>
@@ -532,17 +509,17 @@
                     <span class="card-title"><i class="fas fa-list-ul"></i> Tabela Oficial</span>
                     <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap;">
                         
-                        <select id="tableFilter" onchange="app.renderTable()" class="control-input admin-only" style="width:auto; height:40px; padding: 0 15px; font-size: 11px; text-transform: uppercase; font-weight: 800;">
+                        <select id="tableFilter" onchange="coreApp.renderTable()" class="control-input admin-only" style="width:auto; height:40px; padding: 0 15px; font-size: 11px; text-transform: uppercase; font-weight: 800;">
                             <option value="todos">Todos</option>
                             <option value="livre">Disponíveis</option>
                             <option value="reservado">Reservados</option>
                             <option value="vendido">Vendidos</option>
                         </select>
                         
-                        <button onclick="app.toggleTable()" class="btn-outline" id="btnToggleTable" style="color: var(--brand-gold-dark); border-color: rgba(198, 162, 101, 0.4); height: 40px;">
+                        <button onclick="coreApp.toggleTable()" class="btn-outline" id="btnToggleTable" style="color: var(--brand-gold-dark); border-color: rgba(198, 162, 101, 0.4); height: 40px;">
                             <i class="fas fa-expand-arrows-alt"></i> Expandir Detalhes
                         </button>
-                        <button onclick="app.downloadTablePDF()" class="btn-outline" style="height: 40px; background: var(--brand-primary); color: white; border-color: var(--brand-primary);">
+                        <button onclick="coreApp.downloadTablePDF()" class="btn-outline" style="height: 40px; background: var(--brand-primary); color: white; border-color: var(--brand-primary);">
                             <i class="fas fa-file-pdf"></i> PDF Completo
                         </button>
                     </div>
@@ -716,7 +693,7 @@
                     if (st.inpSinal) document.getElementById('inpSinal').value = st.inpSinal;
                     if (st.tableFilter && document.getElementById('tableFilter')) document.getElementById('tableFilter').value = st.tableFilter;
                     
-                    if (st.tableExpanded === true) app.toggleTable(true); 
+                    if (st.tableExpanded === true) coreApp.toggleTable(true); 
 
                     if(st.selPlano === 'mensal_20') { document.getElementById('inpMensal').value = 20; document.getElementById('inpBalao').value = 0; }
                     else if(st.selPlano === 'balao_20') { document.getElementById('inpMensal').value = 0; document.getElementById('inpBalao').value = 20; }
@@ -750,7 +727,7 @@
                         database.ref('madrid_data/units').set(DEFAULT_UNITS);
                         state.units = DEFAULT_UNITS;
                     }
-                    app.renderAll();
+                    coreApp.renderAll();
                 } catch(e) {
                     ui.showError("Falha interna ao processar dados: " + e.message, "Erro de Banco de Dados");
                 }
@@ -825,7 +802,7 @@
                 if(u == currentSelected) found = true;
 
                 let price = d.valor * state.globalMultiplier;
-                s.innerHTML += `<option value="${u}">Apto ${u} (${t}) - ${app.formatMoney(price)}</option>`;
+                s.innerHTML += `<option value="${u}">Apto ${u} (${t}) - ${coreApp.formatMoney(price)}</option>`;
             });
             
             if(found) { 
@@ -849,13 +826,13 @@
             else if (p === 'balao_20') { inpM.value = 0; inpB.value = 20; }
             else if (p === 'misto_completo') { inpM.value = 10; inpB.value = 10; }
             simulator.calculate();
-            app.renderTable();
+            coreApp.renderTable();
         },
         calculate: () => {
             const u = document.getElementById('selUnidade').value;
             if(!u || !state.units[u]) return;
             let price = state.units[u].valor * state.globalMultiplier;
-            document.getElementById('displayTotal').innerText = app.formatMoney(price);
+            document.getElementById('displayTotal').innerText = coreApp.formatMoney(price);
             
             let pSinal = parseFloat(document.getElementById('inpSinal').value)||0;
             let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
@@ -866,22 +843,22 @@
             let b = simulator.getBalloons() || 1; 
             
             document.getElementById('lblSinal').innerText = `Ato/Sinal (${parcelasSinal}x)`;
-            document.getElementById('resSinal').innerText = app.formatMoney((price * pSinal/100)/parcelasSinal);
+            document.getElementById('resSinal').innerText = coreApp.formatMoney((price * pSinal/100)/parcelasSinal);
             
             if(pMensal > 0) {
                 document.getElementById('rowMensal').style.display='flex';
                 document.getElementById('lblMensal').innerText = `Mensais (${m}x)`;
-                document.getElementById('resMensal').innerText = app.formatMoney((price * pMensal/100)/m);
+                document.getElementById('resMensal').innerText = coreApp.formatMoney((price * pMensal/100)/m);
             } else document.getElementById('rowMensal').style.display='none';
 
             if(pBalao > 0) {
                 document.getElementById('rowBalao').style.display='flex';
                 document.getElementById('lblBalao').innerText = `Balões (${b}x)`;
-                document.getElementById('resBalao').innerText = app.formatMoney((price * pBalao/100)/b);
+                document.getElementById('resBalao').innerText = coreApp.formatMoney((price * pBalao/100)/b);
             } else document.getElementById('rowBalao').style.display='none';
 
             let pChaves = 100 - pSinal - pMensal - pBalao;
-            document.getElementById('resChaves').innerText = app.formatMoney(price * pChaves/100);
+            document.getElementById('resChaves').innerText = coreApp.formatMoney(price * pChaves/100);
             document.getElementById('calcResults').classList.remove('hidden');
             
             ui.saveState();
@@ -918,12 +895,12 @@
             msg += `🔑 *Apartamento ${u}* (${tipo})\n`;
             msg += `📐 Área Privativa: ${d.area} m²\n`;
             msg += `🚗 Vagas: ${d.vagas}\n\n`;
-            msg += `💰 *Valor do Investimento:* ${app.formatMoney(price)}\n\n`;
+            msg += `💰 *Valor do Investimento:* ${coreApp.formatMoney(price)}\n\n`;
             msg += `🗓️ *Proposta de Pagamento:*\n`;
-            msg += `• Entrada/Sinal (${parcelasSinal}x): ${app.formatMoney(vSinal)}\n`;
-            if(pMensal > 0) msg += `• Mensais (${m}x): ${app.formatMoney(vMensal)}\n`;
-            if(pBalao > 0) msg += `• Balões (${b}x): ${app.formatMoney(vBalao)}\n`;
-            msg += `• Entrega das Chaves (Jul/2027): ${app.formatMoney(vChaves)}\n\n`;
+            msg += `• Entrada/Sinal (${parcelasSinal}x): ${coreApp.formatMoney(vSinal)}\n`;
+            if(pMensal > 0) msg += `• Mensais (${m}x): ${coreApp.formatMoney(vMensal)}\n`;
+            if(pBalao > 0) msg += `• Balões (${b}x): ${coreApp.formatMoney(vBalao)}\n`;
+            msg += `• Entrega das Chaves (Jul/2027): ${coreApp.formatMoney(vChaves)}\n\n`;
             msg += `⏳ _Proposta válida até: ${validadeStr}_\n\n`;
             msg += `Qualquer dúvida, estou à disposição!`;
 
@@ -963,6 +940,7 @@
             validade.setDate(validade.getDate() + 5);
             let validadeStr = validade.toLocaleDateString('pt-BR');
 
+            // CABEÇALHO CONTRATUAL PROFISSIONAL
             doc.setFontSize(14);
             doc.setFont("helvetica", "bold");
             doc.text("BAUMANN EMPREENDIMENTOS IMOBILIÁRIOS SPE LTDA", 105, 20, { align: 'center' });
@@ -978,6 +956,7 @@
             let randomNum = Math.floor(1000 + Math.random() * 9000);
             doc.text(`PROPOSTA DE COMPRA E VENDA Nº 00${randomNum}`, 105, 48, { align: 'center' });
 
+            // DADOS DO COMPRADOR
             doc.setFontSize(10);
             doc.setFont("helvetica", "bold");
             doc.text("Dados do Comprador", 14, 58);
@@ -988,6 +967,7 @@
             doc.text(`CPF/CNPJ:   ${cpf || '_______________________'}`, 14, 71);
             doc.text(`Telefone:   ${phone || '_______________________'}`, 105, 71);
 
+            // DADOS DO IMÓVEL
             doc.setFontSize(10);
             doc.setFont("helvetica", "bold");
             doc.text("Discriminação do Imóvel", 14, 81);
@@ -1003,16 +983,19 @@
             doc.text(`Escaninho: ${d.esc || '-'} (${d.areaEsc || 0} m²)`, 130, 94);
             doc.text(`Vagas de Garagem: ${d.vagas}`, 14, 100);
 
+            // VALORES E CONDIÇÕES
             doc.setFontSize(10);
             doc.setFont("helvetica", "bold");
             doc.text("Condições da Proposta", 14, 110);
 
             doc.setFontSize(9);
             doc.setFont("helvetica", "normal");
-            doc.text(`Valor do Investimento: ${app.formatMoney(price)}`, 14, 117);
+            doc.text(`Valor do Investimento: ${coreApp.formatMoney(price)}`, 14, 117);
             doc.text(`Validade da Proposta: ${validadeStr}`, 130, 117);
+            // TEXTO AJUSTADO SEM A PALAVRA JUROS
             doc.text("Forma de correção das parcelas: Reajustadas mensalmente pelo INCC até a entrega.", 14, 123);
 
+            // TABELA MÊS A MÊS - LÓGICA DE COLUNAS SEPARADAS
             let scheduleBody = [];
             let currentDate = new Date();
             let startMonth = currentDate.getMonth(); 
@@ -1025,43 +1008,59 @@
             }
 
             let totalProposta = 0;
-            let totalIter = Math.max(m, parcelasSinal);
-            
-            let inicioMensal = 1;
+            // MÁXIMO DE MESES PARA RODAR O FLUXO (Sinal ou Mensais, o que for maior)
+            let totalIter = Math.max(m, parcelasSinal - 1);
 
             for (let i = 0; i <= totalIter; i++) {
                 let rowDate = new Date(startYear, startMonth + i, 1);
                 let monthStr = rowDate.toLocaleDateString('pt-BR', { month: '2-digit', year: 'numeric' });
                 
-                let desc = [];
-                let valMonth = 0;
+                let vS = 0, vM = 0, vB = 0;
 
-                if (i < parcelasSinal && pSinal > 0) { desc.push(`Entrada (${i+1}/${parcelasSinal})`); valMonth += vSinal; }
-                if (i >= inicioMensal && i < (inicioMensal + m) && pMensal > 0) { desc.push(`Mensal`); valMonth += vMensal; }
-                if (balloonMonths.includes(i) && pBalao > 0) { desc.push(`Balão`); valMonth += vBalao; }
-                if (i === m) { desc.push(`Entrega das Chaves`); valMonth += vChaves; }
+                // Sinal em todos os meses desde o começo até acabarem as parcelas
+                if (i < parcelasSinal && pSinal > 0) vS = vSinal;
+                // Mensais AGORA COMEÇAM NO SEGUNDO MÊS (i >= 1)
+                if (i >= 1 && i <= m && pMensal > 0) vM = vMensal;
+                // Balões nos meses calculados
+                if (balloonMonths.includes(i) && pBalao > 0) vB = vBalao;
+
+                let valMonth = vS + vM + vB;
 
                 if (valMonth > 0) {
-                    scheduleBody.push([ monthStr, desc.join(" + "), app.formatMoney(valMonth) ]);
+                    scheduleBody.push([ 
+                        monthStr, 
+                        vS > 0 ? coreApp.formatMoney(vS) : "-", 
+                        vM > 0 ? coreApp.formatMoney(vM) : "-", 
+                        vB > 0 ? coreApp.formatMoney(vB) : "-", 
+                        coreApp.formatMoney(valMonth) 
+                    ]);
                     totalProposta += valMonth;
                 }
             }
 
+            // CHAVES EM LINHA ISOLADA E O TOTAL FINAL EM BAIXO
             scheduleBody.push([
-                { content: 'TOTAL DA PROPOSTA', colSpan: 2, styles: { halign: 'right', fontStyle: 'bold' } }, 
-                { content: app.formatMoney(totalProposta), styles: { fontStyle: 'bold' } }
+                { content: 'ENTREGA DAS CHAVES (Jul/2027)', colSpan: 4, styles: { halign: 'right', fontStyle: 'bold', textColor: [31, 51, 36] } }, 
+                { content: coreApp.formatMoney(vChaves), styles: { fontStyle: 'bold', textColor: [31, 51, 36] } }
+            ]);
+            totalProposta += vChaves;
+
+            scheduleBody.push([
+                { content: 'VALOR TOTAL DA PROPOSTA', colSpan: 4, styles: { halign: 'right', fontStyle: 'bold', fillColor: [240,240,240] } }, 
+                { content: coreApp.formatMoney(totalProposta), styles: { fontStyle: 'bold', fillColor: [240,240,240] } }
             ]);
 
             doc.autoTable({
                 startY: 129,
-                head: [["Data / Vencimento", "Composição da Parcela", "Valor da Parcela"]],
+                head: [["Data / Vencimento", "Entrada/Sinal", "Mensais", "Balões", "Total do Mês"]],
                 body: scheduleBody,
                 theme: 'grid',
-                headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 9 },
-                styles: { fontSize: 8, cellPadding: 4, textColor: [0, 0, 0] },
-                columnStyles: { 0: { halign: 'center' }, 2: { halign: 'right' } }
+                headStyles: { fillColor: [230, 230, 230], textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 9, halign: 'center' },
+                styles: { fontSize: 8, cellPadding: 4, textColor: [0, 0, 0], halign: 'center' },
+                columnStyles: { 0: { fontStyle: 'bold' }, 4: { fontStyle: 'bold' } }
             });
 
+            // ASSINATURAS E OBSERVAÇÕES
             let finalY = doc.lastAutoTable.finalY + 10;
             
             if(finalY > 230) {
@@ -1136,9 +1135,9 @@
             csv += `Tipologia;${tipo}\n`;
             csv += `Area Privativa;${d.area} m2\n`;
             csv += `Vagas;${d.vagas}\n`;
-            csv += `Valor do Investimento;${app.formatMoney(price)}\n\n`;
+            csv += `Valor do Investimento;${coreApp.formatMoney(price)}\n\n`;
             
-            csv += "MES/VENCIMENTO;COMPOSICAO DA PARCELA;VALOR A PAGAR\n";
+            csv += "MES/VENCIMENTO;ENTRADA;MENSAIS;BALOES;TOTAL DO MES\n";
 
             let currentDate = new Date();
             let startMonth = currentDate.getMonth(); 
@@ -1151,29 +1150,30 @@
             }
 
             let totalProposta = 0;
-            let totalIter = Math.max(m, parcelasSinal);
-            
-            let inicioMensal = 1;
+            let totalIter = Math.max(m, parcelasSinal - 1);
 
             for (let i = 0; i <= totalIter; i++) {
                 let rowDate = new Date(startYear, startMonth + i, 1);
                 let monthStr = rowDate.toLocaleDateString('pt-BR', { month: '2-digit', year: 'numeric' });
                 
-                let desc = [];
-                let valMonth = 0;
+                let vS = 0, vM = 0, vB = 0;
 
-                if (i < parcelasSinal && pSinal > 0) { desc.push(`Entrada`); valMonth += vSinal; }
-                if (i >= inicioMensal && i < (inicioMensal + m) && pMensal > 0) { desc.push(`Mensal`); valMonth += vMensal; }
-                if (balloonMonths.includes(i) && pBalao > 0) { desc.push(`Balao`); valMonth += vBalao; }
-                if (i === m) { desc.push(`Chaves`); valMonth += vChaves; }
+                if (i < parcelasSinal && pSinal > 0) vS = vSinal;
+                if (i >= 1 && i <= m && pMensal > 0) vM = vMensal;
+                if (balloonMonths.includes(i) && pBalao > 0) vB = vBalao;
+
+                let valMonth = vS + vM + vB;
 
                 if (valMonth > 0) {
-                    csv += `${monthStr};${desc.join(" + ")};${app.formatMoney(valMonth)}\n`;
+                    csv += `${monthStr};${vS > 0 ? coreApp.formatMoney(vS) : "-"};${vM > 0 ? coreApp.formatMoney(vM) : "-"};${vB > 0 ? coreApp.formatMoney(vB) : "-"};${coreApp.formatMoney(valMonth)}\n`;
                     totalProposta += valMonth;
                 }
             }
             
-            csv += `\nTOTAL GERAL;;${app.formatMoney(totalProposta)}\n\n`;
+            csv += `ENTREGA DAS CHAVES (Jul/2027);;;;${coreApp.formatMoney(vChaves)}\n`;
+            totalProposta += vChaves;
+            
+            csv += `\nVALOR TOTAL DA PROPOSTA;;;;${coreApp.formatMoney(totalProposta)}\n\n`;
             csv += "Observacao: Correcao de INCC ate a entrega das chaves.\n";
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1234,7 +1234,8 @@
             try {
                 document.getElementById('loginOverlay').style.display = 'none';
                 
-                const appDiv = document.getElementById('app');
+                // MUDANÇA CRÍTICA AQUI (app para appView)
+                const appDiv = document.getElementById('appView');
                 appDiv.style.display = 'block';
                 
                 const badge = document.getElementById('userBadge');
@@ -1248,11 +1249,381 @@
                 }
                 
                 db.load();
-                app.init();
+                coreApp.init();
                 
             } catch(e) {
                 ui.showError("Erro ao montar tela: " + e.message, "Erro Crítico no Sistema");
             }
+        }
+    };
+
+    // NOME MUDADO PARA coreApp PARA NÃO CONFLITAR COM O NAVEGADOR
+    const coreApp = {
+        init: () => {
+            try {
+                coreApp.fetchAPIs();
+                simulator.init();
+            } catch(e) {
+                ui.showError("Erro ao iniciar painéis: " + e.message);
+            }
+        },
+        renderAll: () => {
+            try {
+                if (isFirstLoad) {
+                    state.isLoading = true;
+                    let wantedUnit = ui.loadState();
+                    coreApp.renderFacade();
+                    simulator.updateUnitList(wantedUnit);
+                    coreApp.renderTable();
+                    state.isLoading = false;
+                    isFirstLoad = false;
+                } else {
+                    coreApp.renderFacade();
+                    coreApp.renderTable(); 
+                    simulator.updateUnitList();
+                }
+            } catch(e) {
+                ui.showError("Erro na renderização: " + e.message);
+            }
+        },
+        formatMoney: (v) => v.toLocaleString('pt-BR', {style:'currency', currency:'BRL'}),
+        fetchAPIs: async () => {
+            try { const r = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.192/dados/ultimos/1?formato=json'); const d = await r.json(); if(d.length) document.getElementById('valINCC').innerText = d[0].valor.replace('.',',') + '%'; } catch(e) {}
+            try { const r = await fetch('https://economia.awesomeapi.com.br/last/USD-BRL'); const d = await r.json(); document.getElementById('valDolar').innerText = 'R$ ' + parseFloat(d.USDBRL.bid).toFixed(2); } catch(e) {}
+        },
+        renderFacade: () => {
+            const c = document.getElementById('buildingFacade');
+            if(!c) return;
+            c.innerHTML = '';
+            for(let f=14; f>=1; f--){
+                if (f === 13) continue;
+                let row = document.createElement('div'); row.className='map-floor';
+                row.innerHTML=`<div class="floor-indicator">${f}º</div>`;
+                if(f > 1) {
+                    [3, 2, 1, 4].forEach((u, index) => {
+                        if(index === 2) row.innerHTML += `<div class="unit-spacer"></div>`; 
+                        let apt = f*100+u;
+                        let st = state.statusMap[apt] || 'livre';
+                        let clickAction = state.isAdmin ? `coreApp.toggleStatus(${apt})` : `coreApp.selectApt(${apt})`;
+                        row.innerHTML+=`<div class="unit-box ${st}" onclick="${clickAction}"><span class="unit-num">${apt}</span></div>`;
+                    });
+                } else {
+                    let st102 = state.statusMap[102] || 'livre';
+                    let st101 = state.statusMap[101] || 'livre';
+                    let act102 = state.isAdmin ? `coreApp.toggleStatus(102)` : `coreApp.selectApt(102)`;
+                    let act101 = state.isAdmin ? `coreApp.toggleStatus(101)` : `coreApp.selectApt(101)`;
+                    row.innerHTML += `<div class="unit-box ${st102}" style="width:104px;" onclick="${act102}"><span class="unit-num">102</span></div><div class="unit-spacer"></div><div class="unit-box ${st101}" style="width:104px;" onclick="${act101}"><span class="unit-num">101</span></div>`;
+                }
+                c.appendChild(row);
+            }
+        },
+        toggleStatus: (apt) => {
+            if(!state.isAdmin) return;
+            const curr = state.statusMap[apt] || 'livre';
+            const next = curr === 'livre' ? 'reservado' : (curr === 'reservado' ? 'vendido' : 'livre');
+            database.ref('madrid_data/statusMap/' + apt).set(next).catch(error => ui.showError("🔴 Firebase bloqueou a gravação! Ajuste as regras (Rules) para '.write': 'auth != null'."));
+            if(next === 'vendido') { database.ref('madrid_data/lastSaleUpdate').set(new Date().toLocaleString('pt-BR')); }
+        },
+        selectApt: (apt) => {
+            document.getElementById('selAndar').value = Math.floor(apt/100);
+            simulator.updateUnitList();
+            document.getElementById('selUnidade').value = apt;
+            simulator.selectUnit();
+        },
+        toggleTable: (forceState = null) => {
+            if (forceState !== null) {
+                state.tableExpanded = forceState;
+            } else {
+                state.tableExpanded = !state.tableExpanded;
+            }
+            const btn = document.getElementById('btnToggleTable');
+            const tableCard = document.getElementById('tableCard');
+            const header = document.getElementById('mainHeader');
+            if(state.tableExpanded) {
+                btn.innerHTML = '<i class="fas fa-compress-arrows-alt"></i> Fechar Tela Cheia';
+                tableCard.classList.add('table-fullscreen');
+                header.classList.add('hidden-nav');
+                document.body.style.overflow = 'hidden'; 
+            } else {
+                btn.innerHTML = '<i class="fas fa-expand-arrows-alt"></i> Expandir Detalhes';
+                tableCard.classList.remove('table-fullscreen');
+                header.classList.remove('hidden-nav');
+                document.body.style.overflow = ''; 
+            }
+            coreApp.renderTable();
+            ui.saveState();
+        },
+        renderTable: () => {
+            const tb = document.getElementById('salesTable');
+            if(!tb) return;
+            
+            const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'todos';
+            const plan = document.getElementById('selPlano').value;
+            const elSinalParcelas = document.getElementById('selSinalParcelas');
+            const parcelasSinal = elSinalParcelas ? (parseInt(elSinalParcelas.value) || 3) : 3;
+            const showM = plan === 'mensal_20' || plan === 'misto_completo';
+            const showB = plan === 'balao_20' || plan === 'misto_completo';
+            const m = simulator.getMonths();
+            const b = simulator.getBalloons() || 1;
+            const exp = state.tableExpanded; 
+
+            let html = `<thead><tr>
+                <th>Unidade</th>
+                ${exp ? '<th>Tipologia</th>' : ''}
+                <th>Área Privativa</th>
+                <th>Área Total</th>
+                ${exp ? '<th>Esc.</th><th>Área Esc.</th><th>Vagas</th>' : ''}
+                <th>Sinal/Ato (${parcelasSinal}x)</th>
+                ${showM ? `<th>Mensais (${m}x)</th>` : ''}
+                ${showB ? `<th>Balões (${b}x)</th>` : ''}
+                <th>Entrega da Chave</th>
+                <th>Valor Total</th>
+                ${exp ? '<th class="admin-only">Status</th>' : ''}
+                ${exp ? '<th class="admin-only">Ação</th>' : ''}
+            </tr></thead><tbody>`;
+
+            let totalVGV = 0, totalVend = 0, countLivre = 0;
+
+            Object.keys(state.units).sort((a,b)=>b-a).forEach(u => {
+                let d = state.units[u];
+                let st = state.statusMap[u] || 'livre';
+                let finalPrice = d.valor * state.globalMultiplier; 
+                
+                totalVGV += finalPrice;
+                if(st === 'vendido') totalVend += finalPrice;
+                if(st === 'livre') countLivre++;
+
+                if (!state.isAdmin && st !== 'livre') return; 
+                if (state.isAdmin && filter !== 'todos' && st !== filter) return;
+
+                let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
+                let pSinal = parseFloat(document.getElementById('inpSinal').value)||10;
+                let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
+                let pBalao = parseFloat(document.getElementById('inpBalao').value)||0;
+
+                let vSinal = (finalPrice * (pSinal/100)) / parcelasSinal;
+                let vMensal = m > 0 ? (finalPrice * (pMensal/100)) / m : 0;
+                let vBalao = (finalPrice * (pBalao/100)) / b;
+                let vChaves = finalPrice * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
+
+                let btn = state.isAdmin ? `<td class="admin-only"><button onclick="coreApp.toggleStatus(${u})" class="btn-action-sell" title="Alterar Status"><i class="fas fa-sync-alt"></i></button></td>` : '';
+                let stLabel = st === 'livre' ? 'Disponível' : (st === 'reservado' ? 'Reservado' : 'Vendido');
+
+                html += `<tr class="${st}">
+                    <td>${u}</td>
+                    ${exp ? `<td>${tipo}</td>` : ''}
+                    <td>${d.area}m²</td>
+                    <td>${d.areaTotal}m²</td>
+                    ${exp ? `<td>${d.esc}</td><td>${d.areaEsc}m²</td><td>${d.vagas}</td>` : ''}
+                    <td>${coreApp.formatMoney(vSinal)}</td>
+                    ${showM ? `<td>${coreApp.formatMoney(vMensal)}</td>` : ''}
+                    ${showB ? `<td>${coreApp.formatMoney(vBalao)}</td>` : ''}
+                    <td>${coreApp.formatMoney(vChaves)}</td>
+                    <td>${coreApp.formatMoney(finalPrice)}</td>
+                    ${exp ? `<td class="admin-only"><span class="badge">${stLabel}</span></td>` : ''}
+                    ${exp ? btn : ''}
+                </tr>`;
+            });
+            html += `</tbody>`;
+            tb.innerHTML = html;
+
+            if(state.isAdmin) {
+                if(document.getElementById('kpiTotal')) document.getElementById('kpiTotal').innerText = coreApp.formatMoney(totalVGV);
+                if(document.getElementById('kpiVend')) document.getElementById('kpiVend').innerText = coreApp.formatMoney(totalVend);
+                if(document.getElementById('kpiLivre')) document.getElementById('kpiLivre').innerText = countLivre;
+                if(document.getElementById('logVenda')) document.getElementById('logVenda').innerText = state.lastSaleUpdate ? `Última venda:\n${state.lastSaleUpdate}` : '';
+                if(document.getElementById('logReajuste')) document.getElementById('logReajuste').innerText = state.lastPriceUpdate ? `Log: ${state.lastPriceUpdate}` : '';
+            }
+            ui.saveState();
+        },
+        
+        applyGlobalAdjustment: () => {
+            const val = parseFloat(document.getElementById('globalAdjust').value);
+            if(isNaN(val) || val === 0) return ui.showError("Digite um valor de reajuste válido (ex: 0.72)");
+            const newMultiplier = state.globalMultiplier * (1 + (val / 100));
+            database.ref('madrid_data/globalMultiplier').set(newMultiplier)
+                .then(() => ui.showToast("Tabela reajustada com sucesso!", "success"))
+                .catch(e => ui.showToast("Erro Firebase ao reajustar", "error"));
+            
+            database.ref('madrid_data/previousMultiplier').set(state.globalMultiplier);
+            database.ref('madrid_data/lastPriceUpdate').set(`${new Date().toLocaleString('pt-BR')} (+${val}%)`);
+            document.getElementById('globalAdjust').value = '';
+        },
+        undoGlobalAdjustment: () => {
+            if (state.previousMultiplier && state.previousMultiplier !== state.globalMultiplier) {
+                if(confirm(`Tem a certeza que quer desfazer o último reajuste?`)) {
+                    database.ref('madrid_data/globalMultiplier').set(state.previousMultiplier)
+                        .then(() => ui.showToast("Reajuste desfeito com sucesso!", "success"));
+                    database.ref('madrid_data/previousMultiplier').set(state.previousMultiplier);
+                    database.ref('madrid_data/lastPriceUpdate').set(`${new Date().toLocaleString('pt-BR')} (Desfeito)`);
+                }
+            } else ui.showError("Não há nenhum reajuste na memória para desfazer.");
+        },
+        
+        downloadTablePDF: () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'mm', 'a4');
+            const brandPrimary = [23, 42, 28];
+            
+            try { doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 45, 18); } catch (e) {
+                doc.setFontSize(22); doc.setTextColor(...brandPrimary); doc.text("MADRID", 14, 20);
+            }
+            doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(...brandPrimary);
+            doc.text("PREVISÃO DE ENTREGA", 282, 18, { align: 'right' });
+            doc.setFont("helvetica", "normal"); doc.text("Julho/2027", 282, 23, { align: 'right' });
+            
+            doc.setFontSize(7); doc.setTextColor(100, 100, 100);
+            const text = "Tabela de Vendas - Madrid Casa Elevada - Correção de INCC até a entrega das chaves. As parcelas serão reajustadas mensalmente pelo INCC (Índice Nacional da Construção Civil) até a data prevista de entrega do empreendimento; após a entrega da obra, parcelas não pagas serão reajustadas pelo IPCA + 1% a.m. As despesas para financiamento do imóvel são de responsabilidade do Adquirente. As condições acima e demais condições de venda estão explicitadas no Contrato de Compromisso de Compra e Venda. * A razão social da Vendedora: BAUMANN EMPREENDIMENTOS IMOBILIARIOS SPE LTDA (CNPJ: 13.994.337/0001-03).";
+            doc.text(doc.splitTextToSize(text, 268), 14, 32);
+            doc.setFont("helvetica", "bold"); doc.text("Validade da Tabela: a partir de 01/01/2026", 14, 42);
+
+            let tableBody = [];
+            const filter = state.isAdmin ? document.getElementById('tableFilter').value : 'todos';
+            const plan = document.getElementById('selPlano').value;
+            const elSinalParcelas = document.getElementById('selSinalParcelas');
+            const parcelasSinal = elSinalParcelas ? (parseInt(elSinalParcelas.value) || 3) : 3;
+            
+            const showM = plan === 'mensal_20' || plan === 'misto_completo';
+            const showB = plan === 'balao_20' || plan === 'misto_completo';
+            
+            const pSinal = parseFloat(document.getElementById('inpSinal').value) || 10;
+            const pMensal = parseFloat(document.getElementById('inpMensal').value) || 0;
+            const pBalao = parseFloat(document.getElementById('inpBalao').value) || 0;
+            const pChaves = 100 - pSinal - pMensal - pBalao;
+            const m = simulator.getMonths();
+            const b = simulator.getBalloons() || 1;
+
+            const colHeaders = [
+                "APTO", "TIPO", "ÁREA\nAPTO", "ÁREA\nTOTAL", "N°\nESC.", "ÁREA\nESC.", "VAGAS", "PAVT.\nVAGA", 
+                `ENTRADA (${parcelasSinal}X)\n${pSinal}%`
+            ];
+
+            if (showM) colHeaders.push(`MENSAIS (${m}X)\n${pMensal}%`);
+            if (showB) colHeaders.push(`BALÕES (${b}X)\n${pBalao}%`);
+            colHeaders.push(`ENTREGA DE CHAVE\n${pChaves}%`);
+            colHeaders.push("VALOR TOTAL");
+
+            let idxChaves = colHeaders.length - 2;
+            let idxValorTotal = colHeaders.length - 1;
+
+            Object.keys(state.units).sort((a,b)=>b-a).forEach(u => {
+                let d = state.units[u];
+                let st = state.statusMap[u] || 'livre';
+                
+                if (!state.isAdmin && st !== 'livre') return; 
+                if (state.isAdmin && filter !== 'todos' && st !== filter) return;
+
+                let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte');
+                let price = d.valor * state.globalMultiplier;
+                let vEntrada = (price * (pSinal/100)) / parcelasSinal;
+                let vMensal = (price * (pMensal/100)) / m;
+                let vBalao = (price * (pBalao/100)) / b;
+                let vChaves = price * (pChaves/100);
+
+                let row = [
+                    u, tipo, d.area.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
+                    d.areaTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
+                    d.esc, d.areaEsc.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
+                    d.vagas, d.pav, coreApp.formatMoney(vEntrada)
+                ];
+
+                if (showM) row.push(coreApp.formatMoney(vMensal));
+                if (showB) row.push(coreApp.formatMoney(vBalao));
+                row.push(coreApp.formatMoney(vChaves));
+                row.push(coreApp.formatMoney(price));
+                tableBody.push(row);
+            });
+
+            let dynamicColumnStyles = { 0: { fontStyle: 'bold' } };
+            dynamicColumnStyles[idxChaves] = { fontStyle: 'bold', fillColor: [248, 245, 238] };
+            dynamicColumnStyles[idxValorTotal] = { fontStyle: 'bold' };
+
+            doc.autoTable({
+                head: [colHeaders], body: tableBody, startY: 45, theme: 'grid',
+                styles: { font: 'helvetica', fontSize: 7, cellPadding: 2, valign: 'middle', halign: 'center', lineColor: [220, 220, 220], lineWidth: 0.1, textColor: [50, 50, 50] },
+                headStyles: { fillColor: brandPrimary, textColor: [255, 255, 255], fontStyle: 'bold', halign: 'center', valign: 'middle', lineWidth: 0 },
+                columnStyles: dynamicColumnStyles,
+                alternateRowStyles: { fillColor: [250, 250, 250] },
+                margin: { top: 45, bottom: 10, left: 14, right: 14 }
+            });
+
+            doc.save('Tabela_Madrid_Oficial.pdf');
+            ui.showToast("Tabela Oficial gerada em PDF!", "success");
+        },
+
+        downloadEspelhoPDF: () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const brandPrimary = [23, 42, 28];
+            
+            try { 
+                doc.addImage('MADRID LOGO MUSGO-01-01.png', 'PNG', 14, 10, 45, 16); } catch(e) {
+                doc.setFontSize(22); doc.setTextColor(...brandPrimary); doc.text("MADRID", 14, 20);
+            }
+            doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
+            doc.text("ESPELHO DE VENDAS", 196, 18, { align: 'right' });
+            doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.setTextColor(100);
+            doc.text(new Date().toLocaleDateString('pt-BR'), 196, 24, { align: 'right' });
+
+            let body = [];
+            for (let f = 14; f >= 1; f--) {
+                if (f === 13) continue;
+                let floorLabel = `${f < 10 ? '0'+f : f}° Pavto.`;
+                if (f > 1) {
+                    let a03 = `${f}03`; let ar03 = state.units[a03] ? state.units[a03].areaTotal.toFixed(2) + 'm²' : '';
+                    let a02 = `${f}02`; let ar02 = state.units[a02] ? state.units[a02].areaTotal.toFixed(2) + 'm²' : '';
+                    let a01 = `${f}01`; let ar01 = state.units[a01] ? state.units[a01].areaTotal.toFixed(2) + 'm²' : '';
+                    let a04 = `${f}04`; let ar04 = state.units[a04] ? state.units[a04].areaTotal.toFixed(2) + 'm²' : '';
+                    body.push([ floorLabel, `Apto ${a03}\n${ar03}`, `Apto ${a02}\n${ar02}`, `Apto ${a01}\n${ar01}`, `Apto ${a04}\n${ar04}` ]);
+                } else {
+                    let a102 = `102`; let ar102 = state.units[a102] ? state.units[a102].areaTotal.toFixed(2) + 'm²' : '';
+                    let a101 = `101`; let ar101 = state.units[a101] ? state.units[a101].areaTotal.toFixed(2) + 'm²' : '';
+                    body.push([ floorLabel, { content: `Apto ${a102}\n${ar102}`, colSpan: 2 }, { content: `Apto ${a101}\n${ar101}`, colSpan: 2 } ]);
+                }
+            }
+
+            doc.autoTable({
+                head: [["PAVIMENTO", "3 SUÍTES", "", "1 SUÍTE", ""]],
+                body: body, startY: 32, theme: 'grid',
+                styles: { fontSize: 9, cellPadding: 4, halign: 'center', valign: 'middle', lineColor: [255, 255, 255], lineWidth: 0.5, fontStyle: 'bold' },
+                headStyles: { fillColor: brandPrimary, textColor: 255, fontSize: 10 },
+                willDrawCell: function (data) {
+                    if (data.section === 'head') {
+                        if (data.column.index === 1) { data.cell.colSpan = 2; data.cell.styles.halign = 'center'; }
+                        if (data.column.index === 2) { return false; }
+                        if (data.column.index === 3) { data.cell.colSpan = 2; data.cell.styles.halign = 'center'; }
+                        if (data.column.index === 4) { return false; }
+                    }
+                },
+                didParseCell: function(data) {
+                    if (data.section === 'body') {
+                        if (data.column.index === 0) { data.cell.styles.fillColor = [245, 245, 245]; data.cell.styles.textColor = [80, 80, 80]; return; }
+                        let raw = data.cell.raw.content ? data.cell.raw.content : data.cell.raw;
+                        let aptMatch = raw.match(/Apto (\d+)/);
+                        if(aptMatch) {
+                            let apt = aptMatch[1];
+                            let st = state.statusMap[apt] || 'livre';
+                            if (st === 'livre') { data.cell.styles.fillColor = [232, 240, 234]; data.cell.styles.textColor = [39, 64, 43]; } 
+                            else if (st === 'reservado') { data.cell.styles.fillColor = [253, 245, 230]; data.cell.styles.textColor = [161, 129, 74]; } 
+                            else if (st === 'vendido') { data.cell.styles.fillColor = [245, 230, 230]; data.cell.styles.textColor = [138, 51, 51]; }
+                        }
+                    }
+                }
+            });
+
+            let finalY = doc.lastAutoTable.finalY + 10;
+            doc.setFont("helvetica", "bold"); doc.setFontSize(10); doc.setTextColor(50);
+            doc.text("LEGENDA:", 14, finalY + 4);
+            doc.setFont("helvetica", "bold"); doc.setFontSize(9);
+            doc.setFillColor(232, 240, 234); doc.rect(36, finalY, 5, 5, 'F');
+            doc.setTextColor(39, 64, 43); doc.text("DISPONÍVEL", 43, finalY + 4);
+            doc.setFillColor(253, 245, 230); doc.rect(70, finalY, 5, 5, 'F');
+            doc.setTextColor(161, 129, 74); doc.text("RESERVADO", 77, finalY + 4);
+            doc.setFillColor(245, 230, 230); doc.rect(106, finalY, 5, 5, 'F');
+            doc.setTextColor(138, 51, 51); doc.text("VENDIDO", 113, finalY + 4);
+
+            doc.save('Espelho_Vendas_Madrid.pdf');
+            ui.showToast("Espelho baixado em PDF!", "success");
         }
     };
 
