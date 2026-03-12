@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
-    <title>Madrid Casa Elevada | Premium V37</title>
+    <title>Madrid Casa Elevada | Premium V38</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -157,8 +157,7 @@
         }
         .card.table-fullscreen .card-header { flex-shrink: 0; margin-bottom: 15px; }
         .card.table-fullscreen .table-wrapper { flex: 1 1 auto !important; min-height: 0 !important; min-width: 0 !important; width: 100% !important; overflow: auto !important; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-card); }
-        .card.table-fullscreen #salesTable th { position: sticky; top: 0; z-index: 20; background: var(--brand-primary); color: var(--brand-gold); border-bottom: none; font-size: 10px; }
-
+        
         /* PAINEL DE GESTÃO */
         .premium-admin-card { background: linear-gradient(135deg, var(--brand-primary) 0%, #0d1710 100%); color: white; border: none; position: relative; overflow: hidden; box-shadow: 0 15px 35px -10px rgba(31, 51, 36, 0.5); }
         .premium-admin-card::before { content: ''; position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(197,160,101,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
@@ -222,28 +221,48 @@
         .btn-outline { height: 40px; padding: 0 18px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
 
-        /* TABELA OFICIAL */
+        /* --- TABELA OFICIAL BLINDADA (FONTE, TAMANHO E COR PADRONIZADOS) --- */
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); }
         
-        #salesTable { width: 100%; border-collapse: collapse; font-size: 12px; min-width: max-content; }
+        #salesTable { width: 100%; border-collapse: collapse; min-width: max-content; }
         
-        #salesTable th { background: var(--bg-input); color: var(--text-secondary); padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--border-color); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; font-size: 10px; position: sticky; top: 0; z-index: 10; }
-        #salesTable td { padding: 14px 12px; border-bottom: 1px solid var(--border-color); text-align: left; color: var(--text-main); vertical-align: middle; white-space: nowrap; font-weight: 500; font-size: 12px; transition: background 0.2s; }
+        /* Força bruta em tudo dentro da tabela (exceto badges) para ser igual */
+        #salesTable th { 
+            background: var(--bg-input); 
+            padding: 14px 12px; text-align: left; border-bottom: 1px solid var(--border-color); 
+            text-transform: uppercase; white-space: nowrap; position: sticky; top: 0; z-index: 10; 
+            font-family: 'Plus Jakarta Sans', sans-serif !important; 
+            font-size: 13px !important; 
+            color: var(--text-main) !important; 
+            font-weight: 700 !important; 
+        }
+        
+        #salesTable td { 
+            padding: 14px 12px; border-bottom: 1px solid var(--border-color); text-align: left; 
+            vertical-align: middle; white-space: nowrap; transition: background 0.2s; 
+            font-family: 'Plus Jakarta Sans', sans-serif !important; 
+            font-size: 13px !important; 
+            color: var(--text-main) !important; 
+            font-weight: 500 !important; 
+        }
+        
         #salesTable tr:last-child td { border-bottom: none; }
         #salesTable tr:hover td { background-color: var(--bg-hover); }
         
-        .badge { padding: 6px 10px; border-radius: 4px; font-size: 9px; font-weight: 800; display: inline-block; text-transform: uppercase; letter-spacing: 1px;}
-        tr.livre .badge { background: var(--st-livre-bg); color: var(--st-livre-txt); border: 1px solid rgba(39, 64, 43, 0.1); }
-        tr.reservado .badge { background: var(--st-res-bg); color: var(--st-res-txt); border: 1px solid rgba(161, 129, 74, 0.2); }
-        tr.vendido .badge { background: var(--st-vend-bg); color: var(--st-vend-txt); border: 1px solid rgba(138, 51, 51, 0.1); }
+        /* Protegendo as cores dos badges da regra de força bruta */
+        .badge { padding: 6px 10px; border-radius: 4px; font-size: 10px !important; font-weight: 800 !important; display: inline-block; text-transform: uppercase; letter-spacing: 1px;}
+        tr.livre .badge { background: var(--st-livre-bg) !important; color: var(--st-livre-txt) !important; border: 1px solid rgba(39, 64, 43, 0.1); }
+        tr.reservado .badge { background: var(--st-res-bg) !important; color: var(--st-res-txt) !important; border: 1px solid rgba(161, 129, 74, 0.2); }
+        tr.vendido .badge { background: var(--st-vend-bg) !important; color: var(--st-vend-txt) !important; border: 1px solid rgba(138, 51, 51, 0.1); }
+        
         tr.vendido td { opacity: 0.5; text-decoration: line-through; }
         tr.vendido .badge { text-decoration: none; opacity: 1; }
         
         .btn-action-sell { width: 32px; height: 32px; border-radius: 6px; background: var(--bg-input); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-secondary); transition: 0.3s; font-size: 12px; }
         .btn-action-sell:hover { background: var(--brand-primary); color: var(--brand-gold); border-color: var(--brand-primary); transform: scale(1.05); }
 
-        /* MAPA ESPELHO */
+        /* MAPA ESPELHO ALINHADO MATEMATICAMENTE */
         .map-container-inner { overflow-x: auto; padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
         .building-roof { width: 100%; max-width: 280px; height: 8px; background: linear-gradient(90deg, var(--brand-gold-dark), var(--brand-gold), var(--brand-gold-dark)); border-radius: 10px 10px 0 0; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(197, 160, 101, 0.3); }
         
@@ -454,10 +473,10 @@
                         </div>
 
                         <div style="display: flex; gap: 10px; margin-top: 25px;">
-                            <button onclick="simulator.saveProposalPDF()" class="btn-primary" style="flex: 1;">
+                            <button onclick="simulator.saveProposalPDF()" class="btn-primary" style="flex: 1; margin-top: 0;">
                                 <i class="fas fa-file-pdf" style="font-size: 16px;"></i> Salvar PDF
                             </button>
-                            <button onclick="simulator.saveProposalExcel()" class="btn-secondary" style="flex: 1;">
+                            <button onclick="simulator.saveProposalExcel()" class="btn-secondary" style="flex: 1; margin-top: 0;">
                                 <i class="fas fa-file-excel" style="font-size: 16px;"></i> Salvar Excel
                             </button>
                         </div>
@@ -839,10 +858,7 @@
             msg += `🔑 *Apartamento ${u}* (${tipo})\n`;
             msg += `📐 Área Privativa: ${d.area} m²\n`;
             msg += `🚗 Vagas: ${d.vagas}\n\n`;
-            
-            // TEXTO ALTERADO COMO SOLICITADO
             msg += `💰 *Valor do Investimento:* ${app.formatMoney(price)}\n\n`;
-            
             msg += `🗓️ *Proposta de Pagamento:*\n`;
             msg += `• Entrada/Sinal (${parcelasSinal}x): ${app.formatMoney(vSinal)}\n`;
             if(pMensal > 0) msg += `• Mensais (${m}x): ${app.formatMoney(vMensal)}\n`;
@@ -919,8 +935,6 @@
             doc.text(`Vagas de Garagem: ${d.vagas}`, 14, 74);
 
             doc.setFont("helvetica", "bold"); doc.setFontSize(16); doc.setTextColor(...brandPrimary);
-            
-            // TEXTO ALTERADO NO PDF
             doc.text(`Valor do Investimento: ${app.formatMoney(price)}`, 14, 87);
 
             let scheduleBody = [];
@@ -1037,8 +1051,6 @@
             csv += `Tipologia;${tipo}\n`;
             csv += `Area Privativa;${d.area} m2\n`;
             csv += `Vagas;${d.vagas}\n`;
-            
-            // TEXTO ALTERADO NO EXCEL
             csv += `Valor do Investimento;${app.formatMoney(price)}\n\n`;
             
             csv += "MES/ANO;SINAL;MENSAIS;BALOES;CHAVES;TOTAL DO MES\n";
@@ -1317,16 +1329,16 @@
                 let stLabel = st === 'livre' ? 'Disponível' : (st === 'reservado' ? 'Reservado' : 'Vendido');
 
                 html += `<tr class="${st}">
-                    <td style="font-weight:800;">${u}</td>
+                    <td>${u}</td>
                     ${exp ? `<td>${tipo}</td>` : ''}
                     <td>${d.area}m²</td>
-                    <td style="color:var(--text-muted);">${d.areaTotal}m²</td>
-                    ${exp ? `<td>${d.esc}</td><td style="color:var(--text-muted);">${d.areaEsc}m²</td><td>${d.vagas}</td>` : ''}
-                    <td style="font-weight:600;">${app.formatMoney(vSinal)}</td>
+                    <td>${d.areaTotal}m²</td>
+                    ${exp ? `<td>${d.esc}</td><td>${d.areaEsc}m²</td><td>${d.vagas}</td>` : ''}
+                    <td>${app.formatMoney(vSinal)}</td>
                     ${showM ? `<td>${app.formatMoney(vMensal)}</td>` : ''}
                     ${showB ? `<td>${app.formatMoney(vBalao)}</td>` : ''}
-                    <td style="font-weight:700; color:var(--text-main);">${app.formatMoney(vChaves)}</td>
-                    <td style="font-weight:800">${app.formatMoney(finalPrice)}</td>
+                    <td>${app.formatMoney(vChaves)}</td>
+                    <td>${app.formatMoney(finalPrice)}</td>
                     ${exp ? `<td class="admin-only"><span class="badge">${stLabel}</span></td>` : ''}
                     ${exp ? btn : ''}
                 </tr>`;
