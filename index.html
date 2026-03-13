@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
-    <title>Madrid Casa Elevada | Premium V46</title>
+    <title>Madrid Casa Elevada | Premium V47</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,6 +110,7 @@
 
         .toggle-theme-login { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 44px; height: 44px; border-radius: 50%; color: var(--brand-gold); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
 
+        /* MODAIS */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); opacity: 1; transition: 0.3s; }
         .modal-overlay.hidden { display: none !important; opacity: 0; }
         .modal-box { background: var(--bg-card); width: 90%; max-width: 360px; border-radius: var(--radius-card); padding: 30px; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.5); border: 1px solid var(--border-color); }
@@ -154,6 +155,7 @@
         .card.table-fullscreen .card-header { flex-shrink: 0; margin-bottom: 15px; }
         .card.table-fullscreen .table-wrapper { flex: 1 1 auto !important; min-height: 0 !important; min-width: 0 !important; width: 100% !important; overflow: auto !important; border-radius: var(--radius-md); border: 1px solid var(--border-color); box-shadow: var(--shadow-card); }
         
+        /* PAINEL DE GESTÃO */
         .premium-admin-card { background: linear-gradient(135deg, var(--brand-primary) 0%, #0d1710 100%); color: white; border: none; position: relative; overflow: hidden; box-shadow: 0 15px 35px -10px rgba(31, 51, 36, 0.5); }
         .premium-admin-card::before { content: ''; position: absolute; top: -60px; right: -60px; width: 250px; height: 250px; background: radial-gradient(circle, rgba(197,160,101,0.15) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
         
@@ -215,6 +217,7 @@
         .btn-outline { height: 40px; padding: 0 18px; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s; box-shadow: var(--shadow-sm); }
         .btn-outline:hover { background: var(--bg-hover); border-color: var(--text-muted); }
 
+        /* --- TABELA OFICIAL BLINDADA --- */
         main { min-width: 0; width: 100%; display: block; } 
         .table-wrapper { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-card); }
         
@@ -264,6 +267,16 @@
 <body>
 
 <div id="toastContainer"></div>
+
+<div id="logsModal" class="modal-overlay hidden">
+    <div class="modal-box" style="max-width: 450px;">
+        <h3 class="modal-title"><i class="fas fa-users" style="color: var(--brand-gold); margin-right: 8px;"></i> Acessos de Hoje</h3>
+        <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 15px;">Último acesso registado por utilizador no dia de hoje.</p>
+        <div id="logsContent" style="max-height: 300px; overflow-y: auto; text-align: left; margin-top:15px; font-size:12px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: var(--bg-body);">
+            </div>
+        <button class="btn-modal" style="margin-top: 20px; background: var(--brand-primary);" onclick="document.getElementById('logsModal').classList.add('hidden')">Fechar Relatório</button>
+    </div>
+</div>
 
 <div id="errorModal" class="modal-overlay hidden">
     <div class="modal-box">
@@ -343,11 +356,15 @@
                     </div>
                     <div class="admin-reajuste">
                         <input type="number" id="globalAdjust" step="0.1" placeholder="%">
-                        <button onclick="appController.applyGlobalAdjustment()" class="btn-apply">Aplicar Fator</button>
-                        <button onclick="appController.undoGlobalAdjustment()" class="btn-undo" title="Desfazer Último Reajuste"><i class="fas fa-undo"></i></button>
+                        <button onclick="coreApp.applyGlobalAdjustment()" class="btn-apply">Aplicar Fator</button>
+                        <button onclick="coreApp.undoGlobalAdjustment()" class="btn-undo" title="Desfazer Último Reajuste"><i class="fas fa-undo"></i></button>
                     </div>
                     <div id="logReajuste" style="font-size: 9px; color: rgba(255,255,255,0.4); text-align: center; margin-top: 10px; font-weight: 600; min-height: 14px; letter-spacing: 0.5px;"></div>
                 </div>
+                
+                <button onclick="coreApp.showLogs()" class="btn-outline admin-only" style="width: 100%; height: 36px; margin-top: 15px; background: rgba(197, 160, 101, 0.1); color: var(--brand-gold); border-color: rgba(197, 160, 101, 0.3);">
+                    <i class="fas fa-users"></i> Relatório de Acessos de Hoje
+                </button>
                 
                 <button onclick="db.forceSync()" class="btn-sync" title="Injeta a estrutura completa de apartamentos no Firebase">
                     <i class="fas fa-database"></i> Sincronizar Banco (Firebase)
@@ -408,7 +425,7 @@
                         
                         <div style="margin-bottom:25px;">
                             <label class="control-label">Parcelas do Sinal (Ato)</label>
-                            <select id="selSinalParcelas" class="control-input" onchange="simulator.calculate(); appController.renderTable();">
+                            <select id="selSinalParcelas" class="control-input" onchange="simulator.calculate(); coreApp.renderTable();">
                                 <option value="1">1x (À Vista)</option>
                                 <option value="2">2x</option>
                                 <option value="3" selected>3x</option>
@@ -475,7 +492,7 @@
             <div class="card">
                 <div class="card-header">
                     <span class="card-title"><i class="fas fa-building"></i> Mapa do Prédio</span>
-                    <button onclick="appController.downloadEspelhoPDF()" class="admin-only btn-outline" style="height: 32px; padding: 0 12px; color: #D98888; border-color: rgba(217,136,136,0.3);">
+                    <button onclick="coreApp.downloadEspelhoPDF()" class="admin-only btn-outline" style="height: 32px; padding: 0 12px; color: #D98888; border-color: rgba(217,136,136,0.3);">
                         <i class="fas fa-file-pdf"></i> PDF
                     </button>
                 </div>
@@ -508,17 +525,17 @@
                     <span class="card-title"><i class="fas fa-list-ul"></i> Tabela Oficial</span>
                     <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap;">
                         
-                        <select id="tableFilter" onchange="appController.renderTable()" class="control-input admin-only" style="width:auto; height:40px; padding: 0 15px; font-size: 11px; text-transform: uppercase; font-weight: 800;">
+                        <select id="tableFilter" onchange="coreApp.renderTable()" class="control-input admin-only" style="width:auto; height:40px; padding: 0 15px; font-size: 11px; text-transform: uppercase; font-weight: 800;">
                             <option value="todos">Todos</option>
                             <option value="livre">Disponíveis</option>
                             <option value="reservado">Reservados</option>
                             <option value="vendido">Vendidos</option>
                         </select>
                         
-                        <button onclick="appController.toggleTable()" class="btn-outline" id="btnToggleTable" style="color: var(--brand-gold-dark); border-color: rgba(198, 162, 101, 0.4); height: 40px;">
+                        <button onclick="coreApp.toggleTable()" class="btn-outline" id="btnToggleTable" style="color: var(--brand-gold-dark); border-color: rgba(198, 162, 101, 0.4); height: 40px;">
                             <i class="fas fa-expand-arrows-alt"></i> Expandir Detalhes
                         </button>
-                        <button onclick="appController.downloadTablePDF()" class="btn-outline" style="height: 40px; background: var(--brand-primary); color: white; border-color: var(--brand-primary);">
+                        <button onclick="coreApp.downloadTablePDF()" class="btn-outline" style="height: 40px; background: var(--brand-primary); color: white; border-color: var(--brand-primary);">
                             <i class="fas fa-file-pdf"></i> PDF Completo
                         </button>
                     </div>
@@ -692,7 +709,7 @@
                     if (st.inpSinal) document.getElementById('inpSinal').value = st.inpSinal;
                     if (st.tableFilter && document.getElementById('tableFilter')) document.getElementById('tableFilter').value = st.tableFilter;
                     
-                    if (st.tableExpanded === true) appController.toggleTable(true); 
+                    if (st.tableExpanded === true) coreApp.toggleTable(true); 
 
                     if(st.selPlano === 'mensal_20') { document.getElementById('inpMensal').value = 20; document.getElementById('inpBalao').value = 0; }
                     else if(st.selPlano === 'balao_20') { document.getElementById('inpMensal').value = 0; document.getElementById('inpBalao').value = 20; }
@@ -706,6 +723,17 @@
     };
 
     const db = {
+        logAccess: (email) => {
+            if(!email) return;
+            const d = new Date();
+            const today = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,'0') + "-" + String(d.getDate()).padStart(2,'0');
+            const time = d.toLocaleTimeString('pt-BR');
+            const safeEmail = email.replace(/[.#$[\]]/g, '_');
+            database.ref(`madrid_data/logs/${today}/${safeEmail}`).update({
+                email: email,
+                lastLogin: time
+            });
+        },
         load: () => {
             database.ref('madrid_data').on('value', (snap) => {
                 try {
@@ -726,7 +754,7 @@
                         database.ref('madrid_data/units').set(DEFAULT_UNITS);
                         state.units = DEFAULT_UNITS;
                     }
-                    appController.renderAll();
+                    coreApp.renderAll();
                 } catch(e) {
                     ui.showError("Falha interna ao processar dados: " + e.message, "Erro de Banco de Dados");
                 }
@@ -801,7 +829,7 @@
                 if(u == currentSelected) found = true;
 
                 let price = d.valor * state.globalMultiplier;
-                s.innerHTML += `<option value="${u}">Apto ${u} (${t}) - ${appController.formatMoney(price)}</option>`;
+                s.innerHTML += `<option value="${u}">Apto ${u} (${t}) - ${coreApp.formatMoney(price)}</option>`;
             });
             
             if(found) { 
@@ -825,13 +853,13 @@
             else if (p === 'balao_20') { inpM.value = 0; inpB.value = 20; }
             else if (p === 'misto_completo') { inpM.value = 10; inpB.value = 10; }
             simulator.calculate();
-            appController.renderTable();
+            coreApp.renderTable();
         },
         calculate: () => {
             const u = document.getElementById('selUnidade').value;
             if(!u || !state.units[u]) return;
             let price = state.units[u].valor * state.globalMultiplier;
-            document.getElementById('displayTotal').innerText = appController.formatMoney(price);
+            document.getElementById('displayTotal').innerText = coreApp.formatMoney(price);
             
             let pSinal = parseFloat(document.getElementById('inpSinal').value)||0;
             let pMensal = parseFloat(document.getElementById('inpMensal').value)||0;
@@ -842,22 +870,22 @@
             let b = simulator.getBalloons() || 1; 
             
             document.getElementById('lblSinal').innerText = `Ato/Sinal (${parcelasSinal}x)`;
-            document.getElementById('resSinal').innerText = appController.formatMoney((price * pSinal/100)/parcelasSinal);
+            document.getElementById('resSinal').innerText = coreApp.formatMoney((price * pSinal/100)/parcelasSinal);
             
             if(pMensal > 0) {
                 document.getElementById('rowMensal').style.display='flex';
                 document.getElementById('lblMensal').innerText = `Mensais (${m}x)`;
-                document.getElementById('resMensal').innerText = appController.formatMoney((price * pMensal/100)/m);
+                document.getElementById('resMensal').innerText = coreApp.formatMoney((price * pMensal/100)/m);
             } else document.getElementById('rowMensal').style.display='none';
 
             if(pBalao > 0) {
                 document.getElementById('rowBalao').style.display='flex';
                 document.getElementById('lblBalao').innerText = `Balões (${b}x)`;
-                document.getElementById('resBalao').innerText = appController.formatMoney((price * pBalao/100)/b);
+                document.getElementById('resBalao').innerText = coreApp.formatMoney((price * pBalao/100)/b);
             } else document.getElementById('rowBalao').style.display='none';
 
             let pChaves = 100 - pSinal - pMensal - pBalao;
-            document.getElementById('resChaves').innerText = appController.formatMoney(price * pChaves/100);
+            document.getElementById('resChaves').innerText = coreApp.formatMoney(price * pChaves/100);
             document.getElementById('calcResults').classList.remove('hidden');
             
             ui.saveState();
@@ -894,12 +922,12 @@
             msg += `🔑 *Apartamento ${u}* (${tipo})\n`;
             msg += `📐 Área Privativa: ${d.area} m²\n`;
             msg += `🚗 Vagas: ${d.vagas}\n\n`;
-            msg += `💰 *Valor do Investimento:* ${appController.formatMoney(price)}\n\n`;
+            msg += `💰 *Valor do Investimento:* ${coreApp.formatMoney(price)}\n\n`;
             msg += `🗓️ *Proposta de Pagamento:*\n`;
-            msg += `• Entrada/Sinal (${parcelasSinal}x): ${appController.formatMoney(vSinal)}\n`;
-            if(pMensal > 0) msg += `• Mensais (${m}x): ${appController.formatMoney(vMensal)}\n`;
-            if(pBalao > 0) msg += `• Balões (${b}x): ${appController.formatMoney(vBalao)}\n`;
-            msg += `• Entrega das Chaves (Jul/2027): ${appController.formatMoney(vChaves)}\n\n`;
+            msg += `• Entrada/Sinal (${parcelasSinal}x): ${coreApp.formatMoney(vSinal)}\n`;
+            if(pMensal > 0) msg += `• Mensais (${m}x): ${coreApp.formatMoney(vMensal)}\n`;
+            if(pBalao > 0) msg += `• Balões (${b}x): ${coreApp.formatMoney(vBalao)}\n`;
+            msg += `• Entrega das Chaves (Jul/2027): ${coreApp.formatMoney(vChaves)}\n\n`;
             msg += `⏳ _Proposta válida até: ${validadeStr}_\n\n`;
             msg += `Qualquer dúvida, estou à disposição!`;
 
@@ -985,7 +1013,7 @@
 
             doc.setFontSize(9);
             doc.setFont("helvetica", "normal");
-            doc.text(`Valor do Investimento: ${appController.formatMoney(price)}`, 14, 117);
+            doc.text(`Valor do Investimento: ${coreApp.formatMoney(price)}`, 14, 117);
             doc.text(`Validade da Proposta: ${validadeStr}`, 130, 117);
             doc.text("Forma de correção das parcelas: Reajustadas mensalmente pelo INCC até a entrega.", 14, 123);
 
@@ -1018,10 +1046,10 @@
                 if (valMonth > 0) {
                     scheduleBody.push([ 
                         monthStr, 
-                        vS > 0 ? appController.formatMoney(vS) : "-", 
-                        vM > 0 ? appController.formatMoney(vM) : "-", 
-                        vB > 0 ? appController.formatMoney(vB) : "-", 
-                        appController.formatMoney(valMonth) 
+                        vS > 0 ? coreApp.formatMoney(vS) : "-", 
+                        vM > 0 ? coreApp.formatMoney(vM) : "-", 
+                        vB > 0 ? coreApp.formatMoney(vB) : "-", 
+                        coreApp.formatMoney(valMonth) 
                     ]);
                     totalProposta += valMonth;
                 }
@@ -1029,13 +1057,13 @@
 
             scheduleBody.push([
                 { content: 'ENTREGA DAS CHAVES (Jul/2027)', colSpan: 4, styles: { halign: 'right', fontStyle: 'bold', textColor: [31, 51, 36] } }, 
-                { content: appController.formatMoney(vChaves), styles: { fontStyle: 'bold', textColor: [31, 51, 36] } }
+                { content: coreApp.formatMoney(vChaves), styles: { fontStyle: 'bold', textColor: [31, 51, 36] } }
             ]);
             totalProposta += vChaves;
 
             scheduleBody.push([
                 { content: 'VALOR TOTAL DA PROPOSTA', colSpan: 4, styles: { halign: 'right', fontStyle: 'bold', fillColor: [240,240,240] } }, 
-                { content: appController.formatMoney(totalProposta), styles: { fontStyle: 'bold', fillColor: [240,240,240] } }
+                { content: coreApp.formatMoney(totalProposta), styles: { fontStyle: 'bold', fillColor: [240,240,240] } }
             ]);
 
             doc.autoTable({
@@ -1122,7 +1150,7 @@
             csv += `Tipologia;${tipo}\n`;
             csv += `Area Privativa;${d.area} m2\n`;
             csv += `Vagas;${d.vagas}\n`;
-            csv += `Valor do Investimento;${appController.formatMoney(price)}\n\n`;
+            csv += `Valor do Investimento;${coreApp.formatMoney(price)}\n\n`;
             
             csv += "MES/VENCIMENTO;ENTRADA;MENSAIS;BALOES;TOTAL DO MES\n";
 
@@ -1152,15 +1180,15 @@
                 let valMonth = vS + vM + vB;
 
                 if (valMonth > 0) {
-                    csv += `${monthStr};${vS > 0 ? appController.formatMoney(vS) : "-"};${vM > 0 ? appController.formatMoney(vM) : "-"};${vB > 0 ? appController.formatMoney(vB) : "-"};${appController.formatMoney(valMonth)}\n`;
+                    csv += `${monthStr};${vS > 0 ? coreApp.formatMoney(vS) : "-"};${vM > 0 ? coreApp.formatMoney(vM) : "-"};${vB > 0 ? coreApp.formatMoney(vB) : "-"};${coreApp.formatMoney(valMonth)}\n`;
                     totalProposta += valMonth;
                 }
             }
             
-            csv += `ENTREGA DAS CHAVES (Jul/2027);;;;${appController.formatMoney(vChaves)}\n`;
+            csv += `ENTREGA DAS CHAVES (Jul/2027);;;;${coreApp.formatMoney(vChaves)}\n`;
             totalProposta += vChaves;
             
-            csv += `\nVALOR TOTAL DA PROPOSTA;;;;${appController.formatMoney(totalProposta)}\n\n`;
+            csv += `\nVALOR TOTAL DA PROPOSTA;;;;${coreApp.formatMoney(totalProposta)}\n\n`;
             csv += "Observacao: Correcao de INCC ate a entrega das chaves.\n";
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1234,8 +1262,11 @@
                     badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px; color: var(--brand-gold);"></i> Corretor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
                 }
                 
+                // GRAVA O ACESSO NO BANCO
+                db.logAccess(state.user);
+                
                 db.load();
-                appController.init();
+                coreApp.init();
                 
             } catch(e) {
                 ui.showError("Erro ao montar tela: " + e.message, "Erro Crítico no Sistema");
@@ -1243,28 +1274,50 @@
         }
     };
 
-    const appController = {
+    const coreApp = {
         init: () => {
             try {
-                appController.fetchAPIs();
+                coreApp.fetchAPIs();
                 simulator.init();
             } catch(e) {
                 ui.showError("Erro ao iniciar painéis: " + e.message);
             }
+        },
+        showLogs: () => {
+            const d = new Date();
+            const today = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,'0') + "-" + String(d.getDate()).padStart(2,'0');
+            database.ref(`madrid_data/logs/${today}`).once('value').then(snap => {
+                const data = snap.val();
+                let html = '';
+                if(data) {
+                    html = '<ul style="list-style:none; padding:0; margin:0; text-align:left;">';
+                    Object.values(data).sort((a,b) => b.lastLogin.localeCompare(a.lastLogin)).forEach(log => {
+                        html += `<li style="padding: 10px; border-bottom: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:700; color:var(--text-main); font-size: 13px;">${log.email}</span>
+                            <span style="font-size:11px; color:var(--text-secondary); background:var(--bg-hover); padding: 4px 8px; border-radius:4px;"><i class="far fa-clock"></i> ${log.lastLogin}</span>
+                        </li>`;
+                    });
+                    html += '</ul>';
+                } else {
+                    html = '<p style="text-align:center; color:var(--text-muted); font-weight:600; padding: 20px 0;">Nenhum acesso registado hoje.</p>';
+                }
+                document.getElementById('logsContent').innerHTML = html;
+                document.getElementById('logsModal').classList.remove('hidden');
+            });
         },
         renderAll: () => {
             try {
                 if (isFirstLoad) {
                     state.isLoading = true;
                     let wantedUnit = ui.loadState();
-                    appController.renderFacade();
+                    coreApp.renderFacade();
                     simulator.updateUnitList(wantedUnit);
-                    appController.renderTable();
+                    coreApp.renderTable();
                     state.isLoading = false;
                     isFirstLoad = false;
                 } else {
-                    appController.renderFacade();
-                    appController.renderTable(); 
+                    coreApp.renderFacade();
+                    coreApp.renderTable(); 
                     simulator.updateUnitList();
                 }
             } catch(e) {
@@ -1289,14 +1342,14 @@
                         if(index === 2) row.innerHTML += `<div class="unit-spacer"></div>`; 
                         let apt = f*100+u;
                         let st = state.statusMap[apt] || 'livre';
-                        let clickAction = state.isAdmin ? `appController.toggleStatus(${apt})` : `appController.selectApt(${apt})`;
+                        let clickAction = state.isAdmin ? `coreApp.toggleStatus(${apt})` : `coreApp.selectApt(${apt})`;
                         row.innerHTML+=`<div class="unit-box ${st}" onclick="${clickAction}"><span class="unit-num">${apt}</span></div>`;
                     });
                 } else {
                     let st102 = state.statusMap[102] || 'livre';
                     let st101 = state.statusMap[101] || 'livre';
-                    let act102 = state.isAdmin ? `appController.toggleStatus(102)` : `appController.selectApt(102)`;
-                    let act101 = state.isAdmin ? `appController.toggleStatus(101)` : `appController.selectApt(101)`;
+                    let act102 = state.isAdmin ? `coreApp.toggleStatus(102)` : `coreApp.selectApt(102)`;
+                    let act101 = state.isAdmin ? `coreApp.toggleStatus(101)` : `coreApp.selectApt(101)`;
                     row.innerHTML += `<div class="unit-box ${st102}" style="width:104px;" onclick="${act102}"><span class="unit-num">102</span></div><div class="unit-spacer"></div><div class="unit-box ${st101}" style="width:104px;" onclick="${act101}"><span class="unit-num">101</span></div>`;
                 }
                 c.appendChild(row);
@@ -1335,7 +1388,7 @@
                 header.classList.remove('hidden-nav');
                 document.body.style.overflow = ''; 
             }
-            appController.renderTable();
+            coreApp.renderTable();
             ui.saveState();
         },
         renderTable: () => {
@@ -1391,7 +1444,7 @@
                 let vBalao = (finalPrice * (pBalao/100)) / b;
                 let vChaves = finalPrice * (1 - (pSinal/100) - (pMensal/100) - (pBalao/100));
 
-                let btn = state.isAdmin ? `<td class="admin-only"><button onclick="appController.toggleStatus(${u})" class="btn-action-sell" title="Alterar Status"><i class="fas fa-sync-alt"></i></button></td>` : '';
+                let btn = state.isAdmin ? `<td class="admin-only"><button onclick="coreApp.toggleStatus(${u})" class="btn-action-sell" title="Alterar Status"><i class="fas fa-sync-alt"></i></button></td>` : '';
                 let stLabel = st === 'livre' ? 'Disponível' : (st === 'reservado' ? 'Reservado' : 'Vendido');
 
                 html += `<tr class="${st}">
@@ -1400,11 +1453,11 @@
                     <td>${d.area}m²</td>
                     <td>${d.areaTotal}m²</td>
                     ${exp ? `<td>${d.esc}</td><td>${d.areaEsc}m²</td><td>${d.vagas}</td>` : ''}
-                    <td>${appController.formatMoney(vSinal)}</td>
-                    ${showM ? `<td>${appController.formatMoney(vMensal)}</td>` : ''}
-                    ${showB ? `<td>${appController.formatMoney(vBalao)}</td>` : ''}
-                    <td>${appController.formatMoney(vChaves)}</td>
-                    <td>${appController.formatMoney(finalPrice)}</td>
+                    <td>${coreApp.formatMoney(vSinal)}</td>
+                    ${showM ? `<td>${coreApp.formatMoney(vMensal)}</td>` : ''}
+                    ${showB ? `<td>${coreApp.formatMoney(vBalao)}</td>` : ''}
+                    <td>${coreApp.formatMoney(vChaves)}</td>
+                    <td>${coreApp.formatMoney(finalPrice)}</td>
                     ${exp ? `<td class="admin-only"><span class="badge">${stLabel}</span></td>` : ''}
                     ${exp ? btn : ''}
                 </tr>`;
@@ -1413,8 +1466,8 @@
             tb.innerHTML = html;
 
             if(state.isAdmin) {
-                if(document.getElementById('kpiTotal')) document.getElementById('kpiTotal').innerText = appController.formatMoney(totalVGV);
-                if(document.getElementById('kpiVend')) document.getElementById('kpiVend').innerText = appController.formatMoney(totalVend);
+                if(document.getElementById('kpiTotal')) document.getElementById('kpiTotal').innerText = coreApp.formatMoney(totalVGV);
+                if(document.getElementById('kpiVend')) document.getElementById('kpiVend').innerText = coreApp.formatMoney(totalVend);
                 if(document.getElementById('kpiLivre')) document.getElementById('kpiLivre').innerText = countLivre;
                 if(document.getElementById('logVenda')) document.getElementById('logVenda').innerText = state.lastSaleUpdate ? `Última venda:\n${state.lastSaleUpdate}` : '';
                 if(document.getElementById('logReajuste')) document.getElementById('logReajuste').innerText = state.lastPriceUpdate ? `Log: ${state.lastPriceUpdate}` : '';
@@ -1509,13 +1562,13 @@
                     u, tipo, d.area.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
                     d.areaTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
                     d.esc, d.areaEsc.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²',
-                    d.vagas, d.pav, appController.formatMoney(vEntrada)
+                    d.vagas, d.pav, coreApp.formatMoney(vEntrada)
                 ];
 
-                if (showM) row.push(appController.formatMoney(vMensal));
-                if (showB) row.push(appController.formatMoney(vBalao));
-                row.push(appController.formatMoney(vChaves));
-                row.push(appController.formatMoney(price));
+                if (showM) row.push(coreApp.formatMoney(vMensal));
+                if (showB) row.push(coreApp.formatMoney(vBalao));
+                row.push(coreApp.formatMoney(vChaves));
+                row.push(coreApp.formatMoney(price));
                 tableBody.push(row);
             });
 
