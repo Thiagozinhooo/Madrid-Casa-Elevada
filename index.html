@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     
-    <title>Madrid Casa Elevada | Premium V47</title>
+    <title>Madrid Casa Elevada | Premium V49</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -120,6 +120,7 @@
         .btn-modal { width: 100%; height: 46px; border-radius: var(--radius-btn); background: #D98888; color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: 0.3s; }
         .btn-modal:hover { background: #C47272; transform: translateY(-2px); }
 
+        /* TOASTS */
         #toastContainer { position: fixed; bottom: 30px; right: 30px; z-index: 10001; display: flex; flex-direction: column; gap: 15px; }
         .toast { padding: 15px 20px; border-radius: var(--radius-md); background: var(--bg-card); color: var(--text-main); font-weight: 700; box-shadow: var(--shadow-card); border-left: 4px solid var(--brand-gold); animation: slideInRight 0.3s ease forwards; display: flex; align-items: center; gap: 12px; font-size: 13px; border-top: 1px solid var(--border-color); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
         .toast.success { border-left-color: #8FBC9B; }
@@ -381,7 +382,7 @@
                     <div class="sim-controls">
                         
                         <div style="margin-bottom:15px;">
-                            <label class="control-label">Nome do Comprador</label>
+                            <label class="control-label">Nome do Proponente</label>
                             <input type="text" id="inpClientName" class="control-input" placeholder="Ex: João Silva" oninput="ui.saveState()">
                         </div>
 
@@ -526,8 +527,8 @@
                     <div style="display:flex; gap:12px; align-items: center; flex-wrap: wrap;">
                         
                         <select id="tableFilter" onchange="coreApp.renderTable()" class="control-input admin-only" style="width:auto; height:40px; padding: 0 15px; font-size: 11px; text-transform: uppercase; font-weight: 800;">
+                            <option value="livre" selected>Disponíveis</option>
                             <option value="todos">Todos</option>
-                            <option value="livre">Disponíveis</option>
                             <option value="reservado">Reservados</option>
                             <option value="vendido">Vendidos</option>
                         </select>
@@ -689,7 +690,7 @@
                 selPlano: document.getElementById('selPlano').value,
                 selSinalParcelas: document.getElementById('selSinalParcelas').value,
                 inpSinal: document.getElementById('inpSinal').value,
-                tableFilter: document.getElementById('tableFilter') ? document.getElementById('tableFilter').value : 'todos',
+                tableFilter: document.getElementById('tableFilter') ? document.getElementById('tableFilter').value : 'livre',
                 tableExpanded: state.tableExpanded
             };
             localStorage.setItem('madrid_app_state', JSON.stringify(stateObj));
@@ -974,7 +975,7 @@
             doc.setFontSize(9);
             doc.setFont("helvetica", "normal");
             doc.text("Rua Florianópolis, 143 - Quadra 04 Lote 01/02/03/10/11/12/13 - Jd. Imperial", 105, 25, { align: 'center' });
-            doc.text("Luís Eduardo Magalhães/BA - CEP: 47864-148", 105, 30, { align: 'center' });
+            doc.text("Luís Eduardo Magalhães/BA - CEP: 47.864-148", 105, 30, { align: 'center' });
             doc.text("CNPJ: 51.114.117/0001-37", 105, 35, { align: 'center' });
 
             doc.setFontSize(12);
@@ -984,11 +985,11 @@
 
             doc.setFontSize(10);
             doc.setFont("helvetica", "bold");
-            doc.text("Dados do Comprador", 14, 58);
+            doc.text("Dados do Proponente", 14, 58);
             
             doc.setFontSize(9);
             doc.setFont("helvetica", "normal");
-            doc.text(`Comprador:  ${client || '_________________________________________________________'}`, 14, 65);
+            doc.text(`Proponente:  ${client || '_________________________________________________________'}`, 14, 65);
             doc.text(`CPF/CNPJ:   ${cpf || '_______________________'}`, 14, 71);
             doc.text(`Telefone:   ${phone || '_______________________'}`, 105, 71);
 
@@ -1096,7 +1097,7 @@
             
             doc.line(20, sigY, 90, sigY);
             doc.setFont("helvetica", "bold");
-            doc.text("Assinatura do Comprador", 55, sigY + 5, { align: 'center' });
+            doc.text("Assinatura do Proponente", 55, sigY + 5, { align: 'center' });
             doc.setFont("helvetica", "normal");
             doc.text(client ? client : "Nome: ________________________________", 55, sigY + 10, { align: 'center' });
 
@@ -1140,8 +1141,8 @@
 
             let csv = "\uFEFF"; 
             csv += "PROPOSTA DE COMPRA E VENDA - MADRID CASA ELEVADA\n\n";
-            csv += "DADOS DO COMPRADOR\n";
-            csv += `Comprador:;${client}\n`;
+            csv += "DADOS DO PROPONENTE\n";
+            csv += `Proponente:;${client}\n`;
             csv += `CPF/CNPJ:;${cpf}\n`;
             csv += `Telefone:;${phone}\n\n`;
 
@@ -1262,7 +1263,6 @@
                     badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px; color: var(--brand-gold);"></i> Corretor: <span style="font-weight:600; opacity:0.9;">${state.user}</span>`;
                 }
                 
-                // GRAVA O ACESSO NO BANCO
                 db.logAccess(state.user);
                 
                 db.load();
