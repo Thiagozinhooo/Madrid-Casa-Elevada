@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+    <!-- =========================================================================
+         LANDING PÚBLICA — Madrid Casa Elevada
+         Página pública do empreendimento. NÃO exige login. Lê apenas:
+           - madrid_data/cronograma    (timeline de obra editavel pelo gestor)
+         E escreve em:
+           - madrid_data/leads_inbox/<pushKey> (formulário público — vai pro
+             "Inbox de Leads" dentro do app, que o gestor aprova/recusa)
+         ========================================================================= -->
+
+    <!-- SEO / Open Graph / Schema.org -->
+    <title>Madrid Casa Elevada — Apartamentos de Alto Padrão em Luís Eduardo Magalhães | Entrega Jul/2027</title>
+    <meta name="description" content="Madrid Casa Elevada — Apartamentos premium de 1 e 3 suítes no Jardim Sol Nascente, Luís Eduardo Magalhães — BA. Vagas duplas, escaninho privativo, lazer completo. Entrega Julho/2027. Conheça as plantas e simule sua proposta.">
+    <meta name="keywords" content="Madrid Casa Elevada, apartamentos Luís Eduardo Magalhães, Jardim Sol Nascente, lançamento imobiliário LEM, apartamentos 1 suíte, apartamentos 3 suítes, alto padrão Bahia, Torre Madrid SPE">
+    <meta name="author" content="Torre Madrid Empreendimentos Imobiliários SPE Ltda">
+    <meta name="robots" content="index, follow">
+    <!-- V386 (auditoria SEO): o canonical apontava pra raiz, que faz 301 pro app
+         com noindex — a única página indexável mandava o Google descartá-la. -->
+    <link rel="canonical" href="https://www.madridcasaelevada.com/landing.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Madrid Casa Elevada">
+    <meta property="og:title" content="Madrid Casa Elevada — Alto Padrão | Luís Eduardo Magalhães">
+    <meta property="og:description" content="Apartamentos premium de 1 e 3 suítes. Vagas duplas, escaninho privativo, lazer completo. Entrega Julho/2027.">
+    <meta property="og:image" content="https://www.madridcasaelevada.com/fachada-dia.jpg">
+    <meta property="og:image:width" content="1600">
+    <meta property="og:image:height" content="1600">
+    <meta property="og:image:alt" content="Fachada da torre Madrid Casa Elevada — 14 andares em Luís Eduardo Magalhães">
+    <meta property="og:url" content="https://www.madridcasaelevada.com/landing.html">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Madrid Casa Elevada — Alto Padrão">
+    <meta name="twitter:description" content="Lançamento de alto padrão em Luís Eduardo Magalhães — BA. Entrega Julho/2027.">
+    <meta name="twitter:image" content="https://madridcasaelevada.com/fachada-dia.jpg">
+
+    <meta name="theme-color" content="#1F3324">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+
+    <!-- JSON-LD Schema (RealEstateListing) — ajuda o Google a entender o que é o site -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ApartmentComplex",
+        "name": "Madrid Casa Elevada",
+        "description": "Torre residencial de alto padrão com 50 apartamentos de 1 e 3 suítes no bairro Jardim Sol Nascente, Luís Eduardo Magalhães — BA. Entrega prevista para Julho/2027.",
+        "url": "https://madridcasaelevada.com/",
+        "image": "https://madridcasaelevada.com/fachada-dia.jpg",
+        "numberOfAccommodationUnits": 50,
+        "numberOfBedrooms": "1-3",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Bairro Jardim Sol Nascente",
+            "addressLocality": "Luís Eduardo Magalhães",
+            "addressRegion": "BA",
+            "addressCountry": "BR"
+        },
+        "amenityFeature": [
+            { "@type": "LocationFeatureSpecification", "name": "Vagas duplas em todas as unidades" },
+            { "@type": "LocationFeatureSpecification", "name": "Escaninho privativo" },
+            { "@type": "LocationFeatureSpecification", "name": "14 andares" },
+            { "@type": "LocationFeatureSpecification", "name": "Alto padrão" }
+        ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha384-iw3OoTErCYJJB9mCa8LNS2hbsQ7M3C0EpIsO/H5+EGAkPGc6rk+V8i04oW/K5xq0"
+          crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F3324'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-style='italic' fill='%23C5A065' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+    <link rel="preload" as="image" href="fachada-dia.jpg" fetchpriority="high">
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" crossorigin="anonymous"></script>
+
+    <style>
+        :root {
+            --brand-primary: #1F3324;
+            --brand-secondary: #2E4A35;
+            --brand-gold: #C5A065;
+            --brand-gold-dark: #A68550;
+            --brand-cream: #F5EDDC;
+            --bg-page: #FAFAF7;
+            --bg-card: #FFFFFF;
+            --text-main: #1C241E;
+            --text-secondary: #6A736C;
+            --text-muted: #A3ACA5;
+            --border-soft: #E8E6DE;
+            --shadow-sm: 0 4px 12px rgba(28, 36, 30, 0.06);
+            --shadow-md: 0 10px 30px rgba(28, 36, 30, 0.10);
+            --shadow-lg: 0 25px 60px rgba(28, 36, 30, 0.18);
+            --radius: 10px;
+            --radius-lg: 18px;
+            --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            font-size: 15px;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4 { font-family: 'Cormorant Garamond', serif; font-weight: 600; letter-spacing: -0.01em; line-height: 1.1; margin: 0 0 12px; }
+        h1 { font-size: clamp(40px, 7vw, 84px); }
+        h2 { font-size: clamp(28px, 4vw, 48px); }
+        h3 { font-size: clamp(20px, 2.5vw, 28px); }
+        p { margin: 0 0 14px; color: var(--text-secondary); }
+        a { color: inherit; text-decoration: none; }
+        img { max-width: 100%; display: block; }
+
+        .container { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+        .section { padding: 100px 0; }
+        .section.tight { padding: 60px 0; }
+        @media (max-width: 768px) { .section { padding: 60px 0; } }
+
+        /* ---------- TOPO / NAV ---------- */
+        nav.top-nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 18px 24px;
+            background: rgba(250, 250, 247, 0);
+            backdrop-filter: blur(0);
+            transition: all 0.4s var(--ease);
+        }
+        nav.top-nav.scrolled {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+            padding: 12px 24px;
+        }
+        nav.top-nav .nav-inner {
+            max-width: 1240px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between; gap: 20px;
+        }
+        nav.top-nav img.logo { height: 42px; width: auto; transition: opacity 0.3s; }
+        nav.top-nav.scrolled img.logo { height: 38px; }
+        nav.top-nav .logo-white { display: block; }
+        nav.top-nav .logo-color { display: none; }
+        nav.top-nav.scrolled .logo-white { display: none; }
+        nav.top-nav.scrolled .logo-color { display: block; }
+
+        nav.top-nav .nav-links { display: flex; gap: 28px; align-items: center; }
+        nav.top-nav .nav-links a {
+            font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+            color: white; opacity: 0.92; transition: all 0.2s;
+            padding: 6px 0; border-bottom: 1px solid transparent;
+        }
+        nav.top-nav .nav-links a:hover { opacity: 1; border-color: var(--brand-gold); }
+        nav.top-nav.scrolled .nav-links a { color: var(--text-main); }
+        nav.top-nav .btn-corretor {
+            font-size: 11px; padding: 9px 16px; border-radius: 100px;
+            background: rgba(255,255,255,0.12); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.25); color: white;
+            font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+            transition: all 0.2s; cursor: pointer;
+        }
+        nav.top-nav.scrolled .btn-corretor {
+            background: var(--brand-primary); color: white; border-color: var(--brand-primary);
+        }
+        nav.top-nav .btn-corretor:hover { background: var(--brand-gold); border-color: var(--brand-gold); color: white; }
+
+        .mobile-menu-btn { display: none; background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
+        nav.top-nav.scrolled .mobile-menu-btn { color: var(--text-main); }
+        @media (max-width: 900px) {
+            nav.top-nav .nav-links { display: none; }
+            .mobile-menu-btn { display: block; }
+            nav.top-nav .nav-links.open {
+                display: flex; position: absolute; top: 100%; left: 0; right: 0;
+                background: white; padding: 24px; flex-direction: column; gap: 18px;
+                box-shadow: var(--shadow-md); border-top: 1px solid var(--border-soft);
+            }
+            nav.top-nav .nav-links.open a { color: var(--text-main); }
+        }
+
+        /* ---------- HERO ---------- */
+        .hero {
+            position: relative; min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 120px 24px 80px;
+            overflow: hidden;
+            color: white;
+            text-align: center;
+        }
+        .hero-bg {
+            position: absolute; inset: 0; z-index: 0;
+        }
+        .hero-bg img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0;
+            transition: opacity 1.8s ease;
+            transform: scale(1.05);
+        }
+        .hero-bg img.active { opacity: 1; }
+        /* Hero em vídeo: a torre em movimento (fachada-video.mp4, 8s loop, 2,5MB).
+           O poster (fachada-dia.jpg) cobre o carregamento e os casos em que o
+           autoplay é bloqueado (ex: modo de economia de bateria no iOS). */
+        .hero-bg video {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .hero-bg::after {
+            content: ''; position: absolute; inset: 0;
+            background:
+                linear-gradient(180deg, rgba(31,51,36,0.55) 0%, rgba(31,51,36,0.35) 45%, rgba(31,51,36,0.85) 100%),
+                radial-gradient(ellipse at center, transparent 30%, rgba(31,51,36,0.6) 100%);
+            z-index: 1;
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 900px; animation: fadeUp 1.2s var(--ease) both; }
+        .hero .eyebrow {
+            display: inline-block;
+            font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase; font-weight: 700;
+            color: var(--brand-gold); margin-bottom: 28px;
+            padding: 8px 18px; border: 1px solid rgba(197,160,101,0.5);
+            border-radius: 100px; backdrop-filter: blur(6px);
+            background: rgba(0,0,0,0.15);
+        }
+        .hero h1 {
+            color: white;
+            font-weight: 500;
+            text-shadow: 0 2px 30px rgba(0,0,0,0.4);
+            margin-bottom: 24px;
+        }
+        .hero h1 em { font-style: italic; color: var(--brand-cream); font-weight: 400; }
+        .hero .lead {
+            font-size: clamp(15px, 1.8vw, 19px); color: rgba(255,255,255,0.92);
+            max-width: 620px; margin: 0 auto 40px; font-weight: 400;
+        }
+        .hero .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 16px 32px; border-radius: 100px;
+            font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+            border: none; cursor: pointer;
+            transition: all 0.3s var(--ease);
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: var(--brand-gold); color: var(--brand-primary);
+            box-shadow: 0 10px 30px rgba(197,160,101,0.35);
+        }
+        .btn-primary:hover {
+            background: var(--brand-cream); transform: translateY(-2px);
+            box-shadow: 0 14px 40px rgba(197,160,101,0.45);
+        }
+        .btn-ghost {
+            background: rgba(255,255,255,0.1); color: white;
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .btn-solid-primary {
+            background: var(--brand-primary); color: white;
+            box-shadow: 0 8px 24px rgba(31,51,36,0.25);
+        }
+        .btn-solid-primary:hover { background: var(--brand-secondary); transform: translateY(-2px); }
+
+        /* contador animado */
+        .hero-stats {
+            position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 40px; z-index: 2;
+            padding: 18px 36px; border-radius: 100px;
+            background: rgba(0,0,0,0.25); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            animation: fadeUp 1.5s 0.6s var(--ease) both;
+        }
+        @media (max-width: 700px) {
+            .hero-stats { flex-direction: column; gap: 8px; padding: 16px 28px; bottom: 30px; }
+        }
+        .hero-stats .stat { text-align: center; }
+        .hero-stats .stat strong {
+            display: block; font-size: clamp(26px, 3vw, 34px); color: var(--brand-gold);
+            font-weight: 700; font-family: 'Cormorant Garamond', serif; line-height: 1.1;
+        }
+        .hero-stats .stat span {
+            display: block; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+            opacity: 0.85; margin-top: 4px;
+        }
+        .hero-stats .live-dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #10B981; margin-right: 6px;
+            animation: pulse 1.5s infinite;
+            vertical-align: middle;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(16,185,129,0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scroll-hint {
+            position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+            font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+            color: rgba(255,255,255,0.7); z-index: 2; display: none;
+        }
+
+        /* ---------- SEÇÕES GENÉRICAS ---------- */
+        .section-eyebrow {
+            display: inline-block;
+            font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; font-weight: 700;
+            color: var(--brand-gold-dark); margin-bottom: 14px;
+        }
+        .section-header { text-align: center; max-width: 720px; margin: 0 auto 60px; }
+        .section-header h2 { color: var(--brand-primary); }
+        .gold-divider {
+            width: 50px; height: 2px; background: var(--brand-gold);
+            margin: 16px auto 0;
+        }
+
+        /* ---------- DIFERENCIAIS GRID ---------- */
+        .diffs-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 28px;
+        }
+        .diff-card {
+            text-align: center; padding: 32px 20px;
+            transition: all 0.4s var(--ease);
+        }
+        .diff-card:hover { transform: translateY(-4px); }
+        .diff-icon {
+            width: 64px; height: 64px; margin: 0 auto 18px;
+            background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 24px;
+            box-shadow: 0 12px 28px rgba(197,160,101,0.3);
+        }
+        .diff-card h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--brand-primary); margin-bottom: 8px; }
+        .diff-card p { font-size: 13px; }
+
+        /* ---------- GALERIA ---------- */
+        .gallery-section { background: var(--brand-primary); color: white; }
+        .gallery-section h2 { color: white; }
+        .gallery-section .section-eyebrow { color: var(--brand-gold); }
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+        }
+        .gallery-item {
+            position: relative; overflow: hidden; border-radius: 6px;
+            cursor: pointer; aspect-ratio: 4/3; background: rgba(255,255,255,0.05);
+        }
+        .gallery-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s var(--ease);
+        }
+        .gallery-item::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.5) 100%);
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .gallery-item:hover img { transform: scale(1.08); }
+        .gallery-item:hover::after { opacity: 1; }
+        .gallery-item .gallery-label {
+            position: absolute; bottom: 14px; left: 16px; right: 16px;
+            font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+            color: white; z-index: 1; opacity: 0; transition: opacity 0.3s;
+        }
+        .gallery-item:hover .gallery-label { opacity: 1; }
+        /* Sem mouse (celular/tablet) o hover não existe — a legenda fica sempre
+           visível sobre um degradê pra não depender do toque. */
+        @media (hover: none) {
+            .gallery-item .gallery-label { opacity: 1; background: linear-gradient(transparent, rgba(0,0,0,0.65)); padding-top: 28px; }
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed; inset: 0; z-index: 1000;
+            background: rgba(10, 15, 12, 0.96); backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center;
+            padding: 40px;
+        }
+        .lightbox.open { display: flex; }
+        .lightbox img {
+            max-width: 92vw; max-height: 88vh; object-fit: contain;
+            border-radius: 8px; box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+        }
+        .lightbox .lb-close, .lightbox .lb-prev, .lightbox .lb-next {
+            position: absolute; background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.25); color: white;
+            width: 50px; height: 50px; border-radius: 50%;
+            font-size: 18px; cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s;
+        }
+        .lightbox .lb-close:hover, .lightbox .lb-prev:hover, .lightbox .lb-next:hover { background: rgba(255,255,255,0.25); }
+        .lightbox .lb-close { top: 24px; right: 24px; }
+        .lightbox .lb-prev { left: 24px; top: 50%; transform: translateY(-50%); }
+        .lightbox .lb-next { right: 24px; top: 50%; transform: translateY(-50%); }
+
+        /* ---------- PLANTAS ---------- */
+        .plantas-section {}
+        .plantas-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }
+        .planta-tab {
+            padding: 12px 24px; border-radius: 100px;
+            border: 1px solid var(--border-soft); background: white;
+            font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+            color: var(--text-secondary); cursor: pointer;
+            transition: all 0.2s;
+        }
+        .planta-tab.active {
+            background: var(--brand-primary); color: white;
+            border-color: var(--brand-primary);
+        }
+        .planta-tab:hover:not(.active) { border-color: var(--brand-primary); color: var(--brand-primary); }
+        /* V373: esquema do pavimento — explica os "finais" (jargão de incorporação) */
+        .final-cell {
+            padding: 16px 0; border-radius: 8px; text-align: center;
+            border: 1px solid var(--border-soft); background: #fff;
+            font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 18px;
+            color: var(--text-muted); transition: all 0.25s;
+        }
+        .final-cell.final-on { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
+        .planta-content {
+            display: none; align-items: center; gap: 60px;
+            background: white; padding: 48px; border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+        .planta-content.active { display: flex; }
+        @media (max-width: 900px) {
+            .planta-content { flex-direction: column; padding: 28px; gap: 32px; }
+        }
+        .planta-content .planta-img {
+            flex: 1; min-width: 0;
+            border-radius: var(--radius); overflow: hidden;
+            background: var(--bg-page);
+            display: flex; align-items: center; justify-content: center;
+            min-height: 320px;
+        }
+        .planta-content .planta-img img { max-height: 480px; object-fit: contain; cursor: zoom-in; }
+        .planta-content .planta-img .placeholder {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: var(--text-muted); padding: 60px 20px; text-align: center;
+        }
+        .planta-content .planta-img .placeholder i { font-size: 48px; margin-bottom: 14px; opacity: 0.4; }
+        .planta-info { flex: 1; min-width: 0; }
+        .planta-info h3 { color: var(--brand-primary); margin-bottom: 16px; }
+        .planta-info ul { list-style: none; padding: 0; margin: 20px 0; }
+        .planta-info ul li {
+            padding: 10px 0; border-bottom: 1px solid var(--border-soft);
+            display: flex; justify-content: space-between; font-size: 14px;
+        }
+        .planta-info ul li strong { color: var(--brand-primary); font-weight: 700; }
+
+        /* ---------- CRONOGRAMA / OBRA ---------- */
+        .cronograma-section { background: linear-gradient(180deg, var(--brand-primary) 0%, #16261C 100%); color: white; overflow: hidden; position: relative; }
+        .cronograma-section .section-eyebrow { color: var(--brand-gold); }
+        .cronograma-section h2 { color: white; }
+        .cronograma-section .section-header p { color: rgba(255,255,255,0.75); }
+        .progress-wrap { max-width: 720px; margin: 0 auto 60px; text-align: center; }
+        .progress-wrap .pct-big {
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(56px, 9vw, 96px);
+            color: var(--brand-gold); font-weight: 600; line-height: 1;
+        }
+        .progress-wrap .pct-label {
+            font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase;
+            opacity: 0.8; margin-bottom: 24px;
+        }
+        .progress-bar {
+            width: 100%; height: 4px; background: rgba(255,255,255,0.12);
+            border-radius: 100px; overflow: hidden; position: relative;
+        }
+        .progress-bar .fill {
+            height: 100%; background: linear-gradient(90deg, var(--brand-gold) 0%, var(--brand-cream) 100%);
+            border-radius: 100px;
+            transition: width 1.5s var(--ease);
+            box-shadow: 0 0 18px rgba(197,160,101,0.5);
+        }
+        .progress-wrap .obra-status {
+            margin-top: 16px; font-size: 13px; opacity: 0.85;
+        }
+        .progress-wrap .obra-status .live-dot {
+            display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+            background: #10B981; margin-right: 8px;
+            animation: pulse 1.5s infinite; vertical-align: middle;
+        }
+
+        .timeline {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 24px;
+            position: relative;
+        }
+        .timeline-stage {
+            text-align: center; padding: 24px 16px;
+            border-radius: var(--radius); background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s var(--ease);
+            opacity: 0.55;
+        }
+        .timeline-stage.concluida { opacity: 1; background: rgba(197,160,101,0.1); border-color: rgba(197,160,101,0.3); }
+        .timeline-stage.ativa {
+            opacity: 1; background: rgba(197,160,101,0.2); border-color: var(--brand-gold);
+            box-shadow: 0 12px 30px rgba(197,160,101,0.2);
+            transform: translateY(-4px);
+        }
+        .timeline-stage .stage-icon {
+            width: 48px; height: 48px; margin: 0 auto 14px;
+            border-radius: 50%; background: rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--brand-gold); font-size: 18px;
+        }
+        .timeline-stage.concluida .stage-icon { background: var(--brand-gold); color: var(--brand-primary); }
+        .timeline-stage.ativa .stage-icon { background: var(--brand-gold); color: var(--brand-primary); box-shadow: 0 0 0 6px rgba(197,160,101,0.2); }
+        .timeline-stage .stage-name {
+            font-size: 12px; font-weight: 700; letter-spacing: 0.06em;
+            text-transform: uppercase; margin-bottom: 6px;
+        }
+        .timeline-stage .stage-pct {
+            font-size: 24px; font-family: 'Cormorant Garamond', serif;
+            color: var(--brand-gold); font-weight: 600;
+        }
+
+        /* ---------- LOCALIZAÇÃO ---------- */
+        .loc-section { background: var(--brand-primary); color: white; }
+        .loc-section h2 { color: white; }
+        .loc-section .section-eyebrow { color: var(--brand-gold); }
+        .loc-section .section-header p { color: rgba(255,255,255,0.75); }
+        .map-wrap {
+            border-radius: var(--radius-lg); overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(255,255,255,0.1);
+            aspect-ratio: 16/9; max-height: 520px;
+            background: rgba(255,255,255,0.05);
+        }
+        /* Mapa em SATÉLITE (pedido do gestor: igual à captura) — sem o filtro
+           grayscale que fazia sentido no mapa de ruas. */
+        .map-wrap iframe { width: 100%; height: 100%; border: 0; }
+        .map-endereco { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 16px; font-size: 14px; color: var(--text-secondary); }
+        .map-endereco i { color: var(--brand-gold); }
+        .map-endereco .btn-rota { display: inline-flex; align-items: center; gap: 8px; background: var(--brand-primary); color: #fff; font-size: 13px; font-weight: 700; padding: 10px 18px; border-radius: 999px; text-decoration: none; transition: opacity 0.2s; }
+        .map-endereco .btn-rota:hover { opacity: 0.88; }
+
+        /* ---------- FORMULÁRIO DE LEAD ---------- */
+        .lead-section { background: var(--bg-page); }
+        .lead-wrap {
+            max-width: 920px; margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            display: grid; grid-template-columns: 1fr 1fr;
+        }
+        @media (max-width: 800px) { .lead-wrap { grid-template-columns: 1fr; } }
+        .lead-side {
+            background: linear-gradient(135deg, var(--brand-primary) 0%, #16261C 100%);
+            color: white; padding: 48px 40px;
+            display: flex; flex-direction: column; justify-content: center;
+            position: relative; overflow: hidden;
+        }
+        .lead-side::before {
+            content: ''; position: absolute; top: -30%; right: -30%;
+            width: 80%; height: 80%; border-radius: 50%;
+            background: radial-gradient(circle, rgba(197,160,101,0.15) 0%, transparent 70%);
+        }
+        .lead-side .eyebrow {
+            color: var(--brand-gold); font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+            font-weight: 700; margin-bottom: 18px;
+        }
+        .lead-side h2 { color: white; margin-bottom: 16px; font-size: clamp(28px, 3vw, 38px); }
+        .lead-side p { color: rgba(255,255,255,0.8); font-size: 14px; }
+        .lead-side ul { list-style: none; padding: 0; margin: 24px 0 0; position: relative; z-index: 1; }
+        .lead-side ul li { padding: 6px 0; font-size: 13px; color: rgba(255,255,255,0.85); display: flex; gap: 10px; align-items: center; }
+        .lead-side ul li i { color: var(--brand-gold); }
+
+        .lead-form { padding: 48px 40px; }
+        @media (max-width: 800px) { .lead-side, .lead-form { padding: 32px 28px; } }
+        .lead-form h3 { color: var(--brand-primary); margin-bottom: 6px; }
+        .lead-form .lead-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 22px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--text-secondary); margin-bottom: 6px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 12px 14px;
+            background: var(--bg-page); border: 1px solid var(--border-soft); border-radius: 8px;
+            font-family: inherit; font-size: 14px; color: var(--text-main);
+            transition: all 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--brand-gold); background: white;
+            box-shadow: 0 0 0 4px rgba(197,160,101,0.12);
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group.honeypot {
+            position: absolute; left: -9999px; visibility: hidden;
+        }
+        .form-msg {
+            padding: 14px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 14px;
+            display: none;
+        }
+        .form-msg.success { background: rgba(16,185,129,0.1); color: #047857; border: 1px solid rgba(16,185,129,0.3); }
+        .form-msg.error { background: rgba(239,68,68,0.1); color: #b91c1c; border: 1px solid rgba(239,68,68,0.3); }
+        .form-msg.visible { display: block; }
+        .lead-form .btn { width: 100%; justify-content: center; margin-top: 6px; }
+        /* V395-fix (revisão): o aviso de LGPD é justamente o texto que precisa ser
+           lido antes de enviar dados — estava em 11px quase apagado (2,3:1). */
+        .lead-consent { font-size: 12px; color: #5A625C; margin-top: 14px; text-align: center; line-height: 1.6; }
+        .lead-consent a { color: #6B5218; text-decoration: underline; font-weight: 600; }
+
+        /* ---------- WHATSAPP FLUTUANTE ---------- */
+        .wa-float {
+            position: fixed; bottom: 24px; right: 24px;
+            width: 60px; height: 60px; border-radius: 50%;
+            background: #25D366; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; z-index: 80;
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45);
+            transition: all 0.3s var(--ease);
+            cursor: pointer; text-decoration: none;
+            animation: bobble 4s ease-in-out infinite;
+        }
+        .wa-float:hover {
+            transform: scale(1.1); background: #1DA851;
+            box-shadow: 0 12px 32px rgba(37, 211, 102, 0.6);
+        }
+        .wa-float::before {
+            content: ''; position: absolute; inset: -4px;
+            border-radius: 50%;
+            background: #25D366; opacity: 0.4;
+            animation: ripple 2s infinite; z-index: -1;
+        }
+
+        /* ---------- BARRA CTA FIXA (só mobile, aparece após o hero) ---------- */
+        .mobile-cta-bar {
+            position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+            display: none;
+            padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+            background: rgba(31,51,36,0.97); backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(197,160,101,0.35);
+        }
+        .mobile-cta-bar a {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            height: 48px; border-radius: 100px;
+            background: var(--brand-gold); color: var(--brand-primary);
+            font-weight: 800; font-size: 13px; letter-spacing: 0.05em; text-transform: uppercase;
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-cta-bar.visible { display: block; }
+            /* A barra JÁ É o CTA de WhatsApp — o botão redondo sai de cena pra não duplicar. */
+            body.has-cta-bar .wa-float { display: none; }
+        }
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.4; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        @keyframes bobble {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* ---------- FOOTER ---------- */
+        footer.foot {
+            background: #0E1810; color: rgba(255,255,255,0.6);
+            padding: 64px 24px 40px;
+        }
+        footer.foot .foot-inner {
+            max-width: 1240px; margin: 0 auto;
+            display: grid; grid-template-columns: 1.4fr 1fr 1fr;
+            gap: 48px;
+        }
+        @media (max-width: 800px) { footer.foot .foot-inner { grid-template-columns: 1fr; gap: 32px; } }
+        footer.foot img.foot-logo { height: 56px; margin-bottom: 18px; }
+        footer.foot h5 {
+            color: var(--brand-gold); font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        footer.foot p { font-size: 13px; line-height: 1.7; margin: 0; }
+        footer.foot ul { list-style: none; padding: 0; margin: 0; }
+        footer.foot ul li { padding: 4px 0; font-size: 13px; }
+        footer.foot ul li a { transition: color 0.2s; }
+        footer.foot ul li a:hover { color: var(--brand-gold); }
+        footer.foot .copyright {
+            max-width: 1240px; margin: 48px auto 0; padding-top: 28px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            /* V395-fix (revisão): os avisos legais (imagens ilustrativas, CRECI,
+               privacidade) estavam a 2,7:1 — são exatamente o que precisa ser
+               legível. Rodapé é fundo escuro: a cor legível aqui é a clara. */
+            font-size: 12px; color: rgba(255,255,255,0.78); text-align: center; line-height: 1.7;
+        }
+        footer.foot .copyright a { color: var(--brand-gold); text-decoration: underline; }
+        footer.foot .copyright a { color: var(--brand-gold); }
+
+        /* ---------- EASTER EGG OVERLAY ---------- */
+        .easter-egg {
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(31, 51, 36, 0.97); backdrop-filter: blur(12px);
+            display: none; align-items: center; justify-content: center;
+            color: white; text-align: center; padding: 40px;
+            animation: fadeUp 0.6s var(--ease);
+        }
+        .easter-egg.open { display: flex; flex-direction: column; }
+        .easter-egg .ee-emoji { font-size: 72px; margin-bottom: 20px; }
+        .easter-egg h2 { color: var(--brand-gold); margin-bottom: 14px; }
+        .easter-egg p { color: rgba(255,255,255,0.85); max-width: 480px; }
+        .easter-egg button {
+            margin-top: 28px;
+            background: var(--brand-gold); color: var(--brand-primary);
+            border: none; padding: 14px 32px; border-radius: 100px;
+            font-weight: 700; cursor: pointer; font-family: inherit;
+            font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
+        }
+
+        /* Reveal on scroll */
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal, .hero-content, .hero-stats { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+            .wa-float { animation: none !important; }
+            .wa-float::before { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===================== NAV ===================== -->
+    <nav class="top-nav" id="topNav">
+        <div class="nav-inner">
+            <a href="#topo" aria-label="Madrid Casa Elevada">
+                <img src="MADRID LOGO BRANCA-01.png" class="logo logo-white" alt="Madrid">
+                <img src="MADRID LOGO MUSGO-01-01.png" class="logo logo-color" alt="Madrid">
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="#diferenciais">Diferenciais</a>
+                <a href="#galeria">Galeria</a>
+                <a href="#plantas">Plantas</a>
+                <a href="#obra">Obra</a>
+                <a href="#como-funciona">Como funciona</a>
+                <a href="#localizacao">Localização</a>
+                <a href="#contato">Contato</a>
+                <a href="index.html?app=1" class="btn-corretor"><i class="fas fa-user-tie"></i> Sou corretor</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero" id="topo">
+        <div class="hero-bg">
+            <img src="fachada-dia.jpg" class="active" alt="">
+            <!-- V395 (auditoria): preload="none" + <source> injetado por JS. O topo
+                 baixava 3,3 MB (vídeo + foto) antes de qualquer coisa aparecer —
+                 em rede móvel da região é mais de um minuto de tela escura, e o
+                 vídeo ainda disputava banda com a foto que precisa aparecer
+                 primeiro. A foto de capa cobre o caso sem vídeo. -->
+            <video id="heroVideo" muted loop playsinline preload="none" poster="fachada-dia.jpg" aria-hidden="true"></video>
+        </div>
+        <div class="hero-content">
+            <span class="eyebrow">Lançamento Premium</span>
+            <h1>Madrid <em>Casa Elevada</em></h1>
+            <p class="lead">14 andares de acabamento de alto padrão no Jardim Sol Nascente, em Luís Eduardo Magalhães. Apartamentos de 1 e 3 suítes com vagas duplas e escaninho privativo. Entrega Julho/2027.</p>
+            <div class="cta-row">
+                <a href="#contato" class="btn btn-primary"><i class="fas fa-envelope-open-text"></i> Quero uma proposta</a>
+                <a id="waHeroBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <strong>14</strong>
+                <span>Andares</span>
+            </div>
+            <div class="stat">
+                <strong>50</strong>
+                <span>Unidades</span>
+            </div>
+            <div class="stat">
+                <strong>Jul/2027</strong>
+                <span>Entrega</span>
+            </div>
+        </div>
+        <div class="scroll-hint">↓ role para descobrir</div>
+    </section>
+
+    <!-- ===================== DIFERENCIAIS ===================== -->
+    <section class="section" id="diferenciais">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Por que Madrid</span>
+                <h2>Diferenciais que elevam o padrão</h2>
+                <div class="gold-divider"></div>
+            </div>
+            <div class="diffs-grid">
+                <div class="diff-card reveal">
+                    <div class="diff-icon"><i class="fas fa-car-side"></i></div>
+                    <h4>Vagas Duplas</h4>
+                    <p>Todas as 50 unidades com 2 vagas de garagem dedicadas — térreo ou subsolo, mapeadas pela engenharia.</p>
+                </div>
+                <div class="diff-card reveal">
+                    <div class="diff-icon"><i class="fas fa-box-open"></i></div>
+                    <h4>Escaninho Privativo</h4>
+                    <p>Espaço extra de armazenamento no 1º pavimento — um por apartamento. Pra equipamentos, malas e vinho.</p>
+                </div>
+                <div class="diff-card reveal">
+                    <div class="diff-icon"><i class="fas fa-building"></i></div>
+                    <h4>Apenas 4 por andar</h4>
+                    <p>Distribuição inteligente: 2 unidades por face. Mais privacidade, ventilação cruzada e luz natural.</p>
+                </div>
+                <div class="diff-card reveal">
+                    <div class="diff-icon"><i class="fas fa-handshake"></i></div>
+                    <h4>Plano Flexível</h4>
+                    <p>Sinal, parcelas mensais e balões personalizáveis. Permuta e propostas especiais aceitas.</p>
+                </div>
+                <div class="diff-card reveal">
+                    <div class="diff-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h4>SPE Dedicada</h4>
+                    <p>Patrimônio segregado em SPE (Sociedade de Propósito Específico) — proteção patrimonial pra cada comprador.</p>
+                </div>
+                <div class="diff-card reveal">
+                    <div class="diff-icon"><i class="fas fa-arrow-up"></i></div>
+                    <h4>Casa Elevada</h4>
+                    <p>Conceito de moradia vertical com a sensação de casa: pé-direito amplo, plantas generosas, varanda gourmet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== GALERIA ===================== -->
+    <section class="section gallery-section" id="galeria">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Galeria</span>
+                <h2>A torre e cada detalhe</h2>
+                <div class="gold-divider"></div>
+                <p style="color: rgba(255,255,255,0.75); margin-top: 16px;">Clique para ampliar.</p>
+            </div>
+            <div class="gallery-grid" id="galleryGrid">
+                <!-- preenchido por JS -->
+            </div>
+            <div style="text-align:center; margin-top:36px;" class="reveal">
+                <a id="waGaleriaBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fab fa-whatsapp"></i> Receber mais imagens no WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+        <button class="lb-close" aria-label="Fechar"><i class="fas fa-times"></i></button>
+        <button class="lb-prev" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
+        <img id="lbImg" src="" alt="">
+        <div id="lbCaption" style="position:absolute; bottom:24px; left:50%; transform:translateX(-50%); color:#fff; font-size:13px; font-weight:600; letter-spacing:0.04em; background:rgba(0,0,0,0.5); padding:8px 18px; border-radius:100px; white-space:nowrap;"></div>
+        <button class="lb-next" aria-label="Próxima"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <!-- ===================== PLANTAS ===================== -->
+    <section class="section plantas-section" id="plantas">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Plantas</span>
+                <h2>Escolha a sua tipologia</h2>
+                <div class="gold-divider"></div>
+            </div>
+            <div class="plantas-tabs">
+                <button class="planta-tab active" data-planta="3suites">3 Suítes (125 m²)</button>
+                <button class="planta-tab" data-planta="1suite">1 Suíte (108 m²)</button>
+            </div>
+
+            <!-- V373: esquema do pavimento — "finais 02 e 03" era jargão sem
+                 explicação em lugar nenhum. A tipologia da aba ativa acende. -->
+            <div class="reveal" style="max-width:520px; margin:26px auto 34px; text-align:center;">
+                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px;">
+                    <div class="final-cell" data-tipo="1suite">01</div>
+                    <div class="final-cell final-on" data-tipo="3suites">02</div>
+                    <div class="final-cell final-on" data-tipo="3suites">03</div>
+                    <div class="final-cell" data-tipo="1suite">04</div>
+                </div>
+                <p style="font-size:12px; color:#5A625C; margin-top:10px; line-height:1.6;">Esquema do pavimento-tipo (2º ao 14º andar): são 4 apartamentos por andar, e o "final" é a posição de cada um. Finais 01 e 04 = 1 suíte; finais 02 e 03 = 3 suítes. A tipologia selecionada acima fica destacada. O 1º pavimento é diferente: são apenas 2 apartamentos, ambos de 3 suítes.</p>
+            </div>
+
+            <div class="planta-content active" data-planta="3suites">
+                <div class="planta-img">
+                    <img src="PLANTA_3_SUITES.jpeg" alt="Planta 3 Suítes" loading="lazy" onclick="openLightbox(this.src)">
+                </div>
+                <div class="planta-info">
+                    <h3>3 Suítes</h3>
+                    <p>A planta mais procurada. Espaço amplo para famílias, com 3 suítes, lavabo, sala ampla, varanda gourmet e cozinha integrada.</p>
+                    <ul>
+                        <li><span>Área Privativa</span><strong>125,20 m²</strong></li>
+                        <li><span>Área Total</span><strong>~130 m²</strong></li>
+                        <li><span>Vagas</span><strong>2 (duplas)</strong></li>
+                        <li><span>Escaninho</span><strong>1 privativo</strong></li>
+                        <li><span>Quartos</span><strong>3 suítes</strong></li>
+                        <li><span>Andares</span><strong>2º ao 14º (finais 02 e 03)</strong></li>
+                    </ul>
+                    <p style="font-size:12px; color:#5A625C; margin-top:10px; line-height:1.7;">Área privativa = área interna do apartamento · Vagas duplas = 2 vagas exclusivas na garagem · Escaninho = depósito privativo no prédio · Finais 02 e 03 = posição do apartamento no andar</p>
+                    <a href="#contato" class="btn btn-solid-primary"><i class="fas fa-envelope-open-text"></i> Quero esta planta</a>
+                </div>
+            </div>
+
+            <div class="planta-content" data-planta="1suite">
+                <div class="planta-img">
+                    <img src="planta-1suite.jpg" alt="Planta do apartamento 1 suíte de 108 m² — Madrid Casa Elevada" loading="lazy" onclick="openLightbox(this.src)">
+                </div>
+                <div class="planta-info">
+                    <h3>1 Suíte</h3>
+                    <p>Ideal para casais, investidores e profissionais que valorizam localização e padrão. Sala integrada, cozinha gourmet, suíte com closet.</p>
+                    <ul>
+                        <li><span>Área Privativa</span><strong>108,22 m²</strong></li>
+                        <li><span>Área Total</span><strong>~113 m²</strong></li>
+                        <li><span>Vagas</span><strong>2 (duplas)</strong></li>
+                        <li><span>Escaninho</span><strong>1 privativo</strong></li>
+                        <li><span>Quartos</span><strong>1 suíte ampla</strong></li>
+                        <li><span>Andares</span><strong>2º ao 14º (finais 01 e 04)</strong></li>
+                    </ul>
+                    <p style="font-size:12px; color:#5A625C; margin-top:10px; line-height:1.7;">Área privativa = área interna do apartamento · Vagas duplas = 2 vagas exclusivas na garagem · Escaninho = depósito privativo no prédio · Finais 01 e 04 = posição do apartamento no andar</p>
+                    <a href="#contato" class="btn btn-solid-primary"><i class="fas fa-envelope-open-text"></i> Quero esta planta</a>
+                </div>
+            </div>
+
+            <div style="text-align:center; margin-top:40px;" class="reveal">
+                <a href="book-madrid.pdf" download class="btn btn-solid-primary"><i class="fas fa-file-pdf"></i> Baixar o book do Madrid (PDF)</a>
+                <p style="font-size:12px; color:#5A625C; margin-top:12px;">Plantas, ficha técnica e imagens — pronto pra compartilhar com a família.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== CRONOGRAMA DE OBRA ===================== -->
+    <section class="section cronograma-section" id="obra">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Acompanhe a Obra</span>
+                <h2>Construindo seu novo endereço</h2>
+                <div class="gold-divider"></div>
+                <p>Atualizado regularmente pela equipe de engenharia.</p>
+            </div>
+
+            <div class="progress-wrap reveal">
+                <div class="pct-big" id="obraPct">…%</div>
+                <div class="pct-label">Avanço Geral da Obra</div>
+                <div class="progress-bar"><div class="fill" id="obraFill" style="width: 0%"></div></div>
+                <div class="obra-status"><span class="live-dot"></span> <span id="obraStatusText">Carregando informações…</span></div>
+                <!-- V395-fix (revisão): esta seção tem FUNDO ESCURO — a passada de
+                     contraste escureceu um texto que já era claro e o deixou quase
+                     invisível (2,1:1). Aqui a cor legível é a clara. -->
+                <div id="obraAtualizadoEm" style="font-size:12px; color:rgba(255,255,255,0.8); margin-top:6px;"></div>
+            </div>
+
+            <div class="timeline" id="timeline">
+                <!-- preenchido pelo JS após ler madrid_data/cronograma -->
+            </div>
+            <div style="text-align:center; margin-top:36px;" class="reveal">
+                <a id="waObraBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fab fa-whatsapp"></i> Acompanhar a obra de perto</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== COMO FUNCIONA (V372) =====================
+         A maior ansiedade de quem nunca comprou na planta é não saber o que
+         vem depois do formulário. 5 passos, SEM valores (confidenciais). -->
+    <section class="section" id="como-funciona">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Passo a passo</span>
+                <h2>Como funciona a compra na planta</h2>
+                <div class="gold-divider"></div>
+                <p>Do primeiro contato à entrega das chaves — sem mistério.</p>
+            </div>
+            <div class="reveal" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:18px;">
+                <div style="background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); padding:24px 20px;">
+                    <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">1</div>
+                    <h4 style="margin:10px 0 8px; font-size:15px;">A conversa</h4>
+                    <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">Chame no WhatsApp ou envie o formulário. Um consultor te atende e entende o que você procura.</p>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); padding:24px 20px;">
+                    <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">2</div>
+                    <h4 style="margin:10px 0 8px; font-size:15px;">Proposta sob medida</h4>
+                    <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">O consultor monta o plano com você: entrada (sinal), parcelas mensais, reforços periódicos (balões) e até permuta — usar um bem seu como parte do pagamento.</p>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); padding:24px 20px;">
+                    <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">3</div>
+                    <h4 style="margin:10px 0 8px; font-size:15px;">Contrato</h4>
+                    <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">Fechou? Assinatura do contrato e documentação, com o consultor acompanhando cada etapa.</p>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); padding:24px 20px;">
+                    <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">4</div>
+                    <h4 style="margin:10px 0 8px; font-size:15px;">Obra à vista</h4>
+                    <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">Você acompanha o avanço da obra em tempo real aqui no site, enquanto paga conforme o plano combinado.</p>
+                </div>
+                <div style="background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); padding:24px 20px;">
+                    <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">5</div>
+                    <h4 style="margin:10px 0 8px; font-size:15px;">Chaves em Julho/2027</h4>
+                    <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">Vistoria e entrega das chaves. Até lá, a tabela é corrigida todo mês pelo INCC (o índice do custo da construção) — por isso, quanto antes, melhor.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== LOCALIZAÇÃO ===================== -->
+    <section class="section loc-section" id="localizacao">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Localização</span>
+                <h2>No coração do Jardim Sol Nascente</h2>
+                <div class="gold-divider"></div>
+                <p>Cercado por restaurantes, comércio, escolas premium e fácil acesso às principais vias da cidade.</p>
+            </div>
+            <!-- Pin OFICIAL do empreendimento no Google Maps (ficha "Madrid Casa
+                 Elevada", Rua Quito) em VISÃO DE SATÉLITE (t=k), como o gestor
+                 pediu. Coordenadas do link compartilhado por ele. -->
+            <div class="map-wrap reveal">
+                <iframe
+                    src="https://www.google.com/maps?q=-12.0786068,-45.7844094%28Madrid+Casa+Elevada%29&t=k&z=17&hl=pt-BR&output=embed"
+                    loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen title="Vista de satélite do Madrid Casa Elevada — Rua Quito, Jardim Sol Nascente, Luís Eduardo Magalhães"></iframe>
+            </div>
+            <div class="map-endereco reveal">
+                <span><i class="fas fa-map-marker-alt"></i> Rua Quito · Jardim Sol Nascente · Luís Eduardo Magalhães — BA</span>
+                <a class="btn-rota" href="https://maps.app.goo.gl/gqocq8mGvHNczqG79" target="_blank" rel="noopener"><i class="fas fa-route"></i> Como chegar</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== FORMULÁRIO DE LEAD ===================== -->
+    <section class="section lead-section" id="contato">
+        <div class="container">
+            <div class="lead-wrap reveal">
+                <div class="lead-side">
+                    <span class="eyebrow">Reserve o seu</span>
+                    <h2>Quer uma proposta personalizada?</h2>
+                    <p>Preencha o formulário e um consultor entra em contato em até 1 dia útil — com tabela, plantas e opções de pagamento.</p>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Resposta em até 1 dia útil</li>
+                        <li><i class="fas fa-check-circle"></i> Sem compromisso</li>
+                        <li><i class="fas fa-check-circle"></i> Aceitamos permuta e propostas especiais</li>
+                        <li><i class="fas fa-check-circle"></i> Dados sigilosos — LGPD</li>
+                    </ul>
+                </div>
+                <form class="lead-form" id="leadForm" onsubmit="return submitLead(event)">
+                    <h3>Receber proposta</h3>
+                    <p class="lead-sub">Compartilhe seus dados — sem spam, prometemos.</p>
+
+                    <div class="form-msg success" id="formSuccess"><i class="fas fa-check-circle"></i> Recebemos seus dados! Um consultor entra em contato em breve.
+                        <a id="formWhatsBtn" href="#" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; padding:12px 22px; border-radius:100px; background:#25D366; color:#fff; font-weight:800; font-size:13px; text-decoration:none; width:100%;"><i class="fab fa-whatsapp"></i> Falar agora no WhatsApp</a>
+                    </div>
+                    <div class="form-msg error" id="formError"><i class="fas fa-exclamation-triangle"></i> <span id="formErrorText">Algo deu errado. Tente novamente ou nos chame no WhatsApp.</span></div>
+
+                    <div class="form-group">
+                        <label for="lNome">Nome completo *</label>
+                        <input type="text" id="lNome" maxlength="80" required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="lTelefone">Telefone (WhatsApp) *</label>
+                        <input type="tel" id="lTelefone" maxlength="25" required autocomplete="tel" placeholder="(77) 9 0000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label for="lEmail">E-mail</label>
+                        <input type="email" id="lEmail" maxlength="120" autocomplete="email" placeholder="seunome@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="lInteresse">Tipologia de interesse</label>
+                        <select id="lInteresse">
+                            <option value="">Ainda não decidi</option>
+                            <option value="1 Suíte">1 Suíte (108 m²)</option>
+                            <option value="3 Suítes">3 Suítes (125 m²)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lMensagem">Observação (opcional)</label>
+                        <textarea id="lMensagem" maxlength="500" placeholder="Algo específico que você gostaria de saber?"></textarea>
+                    </div>
+
+                    <!-- Honeypot — se preenchido, é bot -->
+                    <div class="form-group honeypot" aria-hidden="true">
+                        <label for="lWebsite">Website (não preencher)</label>
+                        <input type="text" id="lWebsite" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="btnSubmitLead">
+                        <i class="fas fa-paper-plane"></i> Enviar para um consultor
+                    </button>
+                    <!-- V395 (auditoria): a página citava uma política que não existia
+                         em lugar nenhum — com a LGPD, é promessa sem lastro. Agora o
+                         texto aponta para privacidade.html. -->
+                    <p class="lead-consent">Ao enviar, você concorda com a nossa <a href="privacidade.html" target="_blank" rel="noopener">política de privacidade</a> e com o uso dos seus dados para contato comercial. <strong>Não compartilhamos com terceiros.</strong></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="foot">
+        <div class="foot-inner">
+            <div>
+                <img src="MADRID LOGO BRANCA-01.png" alt="Madrid Casa Elevada" class="foot-logo">
+                <p>Torre residencial de 14 andares e 50 unidades de alto padrão em Luís Eduardo Magalhães — BA.</p>
+                <p style="margin-top: 14px;"><strong style="color:white;">TORRE MADRID EMPREENDIMENTOS IMOBILIÁRIOS SPE LTDA</strong><br>CNPJ: 51.114.117/0001-37</p>
+            </div>
+            <div>
+                <h5>Navegação</h5>
+                <ul>
+                    <li><a href="#topo">Início</a></li>
+                    <li><a href="#diferenciais">Diferenciais</a></li>
+                    <li><a href="#galeria">Galeria</a></li>
+                    <li><a href="#plantas">Plantas</a></li>
+                    <li><a href="#obra">Acompanhe a obra</a></li>
+                    <li><a href="#como-funciona">Como funciona a compra</a></li>
+                    <li><a href="#localizacao">Localização</a></li>
+                    <li><a href="#contato">Contato</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5>Contato</h5>
+                <ul>
+                    <li><a id="waFootBtn" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                    <li><i class="fas fa-map-marker-alt"></i> Jardim Sol Nascente — Luís Eduardo Magalhães, BA</li>
+                    <li><i class="fas fa-calendar-alt"></i> Entrega: Julho/2027</li>
+                </ul>
+                <h5 style="margin-top: 22px;">Equipe</h5>
+                <ul>
+                    <li><a href="index.html?app=1"><i class="fas fa-user-tie"></i> Acesso de corretores</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © <span id="copyYear"></span> Torre Madrid SPE Ltda. Todos os direitos reservados. As imagens são meramente ilustrativas e podem sofrer alterações sem aviso prévio. Lançamento autorizado pelo CRECI/BA. <br>
+            <!-- V395-fix (revisão): a política precisa ser alcançável de qualquer
+                 ponto da página, não só pela letra miúda dentro do formulário. -->
+            <a href="privacidade.html">Política de privacidade</a> &nbsp;·&nbsp;
+            Site desenvolvido com ❤️ — <a href="index.html?app=1">Sou corretor</a>
+        </div>
+    </footer>
+
+    <!-- ===================== WHATSAPP FLUTUANTE ===================== -->
+    <div class="mobile-cta-bar" id="mobileCtaBar">
+        <a id="waMobileBar" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Falar com um especialista</a>
+    </div>
+
+    <a id="waFloat" class="wa-float" href="#" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- ===================== EASTER EGG (Konami) ===================== -->
+    <div class="easter-egg" id="easterEgg" role="dialog" aria-modal="true">
+        <div class="ee-emoji">🏆</div>
+        <h2>Você descobriu o easter egg!</h2>
+        <p>Como recompensa, vou compartilhar um segredo: o sistema interno do Madrid já tem <strong style="color:var(--brand-gold);">50 unidades mapeadas em tempo real</strong>, com simulador, mapa de garagem detalhado e propostas em PDF.</p>
+        <p style="margin-top:12px;">Se você é corretor de imóveis e quer entender como funciona, fala com a gente. Quem sabe a gente trabalha junto.</p>
+        <button onclick="document.getElementById('easterEgg').classList.remove('open')">Fechar</button>
+    </div>
+
+    <!-- ===================== JS ===================== -->
+    <script>
+        // --------- CONFIG ----------
+        const WHATSAPP_NUM = '5577988669009';          // sem o +, sem espaços
+        const WHATSAPP_MSG = 'Olá! Vi o site do Madrid Casa Elevada e quero saber mais sobre as unidades disponíveis.';
+
+        // Firebase (mesma config do index.html — leitura pública dos nós permitidos)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAMoE5JkohMp632zSUSublIuSx_JL1rxv4",
+            authDomain: "madrid-casa-elevada.firebaseapp.com",
+            databaseURL: "https://madrid-casa-elevada-default-rtdb.firebaseio.com",
+            projectId: "madrid-casa-elevada",
+            storageBucket: "madrid-casa-elevada.firebasestorage.app",
+            messagingSenderId: "1056274692863",
+            appId: "1:1056274692863:web:ade2d7b08f8fee9d776aca"
+        };
+        // V386 (auditoria): se o SDK do Firebase falhar ao carregar (rede móvel
+        // instável/gstatic bloqueado), db fica null e SÓ o cronograma/formulário
+        // degradam — antes o ReferenceError matava galeria, WhatsApp e abas.
+        try { firebase.initializeApp(firebaseConfig); } catch(e) {}
+        const db = (typeof firebase !== 'undefined' && firebase.database) ? firebase.database() : null;
+
+        // V395 (auditoria): o vídeo do topo só entra DEPOIS que a página carregou,
+        // e só onde ele faz sentido — tela grande e conexão que aguenta. Em celular
+        // ou rede fraca fica a foto de capa (que já era o plano do poster).
+        (function () {
+            const v = document.getElementById('heroVideo');
+            if (!v) return;
+            const carregar = () => {
+                const con = navigator.connection || {};
+                const lenta = /2g/.test(con.effectiveType || '') || con.saveData === true;
+                if (lenta || window.innerWidth < 768) return;   // fica só a foto
+                const s = document.createElement('source');
+                s.src = 'fachada-video.mp4'; s.type = 'video/mp4';
+                v.appendChild(s);
+                v.load();
+                v.play().catch(() => {});   // autoplay bloqueado: a foto continua lá
+            };
+            if (document.readyState === 'complete') carregar();
+            else window.addEventListener('load', carregar);
+        })();
+
+        // V386 (auditoria): o menu mobile não fechava ao tocar num link — o painel
+        // branco ficava fixo cobrindo o topo depois de navegar pra seção.
+        const navLinksEl = document.getElementById('navLinks');
+        if (navLinksEl) navLinksEl.addEventListener('click', (e) => {
+            if (e.target.closest('a')) navLinksEl.classList.remove('open');
+        });
+
+        // --------- WHATSAPP LINKS ----------
+        function buildWhatsURL(msg = WHATSAPP_MSG) {
+            return `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(msg)}`;
+        }
+        ['waFloat','waHeroBtn','waFootBtn','waMobileBar'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.href = buildWhatsURL();
+        });
+        // CTAs contextuais por seção — a mensagem já diz de onde o lead veio,
+        // então o corretor atende sabendo o interesse.
+        const setWa = (id, msg) => { const el = document.getElementById(id); if (el) el.href = buildWhatsURL(msg); };
+        setWa('waGaleriaBtn', 'Olá! Vi a galeria do Madrid Casa Elevada e quero receber mais imagens e vídeos.');
+        setWa('waObraBtn', 'Olá! Quero acompanhar de perto o andamento da obra do Madrid Casa Elevada.');
+        // Barra fixa mobile: entra depois que o hero sai de cena.
+        const ctaBar = document.getElementById('mobileCtaBar');
+        if (ctaBar) {
+            const onScrollBar = () => {
+                const past = window.scrollY > window.innerHeight * 0.7;
+                ctaBar.classList.toggle('visible', past);
+                document.body.classList.toggle('has-cta-bar', past);
+            };
+            window.addEventListener('scroll', onScrollBar, { passive: true });
+            onScrollBar();
+        }
+
+        // --------- NAV SCROLL ----------
+        const nav = document.getElementById('topNav');
+        const onScroll = () => {
+            if (window.scrollY > 60) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        // --------- HERO CAROUSEL ----------
+        const slides = document.querySelectorAll('.hero-bg img');
+        let slideIdx = 0;
+        if (slides.length > 1) {
+            setInterval(() => {
+                slides[slideIdx].classList.remove('active');
+                slideIdx = (slideIdx + 1) % slides.length;
+                slides[slideIdx].classList.add('active');
+            }, 6000);
+        }
+
+        // --------- GALERIA ----------
+        // Constrói a partir do que existe no diretório.
+        // Damos preferência aos arquivos _opt.jpg quando disponíveis (mais leves).
+        // Ordem: a chegada (torre) → a vida (lazer) → o interior → o acabamento.
+        // Nomes e rótulos conferidos imagem por imagem (os arquivos originais
+        // vinham todos nomeados "BANHEIRO SUITE" por engano — só o último é).
+        const galleryFiles = [
+            { src: 'fachada-dia.jpg', label: 'A Torre · Fachada' },
+            { src: 'fachada-entardecer.jpg', label: 'A Torre · Entardecer' },
+            { src: 'fachada-entrada.jpg', label: 'A Torre · Entrada' },
+            { src: 'fachada-frontal.jpg', label: 'A Torre · Vista da Rua' },
+            { src: 'area-piscina.jpg', label: 'Lazer · Piscina com Deck' },
+            { src: 'espaco-gourmet.jpg', label: 'Lazer · Espaço Gourmet' },
+            { src: 'salao-de-festas.jpg', label: 'Lazer · Salão de Festas' },
+            { src: 'academia.jpg', label: 'Lazer · Academia' },
+            { src: 'coworking.jpg', label: 'Lazer · Coworking' },
+            { src: 'bicicletario.jpg', label: 'Lazer · Bicicletário' },
+            { src: 'oficina-de-bikes.jpg', label: 'Lazer · Oficina de Bikes' },
+            { src: 'sala-jantar-living.jpg', label: 'Interiores · Living & Jantar' },
+            { src: 'living-varanda.jpg', label: 'Interiores · Living com Varanda' },
+            { src: 'suite-casal.jpg', label: 'Interiores · Suíte Casal' },
+            { src: 'quarto-jovem.jpg', label: 'Interiores · Quarto Jovem' },
+            { src: 'quarto-infantil.jpg', label: 'Interiores · Quarto Infantil' },
+            { src: 'home-office.jpg', label: 'Interiores · Home Office' },
+            { src: 'banheiro-suite.jpg', label: 'Acabamento · Banheiro da Suíte' },
+            { src: 'banheiro-02.jpg', label: 'Acabamento · Banheiro' },
+        ];
+        const galleryGrid = document.getElementById('galleryGrid');
+        galleryFiles.forEach((g, idx) => {
+            const div = document.createElement('div');
+            div.className = 'gallery-item';
+            div.innerHTML = `
+                <img src="${g.src}" alt="${g.label}" loading="lazy">
+                <div class="gallery-label">${g.label}</div>
+            `;
+            div.addEventListener('click', () => openLightbox(g.src, idx));
+            galleryGrid.appendChild(div);
+        });
+
+        // --------- LIGHTBOX ----------
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lbImg');
+        let lbIdx = 0;
+        // Legenda da foto ampliada (segue a navegação ‹ ›). Sem legenda (ex: zoom
+        // da planta, aberto sem índice), a pílula SOME — não fica vazia na tela.
+        function setLbCaption() {
+            const cap = document.getElementById('lbCaption');
+            if (!cap) return;
+            const texto = (lbIdx >= 0 && galleryFiles[lbIdx]) ? galleryFiles[lbIdx].label : '';
+            cap.textContent = texto;
+            cap.style.display = texto ? 'block' : 'none';
+        }
+        function openLightbox(src, idx) {
+            lbImg.src = src;
+            lbIdx = (typeof idx === 'number') ? idx : -1;
+            setLbCaption();
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            lb.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        document.querySelector('.lb-close').addEventListener('click', closeLightbox);
+        lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+        document.querySelector('.lb-prev').addEventListener('click', () => {
+            if (lbIdx >= 0) { lbIdx = (lbIdx - 1 + galleryFiles.length) % galleryFiles.length; lbImg.src = galleryFiles[lbIdx].src; setLbCaption(); }
+        });
+        document.querySelector('.lb-next').addEventListener('click', () => {
+            if (lbIdx >= 0) { lbIdx = (lbIdx + 1) % galleryFiles.length; lbImg.src = galleryFiles[lbIdx].src; setLbCaption(); }
+        });
+        window.addEventListener('keydown', (e) => {
+            if (!lb.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') document.querySelector('.lb-prev').click();
+            if (e.key === 'ArrowRight') document.querySelector('.lb-next').click();
+        });
+
+        // --------- PLANTAS TABS ----------
+        document.querySelectorAll('.planta-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const key = tab.dataset.planta;
+                document.querySelectorAll('.planta-tab').forEach(t => t.classList.toggle('active', t === tab));
+                document.querySelectorAll('.planta-content').forEach(c => c.classList.toggle('active', c.dataset.planta === key));
+                // V373: o esquema do pavimento acende os "finais" da tipologia ativa.
+                document.querySelectorAll('.final-cell').forEach(c => c.classList.toggle('final-on', c.dataset.tipo === key));
+            });
+        });
+
+        // --------- CRONOGRAMA (animateNumber usado pelo avanço da obra) ----------
+        function animateNumber(el, from, to, suffix='', dur=1200) {
+            const start = performance.now();
+            const step = (now) => {
+                const t = Math.min(1, (now - start) / dur);
+                const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+                const v = from + (to - from) * eased;
+                el.textContent = Math.round(v) + suffix;
+                if (t < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        }
+
+        // Cronograma de obra
+        const defaultCronograma = {
+            geral_percentual: 0,
+            proxima_etapa: 'Aguardando início',
+            etapas: [
+                { nome: 'Fundação', percentual: 0, status: 'pendente', icone: 'fa-cube' },
+                { nome: 'Estrutura', percentual: 0, status: 'pendente', icone: 'fa-building' },
+                { nome: 'Alvenaria', percentual: 0, status: 'pendente', icone: 'fa-trowel-bricks' },
+                { nome: 'Instalações', percentual: 0, status: 'pendente', icone: 'fa-bolt' },
+                { nome: 'Acabamento', percentual: 0, status: 'pendente', icone: 'fa-paint-roller' },
+                { nome: 'Entrega', percentual: 0, status: 'pendente', icone: 'fa-key' }
+            ]
+        };
+        // V346: escape HTML robusto (a landing não tem AppUtils). Mesmo o cronograma
+        // vindo do Firebase (escrito só por gestor), aplicamos defesa-em-profundidade
+        // consistente em vez de só remover <> (que era frágil contra & e aspas).
+        function escHtml(s) {
+            return String(s == null ? '' : s)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+        function renderCronograma(data) {
+            const pct = data.geral_percentual || 0;
+            const obraPct = document.getElementById('obraPct');
+            animateNumber(obraPct, 0, pct, '%');
+            document.getElementById('obraFill').style.width = pct + '%';
+            // V386 (auditoria): com "próxima etapa" vazia no banco, a página dizia
+            // "Obra em planejamento" ao lado de 56% de avanço — contradição pública.
+            document.getElementById('obraStatusText').textContent =
+                data.proxima_etapa
+                    ? `Próxima etapa: ${data.proxima_etapa}`
+                    : ((Number(data.geral_percentual) || 0) > 0 ? 'Obra em andamento' : 'Obra em planejamento');
+            // Data da última atualização — % sozinho é afirmação; % datado é evidência.
+            const atEl = document.getElementById('obraAtualizadoEm');
+            if (atEl) atEl.textContent = data.ts
+                ? 'Atualizado pela engenharia em ' + new Date(data.ts).toLocaleDateString('pt-BR')
+                : '';
+            const tl = document.getElementById('timeline');
+            tl.innerHTML = '';
+            (data.etapas || defaultCronograma.etapas).forEach(et => {
+                const div = document.createElement('div');
+                const status = et.status || 'pendente';
+                div.className = 'timeline-stage' + (status === 'concluida' ? ' concluida' : (status === 'ativa' ? ' ativa' : ''));
+                // V386-fix (revisão): mapeia o legado gravado no banco — fa-bricks
+                // não existe no FA6 e renderizava um quadrado vazio na etapa Alvenaria.
+                const icone = ((et.icone || 'fa-circle') === 'fa-bricks' ? 'fa-trowel-bricks' : (et.icone || 'fa-circle')).replace(/[^a-z0-9\-]/gi, '');
+                const nome = escHtml(String(et.nome || '').slice(0, 40));
+                const pe = Math.max(0, Math.min(100, parseInt(et.percentual || 0)));
+                div.innerHTML = `
+                    <div class="stage-icon"><i class="fas ${icone}"></i></div>
+                    <div class="stage-name">${nome}</div>
+                    <div class="stage-pct">${pe}%</div>
+                `;
+                tl.appendChild(div);
+            });
+        }
+        // V386-fix (revisão): sem SDK (db null) a seção ficava em "Carregando…"
+        // pra sempre — cai no cronograma default, igual ao caminho de erro.
+        if (!db) renderCronograma(defaultCronograma);
+        if (db) db.ref('madrid_data/cronograma').on('value', snap => {
+            const data = snap.val() || defaultCronograma;
+            renderCronograma(data);
+        }, err => {
+            renderCronograma(defaultCronograma);
+        });
+
+        // --------- FORMULÁRIO DE LEAD ----------
+        function showFormMsg(kind, text) {
+            ['formSuccess','formError'].forEach(id => document.getElementById(id).classList.remove('visible'));
+            const el = document.getElementById('form' + (kind === 'success' ? 'Success' : 'Error'));
+            if (text && kind === 'error') document.getElementById('formErrorText').textContent = text;
+            el.classList.add('visible');
+            // Sucesso fica na tela: tem o botão "Falar agora no WhatsApp" pro lead
+            // quente — sumir em 7s mataria o clique. Só erro se auto-esconde.
+            if (kind === 'error') setTimeout(() => el.classList.remove('visible'), 7000);
+        }
+        async function submitLead(e) {
+            e.preventDefault();
+            const nome = document.getElementById('lNome').value.trim();
+            const telefone = document.getElementById('lTelefone').value.trim();
+            const email = document.getElementById('lEmail').value.trim();
+            const interesse = document.getElementById('lInteresse').value.trim();
+            const mensagem = document.getElementById('lMensagem').value.trim();
+            const honey = document.getElementById('lWebsite').value;
+            const btn = document.getElementById('btnSubmitLead');
+
+            // Honeypot (bots quase sempre preenchem todos os campos)
+            if (honey) { showFormMsg('error', 'Houve um problema. Tente novamente.'); return false; }
+
+            // Validações
+            if (nome.length < 3 || nome.length > 80) { showFormMsg('error', 'Informe seu nome completo.'); return false; }
+            const telDigits = telefone.replace(/\D/g, '');
+            if (telDigits.length < 10 || telDigits.length > 14) { showFormMsg('error', 'Telefone inválido — inclua DDD.'); return false; }
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showFormMsg('error', 'E-mail inválido.'); return false; }
+            if (mensagem.length > 500) { showFormMsg('error', 'Observação muito longa.'); return false; }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+
+            try {
+                const payload = {
+                    nome, telefone, email, interesse, mensagem,
+                    origem: 'landing',
+                    status: 'novo',
+                    ts: firebase.database.ServerValue.TIMESTAMP,
+                    ua: (navigator.userAgent || '').slice(0, 200),
+                    referrer: (document.referrer || '').slice(0, 200)
+                };
+                if (!db) throw new Error('sem conexão com o sistema');
+                await db.ref('madrid_data/leads_inbox').push(payload);
+                // Lead quente não espera "1 dia útil": o botão de WhatsApp já sai
+                // com nome e tipologia na mensagem — o contato fica gravado no banco
+                // E a conversa começa agora.
+                const waMsg = `Olá! Sou ${nome} e acabei de enviar meus dados pelo site do Madrid Casa Elevada.` +
+                    (interesse ? ` Tenho interesse na tipologia ${interesse}.` : '') + ' Pode me atender?';
+                const wbtn = document.getElementById('formWhatsBtn');
+                if (wbtn) wbtn.href = buildWhatsURL(waMsg);
+                showFormMsg('success');
+                document.getElementById('leadForm').reset();
+                // Analytics ping (se o pixel estiver configurado mais tarde)
+                try { if (window.gtag) gtag('event', 'generate_lead', { method: 'landing_form' }); } catch(_) {}
+                try { if (window.fbq) fbq('track', 'Lead'); } catch(_) {}
+            } catch (err) {
+                console.error(err);
+                showFormMsg('error', 'Não foi possível enviar. Tente pelo WhatsApp.');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar para um consultor';
+            }
+            return false;
+        }
+        window.submitLead = submitLead;
+
+        // --------- REVEAL ON SCROLL ----------
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+        // --------- COPY YEAR ----------
+        document.getElementById('copyYear').textContent = new Date().getFullYear();
+
+        // --------- EASTER EGG (Konami code) ----------
+        // ↑ ↑ ↓ ↓ ← → ← → B A
+        const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+        let kIdx = 0;
+        document.addEventListener('keydown', e => {
+            const key = (e.key.length === 1) ? e.key.toLowerCase() : e.key;
+            if (key === konami[kIdx]) {
+                kIdx++;
+                if (kIdx === konami.length) {
+                    document.getElementById('easterEgg').classList.add('open');
+                    kIdx = 0;
+                }
+            } else { kIdx = 0; }
+        });
+
+        // --------- WHATSAPP CONTEXT-AWARE ----------
+        // Se o usuário clicou em "Quero esta planta", monta mensagem com a tipologia.
+        document.querySelectorAll('.planta-content .btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const block = btn.closest('.planta-content');
+                if (!block) return;
+                const tipo = block.querySelector('h3')?.textContent?.trim() || '';
+                if (tipo) {
+                    document.getElementById('lInteresse').value = tipo.includes('1 Suíte') ? '1 Suíte' :
+                        tipo.includes('3 Suítes') ? '3 Suítes' : '';
+                }
+            });
+        });
+
+        // --------- GA4 / META PIXEL placeholders ----------
+        // Quando o gestor preencher os IDs em prod, basta substituir abaixo.
+        // const GA_ID = ''; // ex: G-XXXXXXXXXX
+        // const PIXEL_ID = ''; // ex: 1234567890
+        // (function(){
+        //     if (GA_ID) {
+        //         const s = document.createElement('script');
+        //         s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+        //         document.head.appendChild(s);
+        //         window.dataLayer = window.dataLayer || [];
+        //         function gtag(){dataLayer.push(arguments);} window.gtag = gtag;
+        //         gtag('js', new Date()); gtag('config', GA_ID);
+        //     }
+        // })();
+
+    </script>
+</body>
+</html>

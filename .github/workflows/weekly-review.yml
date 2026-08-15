@@ -1,0 +1,94 @@
+# =====================================================================
+# Refatoração Semanal — Madrid Casa Elevada
+#
+# Toda sexta-feira às 09:03 BRT (12:03 UTC) abre uma Issue no GitHub
+# contendo o prompt detalhado de revisão (em .github/REVIEW_PROMPT.md).
+#
+# Como funciona:
+#   1. Esta action cria a Issue automaticamente.
+#   2. Você abre a Issue e copia o prompt.
+#   3. Cola no Claude Code aberto neste repo (ou no claude.ai).
+#   4. O Claude faz a análise completa e devolve o relatório.
+#   5. Você cola o relatório como comentário na própria Issue.
+#
+# Trigger manual: vá em Actions → "Refatoração Semanal" → Run workflow.
+# =====================================================================
+
+name: Refatoração Semanal
+
+on:
+  schedule:
+    # Sexta-feira, 12:03 UTC = 09:03 BRT (off-minute pra evitar congestionamento).
+    - cron: '3 12 * * 5'
+  workflow_dispatch: {}  # permite trigger manual da aba Actions
+
+jobs:
+  create-review-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Criar Issue de revisão semanal
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const promptPath = '.github/REVIEW_PROMPT.md';
+            if (!fs.existsSync(promptPath)) {
+              core.setFailed(`Prompt não encontrado em ${promptPath}`);
+              return;
+            }
+            const prompt = fs.readFileSync(promptPath, 'utf8');
+
+            // Data formatada em PT-BR
+            const now = new Date();
+            const tz = 'America/Sao_Paulo';
+            const dateStr = now.toLocaleDateString('pt-BR', { timeZone: tz });
+            const weekNum = (() => {
+              const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+              const dayNum = d.getUTCDay() || 7;
+              d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+              const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+              return Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+            })();
+
+            // Pega o head SHA pra dar contexto (qual commit está sendo revisado)
+            const headSha = context.sha.substring(0, 7);
+
+            const body = `> 🤖 Issue gerada automaticamente pela rotina semanal de refatoração.
+            > Commit em análise: \`${headSha}\` (\`main\`)
+            > Data: ${dateStr} (semana ${weekNum})
+
+            ---
+
+            ${prompt}
+
+            ---
+
+            ## Como usar este prompt
+
+            1. Abra o Claude Code dentro do repositório (\`cd "C:/Projetos/Tabela Madri"\`)
+            2. Cole **tudo entre os \`---\`** acima
+            3. O Claude vai produzir o relatório
+            4. **Cole o relatório como comentário desta issue** (não feche a issue até resolver/arquivar os achados)
+            5. Para cada achado, decida: 🔧 corrigir agora · 📌 backlog · 🚮 dispensar
+
+            ---
+
+            **⏰ Próxima revisão:** sexta-feira que vem, mesma hora.
+            `;
+
+            const created = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔍 Refatoração semanal — ${dateStr}`,
+              body,
+              labels: ['weekly-review', 'tech-debt', 'security']
+            });
+
+            core.notice(`Issue #${created.data.number} criada: ${created.data.html_url}`);

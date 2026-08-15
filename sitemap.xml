@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- V386 (auditoria SEO): só a landing é indexável (o app tem noindex de
+     propósito) — a raiz saiu do sitemap e o domínio usa www (o apex faz 301). -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://www.madridcasaelevada.com/landing.html</loc>
+        <changefreq>weekly</changefreq>
+        <priority>1.0</priority>
+    </url>
+    <!-- V395: a política de privacidade é indexável (index,follow) e precisa
+         estar aqui — página exigida pela LGPD, linkada do formulário e do rodapé. -->
+    <url>
+        <loc>https://www.madridcasaelevada.com/privacidade.html</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+</urlset>

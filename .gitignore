@@ -1,0 +1,38 @@
+# V396 (auditoria): ORIGINAIS ficam fora do repositório.
+#
+# As 15 imagens .png originais (141,5 MB) não eram usadas por página nenhuma —
+# o site serve as versões .jpg otimizadas. Elas continuam NA SUA MÁQUINA, na
+# pasta do projeto; só deixaram de ser publicadas a cada deploy.
+# Guarde uma cópia no Drive/HD antes de limpar a pasta.
+academia.png
+area-piscina.png
+banheiro-02.png
+banheiro-suite.png
+bicicletario.png
+coworking.png
+espaco-gourmet.png
+home-office.png
+living-varanda.png
+oficina-de-bikes.png
+quarto-infantil.png
+quarto-jovem.png
+sala-jantar-living.png
+salao-de-festas.png
+suite-casal.png
+planta-3suites-book.jpg
+
+# Vídeos brutos e PDFs de trabalho (nunca foram versionados — ficam locais)
+TAKE*.mp4
+TORRE MADRID.mp4
+Tabela_Madrid_Oficial.pdf
+Espelho_Vendas_Madrid.pdf
+*-PE-ARQ-*.pdf
+
+# Ferramentas locais (nunca foram versionadas)
+.vscode/
+_propostas/
+
+# Sistema
+Thumbs.db
+.DS_Store
+node_modules/

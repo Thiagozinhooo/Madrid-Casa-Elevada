@@ -1,0 +1,11 @@
+# robots.txt — Madrid Casa Elevada
+# Permitimos indexação somente da landing pública.
+# O app interno (corretores/gestores) é gateado por login e não precisa ser indexado.
+
+User-agent: *
+Allow: /
+Allow: /landing.html
+Disallow: /index.html
+
+# V386 (auditoria SEO): www — o apex faz 301; tudo padronizado no host servido.
+Sitemap: https://www.madridcasaelevada.com/sitemap.xml
