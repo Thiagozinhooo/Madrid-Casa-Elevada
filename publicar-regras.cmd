@@ -41,21 +41,30 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/4] Verificando login...
-call firebase login:list >nul 2>&1
+echo [2/4] Login no programa do Firebase...
+echo.
+echo   ATENCAO: estar logado no SITE do Firebase nao basta. O "firebase" e um
+echo   programa instalado no computador e tem login proprio.
+echo.
+echo   Se aparecer a pergunta sobre coletar dados de uso, responda o que quiser.
+echo   Depois o navegador abre: ESCOLHA A CONTA ngblem2016@gmail.com e autorize.
+echo   Se ja estiver logado, ele so avisa e segue direto.
+echo.
+REM NAO usar "firebase login:list" para decidir: ele sai com SUCESSO mesmo sem
+REM conta nenhuma (so imprime um aviso), e o script pulava o login e falhava
+REM na publicacao. "firebase login" ja e idempotente: se houver sessao, ele
+REM apenas responde "Already logged in as ..." e continua.
+call firebase login
 if errorlevel 1 (
     echo.
-    echo Voce ainda nao esta logado. Vou abrir o navegador.
-    echo IMPORTANTE: escolha a conta ngblem2016@gmail.com
-    echo.
-    call firebase login
-    if errorlevel 1 (
-        echo.
-        echo [ERRO] O login nao foi concluido. Rode este arquivo de novo.
-        pause
-        exit /b 1
-    )
+    echo [ERRO] O login nao foi concluido. Rode este arquivo de novo.
+    pause
+    exit /b 1
 )
+
+echo.
+echo Conta autenticada:
+call firebase login:list
 
 echo.
 echo [3/4] Publicando as regras...
