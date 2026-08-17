@@ -1,4 +1,5 @@
 @echo off
+chcp 65001 >nul
 REM ============================================================
 REM  PUBLICAR AS REGRAS DE SEGURANCA DO FIREBASE
 REM  Basta dar dois cliques neste arquivo.
@@ -7,12 +8,14 @@ REM  O que vai acontecer:
 REM   1) Abre o navegador pedindo para escolher a conta Google.
 REM      >>> ESCOLHA A CONTA DONA DO PROJETO: ngblem2016@gmail.com
 REM   2) Publica o arquivo database.rules.json no Firebase.
+REM   3) Confere sozinho se o site continua funcionando.
 REM
 REM  Se ja estiver logado, ele pula direto para a publicacao.
 REM ============================================================
 setlocal
 cd /d "%~dp0"
 set "PATH=%PATH%;%APPDATA%\npm"
+set "DB=https://madrid-casa-elevada-default-rtdb.firebaseio.com"
 
 echo.
 echo === MADRID CASA ELEVADA - publicar regras de seguranca ===
@@ -27,7 +30,18 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo Verificando login...
+echo [1/4] Conferindo o arquivo de regras antes de subir...
+call node validar.js
+if errorlevel 1 (
+    echo.
+    echo [PAREI] O validador reprovou. NAO publique assim - avise o Claude.
+    echo.
+    pause
+    exit /b 1
+)
+
+echo.
+echo [2/4] Verificando login...
 call firebase login:list >nul 2>&1
 if errorlevel 1 (
     echo.
@@ -44,7 +58,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo Publicando as regras...
+echo [3/4] Publicando as regras...
 echo.
 call firebase deploy --only database
 if errorlevel 1 (
@@ -57,9 +71,30 @@ if errorlevel 1 (
 )
 
 echo.
+echo [4/4] Conferindo se o site continua funcionando...
+echo.
+echo   O cronograma da obra PRECISA aparecer (a landing le ele sem login):
+curl -s "%DB%/madrid_data/cronograma.json?shallow=true"
+echo.
+echo.
+echo   Os precos das unidades PRECISAM dar "Permission denied":
+curl -s "%DB%/madrid_data/units.json?shallow=true"
+echo.
+echo.
+echo   Os contratos PRECISAM dar "Permission denied":
+curl -s "%DB%/proposals/zz_vendas_reais.json?shallow=true"
+echo.
+
+echo.
 echo ============================================================
 echo  PRONTO! As regras foram publicadas.
-echo  Avise o Claude para ele conferir o efeito no app.
+echo.
+echo  Confira as 3 linhas acima:
+echo    - a primeira tem que mostrar etapas/percentual
+echo    - as outras duas tem que dizer "Permission denied"
+echo.
+echo  Se bater, esta tudo certo. Avise o Claude que ele confere
+echo  o resto sozinho e segue para as proximas pendencias.
 echo ============================================================
 echo.
 pause

@@ -81,6 +81,13 @@
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" crossorigin="anonymous"></script>
+    <!-- App Check: esta página lê o cronograma da obra e grava o formulário de
+         lead SEM login. Se o App Check for exigido no console e só o index.html
+         mandasse token, a página pública quebrava — cronograma em branco e
+         formulário recusado. Por isso o SDK vive aqui também, e a chave é a
+         MESMA do index.html (o validar.js reprova se uma estiver preenchida e
+         a outra não). -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js" crossorigin="anonymous"></script>
 
     <style>
         :root {
@@ -1178,6 +1185,15 @@
         // instável/gstatic bloqueado), db fica null e SÓ o cronograma/formulário
         // degradam — antes o ReferenceError matava galeria, WhatsApp e abas.
         try { firebase.initializeApp(firebaseConfig); } catch(e) {}
+        // App Check — precisa vir DEPOIS do initializeApp e ANTES do primeiro
+        // acesso ao banco. Vazio = desligado (nada muda). Ao colar a chave do
+        // reCAPTCHA v3, cole a MESMA aqui e no index.html, e só depois marque
+        // "Enforced" no console — nessa ordem, senão o site sai do ar.
+        const APP_CHECK_SITE_KEY = ""; // <-- COLE AQUI o reCAPTCHA v3 site key
+        if (APP_CHECK_SITE_KEY && typeof firebase !== 'undefined' && firebase.appCheck) {
+            try { firebase.appCheck().activate(APP_CHECK_SITE_KEY, true); }
+            catch (e) { console.warn('App Check falhou ao ativar:', e.message); }
+        }
         const db = (typeof firebase !== 'undefined' && firebase.database) ? firebase.database() : null;
 
         // V395 (auditoria): o vídeo do topo só entra DEPOIS que a página carregou,
@@ -1527,20 +1543,53 @@
             });
         });
 
-        // --------- GA4 / META PIXEL placeholders ----------
-        // Quando o gestor preencher os IDs em prod, basta substituir abaixo.
-        // const GA_ID = ''; // ex: G-XXXXXXXXXX
-        // const PIXEL_ID = ''; // ex: 1234567890
-        // (function(){
-        //     if (GA_ID) {
-        //         const s = document.createElement('script');
-        //         s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-        //         document.head.appendChild(s);
-        //         window.dataLayer = window.dataLayer || [];
-        //         function gtag(){dataLayer.push(arguments);} window.gtag = gtag;
-        //         gtag('js', new Date()); gtag('config', GA_ID);
-        //     }
-        // })();
+        // --------- MEDIÇÃO (GA4 / META PIXEL) ----------
+        // VAZIO = DESLIGADO. Sem ID, nada é baixado e nenhum cookie é criado —
+        // o visitante não é rastreado de forma alguma.
+        //
+        // Para ligar, basta colar o ID abaixo. O resto já está pronto: o
+        // formulário de lead (submitLead) já dispara 'generate_lead' no GA4 e
+        // 'Lead' no Pixel assim que eles existirem.
+        //
+        // ⚠ LIGAR ISTO CRIA COOKIE DE TERCEIRO. A política de privacidade
+        // PRECISA declarar o serviço antes. O `validar.js` reprova a publicação
+        // se o ID estiver preenchido e a privacidade.html não citar o serviço —
+        // é proposital, para não subir rastreamento não declarado (LGPD).
+        const GA_ID = '';        // ex: 'G-XXXXXXXXXX'   — Google Analytics 4
+        const PIXEL_ID = '';     // ex: '1234567890'     — Meta (Facebook) Pixel
+
+        (function () {
+            // Se o script de terceiro não carregar (rede, bloqueador, adblock),
+            // a página não pode quebrar por causa disso — daí o try/catch.
+            try {
+                if (GA_ID) {
+                    window.dataLayer = window.dataLayer || [];
+                    window.gtag = function () { window.dataLayer.push(arguments); };
+                    window.gtag('js', new Date());
+                    window.gtag('config', GA_ID);
+                    const s = document.createElement('script');
+                    s.async = true;
+                    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);
+                    document.head.appendChild(s);
+                }
+                if (PIXEL_ID) {
+                    if (!window.fbq) {
+                        const n = function () {
+                            n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+                        };
+                        n.push = n; n.loaded = true; n.version = '2.0'; n.queue = [];
+                        window.fbq = n;
+                        window._fbq = window._fbq || n;
+                        const s = document.createElement('script');
+                        s.async = true;
+                        s.src = 'https://connect.facebook.net/en_US/fbevents.js';
+                        document.head.appendChild(s);
+                    }
+                    window.fbq('init', PIXEL_ID);
+                    window.fbq('track', 'PageView');
+                }
+            } catch (e) { /* medição é acessório: nunca derruba a página */ }
+        })();
 
     </script>
 </body>

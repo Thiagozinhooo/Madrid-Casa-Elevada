@@ -196,6 +196,85 @@ if (mWa && fs.existsSync(bookArq)) {
         'a anotação de link do PDF ficou com outro número (ou sumiu)');
 }
 
+// Lê uma constante de configuração do HTML. Aceita aspas simples, duplas ou
+// crase, com espaçamento livre, e IGNORA linha comentada.
+//
+// Por que tanto cuidado: a primeira versão desta função só aceitava um tipo de
+// aspa. Quem colasse o ID com o outro tipo — a convenção usada no MESMO arquivo,
+// duas linhas acima — fazia a checagem "não encontrar" e concluir DESLIGADO.
+// Ou seja: o portão aprovava exatamente o que ele existe para barrar. Agora,
+// "não encontrei" é ERRO, nunca "está desligado" (falha fechada, não aberta).
+const lerConst = (txt, nome) => {
+    const linhas = txt.split('\n')
+        .filter(l => !/^\s*(\/\/|\*|<!--)/.test(l))
+        .filter(l => new RegExp('const\\s+' + nome + '\\s*=').test(l));
+    if (linhas.length !== 1) return { achou: false, quantas: linhas.length, valor: null };
+    const m = linhas[0].match(new RegExp('const\\s+' + nome + '\\s*=\\s*([\'"`])([\\s\\S]*?)\\1'));
+    return m ? { achou: true, quantas: 1, valor: m[2].trim() } : { achou: false, quantas: 1, valor: null };
+};
+
+// A política de privacidade é linkada pela landing e pelo sitemap. Sumir com
+// ela deixa dois links mortos numa página que promete LGPD — isso é erro.
+checar('privacidade.html existe', priv !== null,
+    'a landing e o sitemap.xml apontam para ela — sem o arquivo, os links morrem');
+
+// App Check só pode ser exigido no console quando as DUAS páginas mandam token.
+// Com a chave só no app dos corretores, ligar a exigência apaga o cronograma da
+// landing e recusa o formulário de lead — e nada no código denuncia isso.
+const acApp = lerConst(idx, 'APP_CHECK_SITE_KEY');
+const acLnd = lerConst(lnd, 'APP_CHECK_SITE_KEY');
+checar('as duas páginas têm o campo do App Check',
+    acApp.achou && acLnd.achou,
+    'não achei uma declaração única de APP_CHECK_SITE_KEY em ' +
+    (!acApp.achou ? `index.html (${acApp.quantas} linha[s])` : `landing.html (${acLnd.quantas} linha[s])`));
+if (acApp.achou && acLnd.achou) {
+    checar('a chave do App Check é a mesma nas duas páginas', acApp.valor === acLnd.valor,
+        acApp.valor && !acLnd.valor ? 'só o index.html tem a chave — exigir App Check derruba a landing pública'
+            : (!acApp.valor && acLnd.valor ? 'só a landing tem a chave — o app dos corretores fica de fora'
+                : 'as chaves são diferentes'));
+
+    if (acApp.valor && acApp.valor === acLnd.valor) {
+        // Chave preenchida = App Check vai pra valer. Três coisas precisam estar
+        // no lugar ANTES de o dono marcar "Enforced" no console, e nenhuma delas
+        // aparece na tela quando falta: o site simplesmente para de ler o banco.
+        const SDK = 'firebase-app-check-compat.js';
+        checar('o SDK do App Check está nas duas páginas',
+            idx.includes(SDK) && lnd.includes(SDK),
+            'falta a tag <script> do ' + SDK + ' em ' + (idx.includes(SDK) ? 'landing.html' : 'index.html') +
+            ' — com a chave preenchida e sem o SDK, a página não gera token e o banco recusa tudo');
+        const csp = (idx.match(/Content-Security-Policy"\s+content="([\s\S]*?)"/) || [])[1] || '';
+        const bloco = (nome) => (csp.match(new RegExp(nome + '([^;]*)')) || [])[1] || '';
+        checar('a CSP do app libera o reCAPTCHA',
+            bloco('script-src').includes('https://www.google.com') &&
+            bloco('frame-src').includes('https://www.google.com'),
+            'o reCAPTCHA v3 carrega de www.google.com; sem ele em script-src E frame-src ' +
+            'a CSP bloqueia calado e NENHUM corretor consegue usar o app com App Check exigido');
+        checar('o reCAPTCHA está declarado na política de privacidade',
+            !!priv && /reCAPTCHA/i.test(priv),
+            'App Check ligado usa o reCAPTCHA do Google, que grava cookie — a política precisa dizer isso');
+    }
+    if (!acApp.valor && !acLnd.valor) ok.push('App Check preparado nas duas páginas, ainda desligado');
+}
+
+// Rastreamento não declarado é problema de LGPD, não de código: se o ID estiver
+// preenchido, a política PRECISA citar o serviço antes de a página ir ao ar.
+const medicao = [
+    { const: 'GA_ID', nome: 'Google Analytics', termos: ['Google Analytics', 'GA4'] },
+    { const: 'PIXEL_ID', nome: 'Meta (Facebook) Pixel', termos: ['Facebook', 'Meta Pixel', 'Meta (Facebook)'] },
+];
+medicao.forEach(m => {
+    const c = lerConst(lnd, m.const);
+    checar(`o campo ${m.const} existe uma vez só na landing`, c.achou,
+        `não achei uma declaração única de ${m.const} — sem ela eu não consigo saber se ` +
+        'o rastreamento está ligado, e não vou aprovar no escuro');
+    if (!c.achou) return;
+    if (!c.valor) { ok.push(`${m.nome} desligado (nenhum cookie criado)`); return; }
+    checar(`${m.nome} está declarado na política de privacidade`,
+        !!priv && m.termos.some(t => priv.includes(t)),
+        `${m.const} está preenchido, mas privacidade.html não cita "${m.termos[0]}" — ` +
+        'ligar rastreamento sem declarar é o tipo de coisa que a LGPD pune');
+});
+
 // ─────────────────────────────────────────────────────────────
 // 7. ACESSO
 // ─────────────────────────────────────────────────────────────
