@@ -1,7 +1,28 @@
 # 🏗️ AGENTS.MD — Diretrizes do Sistema Tabela Madrid
 
 > **Documento de referência obrigatória para qualquer agente IA ou desenvolvedor.**
-> Última atualização: 2026-08-13 | Versão do sistema: V394
+> Última atualização: 2026-08-15 | Versão do sistema: V396
+
+## 🔴 ANTES DE PUBLICAR QUALQUER MUDANÇA
+
+```
+node validar.js
+```
+
+São 34 verificações do que já quebrou neste projeto (versão nos 3 lugares, sintaxe,
+sigilo, regras de dinheiro, "não perder trabalho", acesso, sintaxe das rules do
+Firebase). Ele responde **"Pode publicar"** ou lista exatamente o que impede.
+Não precisa de internet nem login. **Se falhar, não publique.**
+
+Outras duas regras que este projeto aprendeu na prática:
+
+1. **Toda alteração passa por revisão adversarial antes do deploy.** Entre a V386 e a
+   V396, as revisões acharam mais defeitos NAS CORREÇÕES do que nas auditorias do
+   código antigo — três vezes o defeito era o oposto do que a correção prometia
+   (um redirecionamento que nunca acontecia, uma reserva que apagava a de outro
+   gestor, uma "correção de contraste" que piorou o contraste).
+2. **Defeito que só aparece rodando, teste rodando.** Zoom do iOS, redirecionamento,
+   coluna fora da tela: valide no navegador, não só no código.
 
 ## ⚠️ LEIA ANTES: o que mudou desde a V386 (auditoria de 2026-08-13)
 
@@ -22,6 +43,12 @@ As correções abaixo VALEM sobre qualquer texto mais antigo neste documento:
 | **Contratos/VGV** | Fonte é o **cofre** `proposals/zz_vendas_reais` (o nó `madrid_data/vendas` é legado e perde a prioridade). Importação: GESTÃO → "Importar/atualizar contratos". Distrato (unidade que deixou de estar vendida) sai dos KPIs e fica marcado na lista. (V389/V392) |
 | **Permuta/FGTS** | **Sem trava**, por decisão do gestor — pode passar do valor do imóvel. O campo "Destino pretendido" é ANOTAÇÃO: o abatimento é sempre sobre o saldo total. Lembrar o gestor a cada atualização. |
 | **`AppLeads` / `AppPerf`** | **Apagados na V365.** As tabelas mais abaixo ainda os citam — ignore; voltar a ter leads significa reescrever, não "reativar". |
+| **Mensagens do site** | O formulário da landing grava em `leads_inbox` e o gestor lê no card "Mensagens do site" (aba GESTÃO). Quem tem `interesse: 'ACESSO_APP'` é pedido de acesso, não mensagem. A ordem usa a CHAVE do Firebase (o campo `ts` é escolhido pelo visitante e não é confiável). (V395) |
+| **Política de privacidade** | `privacidade.html` — exigida pela LGPD, linkada no formulário e no rodapé, e no sitemap. Se mudar o que o site coleta (hoje: nome, telefone, e-mail, interesse, mensagem, data, user agent e referrer) ou embutir outro serviço de terceiros, **atualize a página**. (V395) |
+| **Data de entrega** | Constante `ENTREGA` no topo do script → `ENTREGA_DATE` / `ENTREGA_ISO` / `ENTREGA_BR` / `ENTREGA_MES_ANO`. Nunca escrever data solta. (V394) |
+| **Valor Total** | Uma função só: `AppSim._valorTotal()` (usada por `_currentPrice`, `calculate` e `_getProposalData`). Não repetir a fórmula. (V394) |
+| **Histórico do Git** | Consolidado em 15/08/2026 num commit único para tirar preços e 141,5 MB de imagens do repositório público. As mensagens dos 335 commits antigos estão em `HISTORICO.md`. |
+| **Imagens originais** | Os `.png` de alta resolução saíram do repositório (`.gitignore`) — o site usa os `.jpg` otimizados. Não recommitar os originais. (V396) |
 
 ## V337 — Vaga extra (avulsa) na proposta
 
