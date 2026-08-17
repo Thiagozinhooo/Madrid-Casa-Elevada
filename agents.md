@@ -49,6 +49,7 @@ As correções abaixo VALEM sobre qualquer texto mais antigo neste documento:
 | **Valor Total** | Uma função só: `AppSim._valorTotal()` (usada por `_currentPrice`, `calculate` e `_getProposalData`). Não repetir a fórmula. (V394) |
 | **Histórico do Git** | Consolidado em 15/08/2026 num commit único para tirar preços e 141,5 MB de imagens do repositório público. As mensagens dos 335 commits antigos estão em `HISTORICO.md`. |
 | **Imagens originais** | Os `.png` de alta resolução saíram do repositório (`.gitignore`) — o site usa os `.jpg` otimizados. Não recommitar os originais. (V396) |
+| **Número de atendimento** | Hoje: **(77) 9 8134-6775** (`5577981346775`). Vive em `WHATSAPP_NUM` no topo do script da `landing.html` e alimenta os 7 botões da página (flutuante, topo, galeria, obra, rodapé, barra do celular e o pós-formulário). **Mas existem mais 2 cópias fora da landing:** o `book-madrid.pdf` (última página, "Vamos conversar?") e a `privacidade.html` (2 links). Trocar o número = mudar a constante **+ regerar o book** com `scratchpad/gerar_book.js` **+ os 2 links da privacidade**. O `validar.js` (seção CONTATO) confere os três e reprova a publicação se divergirem — inclusive lendo o binário do PDF. Formato obrigatório: 55 + DDD + 9 + 8 dígitos. Nunca escrever `wa.me/` com número na mão. (17/08/2026 — sem número de versão: o `index.html` não mudou) |
 
 ## V337 — Vaga extra (avulsa) na proposta
 

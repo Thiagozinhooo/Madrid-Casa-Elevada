@@ -20,6 +20,9 @@ const idx = ler('index.html');
 const lnd = ler('landing.html');
 const agents = ler('agents.md');
 const rulesRaw = ler('database.rules.json');
+// privacidade.html é o canal exigido pela LGPD: se ela apontar pra um contato
+// que não existe mais, a promessa legal fica sem lastro.
+const priv = fs.existsSync(path.join(DIR, 'privacidade.html')) ? ler('privacidade.html') : null;
 
 const erros = [];
 const avisos = [];
@@ -130,7 +133,71 @@ checar('cronograma da obra avisa antes de descartar',
     /Você tem alterações NÃO SALVAS no cronograma/.test(idx));
 
 // ─────────────────────────────────────────────────────────────
-// 6. ACESSO
+// 6. CONTATO — se o número quebrar, o lead some sem ninguém notar
+// ─────────────────────────────────────────────────────────────
+// Números que o gestor já usou e desativou. Voltar a um deles manda o lead
+// para uma linha que ninguém atende — e nada na tela denuncia isso.
+const APOSENTADOS = ['5577988669009'];   // aposentado em 17/08/2026
+
+// Pega a declaração REAL (ignora linha comentada): se alguém deixar a antiga
+// comentada logo acima, um match simples leria o número velho e aprovaria tudo.
+const linhasWa = lnd.split('\n')
+    .filter(l => /const WHATSAPP_NUM = '\d+';/.test(l) && !/^\s*(\/\/|\*|<!--)/.test(l));
+checar('o número de WhatsApp está declarado uma vez só', linhasWa.length === 1,
+    linhasWa.length === 0
+        ? "não achei a linha: const WHATSAPP_NUM = '55DDD9XXXXXXXX';"
+        : `achei ${linhasWa.length} declarações ativas — o navegador nem carrega a página assim`);
+const mWa = linhasWa.length === 1 ? linhasWa[0].match(/'(\d+)'/) : null;
+if (mWa) {
+    checar('número de WhatsApp no formato que o wa.me aceita',
+        /^55\d{2}9\d{8}$/.test(mWa[1]),
+        `"${mWa[1]}" — tem que ser 55 + DDD (2) + 9 + 8 dígitos, só números. ` +
+        'Faltando o 9 do celular, o link abre em erro e TODO lead se perde calado');
+    checar('não voltou para um número aposentado',
+        !APOSENTADOS.includes(mWa[1]),
+        `${mWa[1]} foi desativado — o gestor não atende mais nele`);
+}
+// Nenhum contato escrito na mão: wa.me com número fixo, api.whatsapp.com ou tel:
+const contatosDuros = [
+    ...(lnd.match(/wa\.me\/(?!\$\{WHATSAPP_NUM\})/g) || []),
+    ...(lnd.match(/api\.whatsapp\.com/g) || []),
+    ...(lnd.match(/tel:\+?\d/g) || []),
+];
+checar('todo botão de contato usa a mesma constante', contatosDuros.length === 0,
+    `${contatosDuros.length} contato(s) na mão (${contatosDuros.join(', ')}) — use \${WHATSAPP_NUM}`);
+
+if (mWa && priv) {
+    const numsPriv = [...priv.matchAll(/wa\.me\/(\d+)/g)].map(m => m[1]);
+    checar('a política de privacidade oferece um contato real',
+        numsPriv.length > 0 && numsPriv.every(n => n === mWa[1]),
+        numsPriv.length === 0
+            ? 'privacidade.html não tem link de WhatsApp — a LGPD pede um canal que funcione'
+            : `privacidade.html aponta para ${[...new Set(numsPriv)].join(', ')} em vez de ${mWa[1]}`);
+}
+
+// O book em PDF é baixado e REENCAMINHADO por fora do site: se ele guardar o
+// número velho, trocar a constante não adianta e ninguém percebe. O jsPDF grava
+// o texto sem compressão, então dá para conferir lendo o binário.
+const bookArq = path.join(DIR, 'book-madrid.pdf');
+if (mWa && fs.existsSync(bookArq)) {
+    const pdf = fs.readFileSync(bookArq, 'latin1');
+    const semDDI = mWa[1].slice(2);                       // 77981346775
+    const impressos = [...pdf.matchAll(/\((?:[^()\\]|\\.)*\)\s*Tj/g)]
+        .map(m => m[0].slice(1, m[0].lastIndexOf(')')))
+        .filter(t => /\d{4}\s?-\s?\d{4}/.test(t));        // o que parece telefone
+    const errados = impressos.filter(t => t.replace(/\D/g, '') !== semDDI);
+    checar('o book em PDF traz o número atual',
+        impressos.length > 0 && errados.length === 0,
+        impressos.length === 0
+            ? 'o book não imprime telefone nenhum — quem baixa fica sem contato'
+            : `o book imprime "${errados.join('" / "')}" — regere com scratchpad/gerar_book.js`);
+    checar('o número do book é clicável e aponta pro atual',
+        pdf.includes('/URI (https://wa.me/' + mWa[1] + ')'),
+        'a anotação de link do PDF ficou com outro número (ou sumiu)');
+}
+
+// ─────────────────────────────────────────────────────────────
+// 7. ACESSO
 // ─────────────────────────────────────────────────────────────
 checar('endereço curto leva o visitante à landing',
     /window\.__madridIndoLanding = true;/.test(idx) && /location\.replace\('landing\.html'\);/.test(idx));
@@ -143,7 +210,7 @@ checar('gestor não consegue se auto-rebaixar/remover',
     /Você não pode remover a própria conta/.test(idx));
 
 // ─────────────────────────────────────────────────────────────
-// 7. REGRAS DO FIREBASE — sintaxe que o motor aceita
+// 8. REGRAS DO FIREBASE — sintaxe que o motor aceita
 // ─────────────────────────────────────────────────────────────
 if (/indexOf\(|numChildren\(/.test(rulesRaw)) {
     erros.push('database.rules.json usa indexOf/numChildren — o motor de regras NÃO tem esses métodos (o publish falha)');
@@ -167,7 +234,7 @@ if (/indexOf\(|numChildren\(/.test(rulesRaw)) {
 })();
 
 // ─────────────────────────────────────────────────────────────
-// 8. AVISOS (não impedem publicar)
+// 9. AVISOS (não impedem publicar)
 // ─────────────────────────────────────────────────────────────
 const versaoAgents = (agents.match(/Versão do sistema: V(\d+)/) || [])[1];
 if (versaoAgents && VERSAO !== '???' && Math.abs(Number(versaoAgents) - Number(VERSAO)) > 3) {
