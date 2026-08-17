@@ -69,6 +69,11 @@
     }
     </script>
 
+    <!-- O "tema escuro automático" do Chrome no Android inverte as cores de sites
+         que não se declaram. Sem isto, o visitante vê o Madrid cinza-chumbo, com o
+         creme virando marrom — e o gestor nunca vê isso no computador dele. -->
+    <meta name="color-scheme" content="light">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -79,22 +84,23 @@
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231F3324'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-style='italic' fill='%23C5A065' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
     <link rel="preload" as="image" href="fachada-dia.jpg" fetchpriority="high">
 
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" crossorigin="anonymous"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" crossorigin="anonymous"></script>
-    <!-- App Check: esta página lê o cronograma da obra e grava o formulário de
-         lead SEM login. Se o App Check for exigido no console e só o index.html
-         mandasse token, a página pública quebrava — cronograma em branco e
-         formulário recusado. Por isso o SDK vive aqui também, e a chave é a
-         MESMA do index.html (o validar.js reprova se uma estiver preenchida e
-         a outra não). -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js" crossorigin="anonymous"></script>
+    <!-- Os três SDKs do Firebase saíram daqui e foram para o fim da página, logo
+         antes do script que os usa. No <head> eles seguravam a primeira pintura:
+         o visitante ficava 1,5 a 2 segundos olhando tela branca antes de a foto
+         do topo sequer começar. A ordem de execução não mudou. -->
 
     <style>
         :root {
+            color-scheme: light;   /* par do <meta> acima: trava o tema claro */
             --brand-primary: #1F3324;
             --brand-secondary: #2E4A35;
             --brand-gold: #C5A065;
             --brand-gold-dark: #A68550;
+            /* Dourado só para TEXTO em fundo claro. O --brand-gold-dark ficou em
+               3,30:1 sobre o creme (mínimo 4,5) — mas ele também pinta o filete
+               decorativo, então escurecer a variável mudaria o filete junto.
+               Este token existe para o texto e mede 4,89:1 no creme, 5,11:1 no branco. */
+            --brand-gold-text: #856A34;
             --brand-cream: #F5EDDC;
             --bg-page: #FAFAF7;
             --bg-card: #FFFFFF;
@@ -194,9 +200,18 @@
 
         /* ---------- HERO ---------- */
         .hero {
-            position: relative; min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            padding: 120px 24px 80px;
+            /* 100vh no celular NÃO desconta a barra de endereço do navegador, então
+               os últimos ~90px do topo nascem escondidos atrás dela. 100svh mede a
+               tela pequena (com a barra visível). A linha antiga fica acima como
+               reserva para navegador antigo que não conhece svh. */
+            position: relative; min-height: 100vh; min-height: 100svh;
+            /* Coluna: o conteúdo e a pílula de números viram irmãos EM FLUXO, um
+               abaixo do outro. Antes a pílula era absoluta e pintava por cima dos
+               dois botões — e encurtar o topo (svh) piorava, porque ela é ancorada
+               embaixo e sobe o dobro do que o conteúdo centralizado sobe. Em fluxo
+               a colisão deixa de ser possível em qualquer altura de tela. */
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 120px 24px 48px;
             overflow: hidden;
             color: white;
             text-align: center;
@@ -275,8 +290,15 @@
 
         /* contador animado */
         .hero-stats {
-            position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
+            /* Em fluxo (ver .hero em coluna). Era `position:absolute; bottom:60px;
+               left:50%; transform:translateX(-50%)` e cobria os botões do topo.
+               O translateX ainda brigava com o translateY da animação fadeUp, que
+               o sobrescrevia enquanto ela rodava. Nada disso existe mais. */
+            margin-top: 44px;
             display: flex; gap: 40px; z-index: 2;
+            /* Decorativa: não recebe toque, para nunca voltar a roubar o clique de
+               um botão caso alguém a reposicione no futuro. */
+            pointer-events: none;
             padding: 18px 36px; border-radius: 100px;
             background: rgba(0,0,0,0.25); backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.15);
@@ -284,7 +306,11 @@
             animation: fadeUp 1.5s 0.6s var(--ease) both;
         }
         @media (max-width: 700px) {
-            .hero-stats { flex-direction: column; gap: 8px; padding: 16px 28px; bottom: 30px; }
+            /* Continua em LINHA no celular. Empilhado em coluna ela ficava com ~195px
+               de altura e comia a primeira tela inteira; em linha fica com ~60px. */
+            .hero-stats { gap: 18px; padding: 12px 18px; margin-top: 28px; }
+            .hero-stats .stat strong { font-size: 22px; }
+            .hero-stats .stat span { font-size: 9px; letter-spacing: 0.12em; }
         }
         .hero-stats .stat { text-align: center; }
         .hero-stats .stat strong {
@@ -320,7 +346,7 @@
         .section-eyebrow {
             display: inline-block;
             font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; font-weight: 700;
-            color: var(--brand-gold-dark); margin-bottom: 14px;
+            color: var(--brand-gold-text); margin-bottom: 14px;
         }
         .section-header { text-align: center; max-width: 720px; margin: 0 auto 60px; }
         .section-header h2 { color: var(--brand-primary); }
@@ -448,7 +474,10 @@
             display: flex; align-items: center; justify-content: center;
             min-height: 320px;
         }
-        .planta-content .planta-img img { max-height: 480px; object-fit: contain; cursor: zoom-in; }
+        /* height:auto é obrigatório junto dos atributos width/height do <img>: sem
+           ele, o max-width global esmagaria a planta. Com os dois, o navegador já
+           reserva o espaço certo antes de a imagem chegar e a página não pula. */
+        .planta-content .planta-img img { max-height: 480px; height: auto; object-fit: contain; cursor: zoom-in; }
         .planta-content .planta-img .placeholder {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             color: var(--text-muted); padding: 60px 20px; text-align: center;
@@ -546,7 +575,11 @@
         /* Mapa em SATÉLITE (pedido do gestor: igual à captura) — sem o filtro
            grayscale que fazia sentido no mapa de ruas. */
         .map-wrap iframe { width: 100%; height: 100%; border: 0; }
-        .map-endereco { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 16px; font-size: 14px; color: var(--text-secondary); }
+        /* Esta linha é o ENDEREÇO do empreendimento e vive sobre o verde escuro.
+           Estava com --text-secondary (cinza de fundo claro) = 2,75:1, praticamente
+           invisível justamente na seção que existe para dizer onde o prédio fica.
+           O branco a 80% mede ~9,5:1 e segue a linguagem já usada nesta seção. */
+        .map-endereco { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 16px; font-size: 14px; color: rgba(255,255,255,0.8); }
         .map-endereco i { color: var(--brand-gold); }
         .map-endereco .btn-rota { display: inline-flex; align-items: center; gap: 8px; background: var(--brand-primary); color: #fff; font-size: 13px; font-weight: 700; padding: 10px 18px; border-radius: 999px; text-decoration: none; transition: opacity 0.2s; }
         .map-endereco .btn-rota:hover { opacity: 0.88; }
@@ -595,7 +628,10 @@
         .form-group input, .form-group select, .form-group textarea {
             width: 100%; padding: 12px 14px;
             background: var(--bg-page); border: 1px solid var(--border-soft); border-radius: 8px;
-            font-family: inherit; font-size: 14px; color: var(--text-main);
+            /* 16px NÃO é estética: abaixo disso o Safari do iPhone amplia a tela
+               sozinha a cada toque no campo. A pessoa preenchia torto e dava pinça
+               cinco vezes — no único lugar da página onde o site converte. */
+            font-family: inherit; font-size: 16px; color: var(--text-main);
             transition: all 0.2s;
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
@@ -661,6 +697,11 @@
             .mobile-cta-bar.visible { display: block; }
             /* A barra JÁ É o CTA de WhatsApp — o botão redondo sai de cena pra não duplicar. */
             body.has-cta-bar .wa-float { display: none; }
+            /* A barra tem ~69px e cobria o fim do rodapé: "Sou corretor" ficava
+               inalcançável e o link da política de privacidade saía cortado ao meio
+               — justamente o link que a LGPD exige que seja alcançável, e que foi
+               posto ali na V395 para poder ser alcançado de qualquer ponto. */
+            body.has-cta-bar { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
         }
         @keyframes ripple {
             0% { transform: scale(1); opacity: 0.4; }
@@ -892,7 +933,7 @@
 
             <div class="planta-content active" data-planta="3suites">
                 <div class="planta-img">
-                    <img src="PLANTA_3_SUITES.jpeg" alt="Planta 3 Suítes" loading="lazy" onclick="openLightbox(this.src)">
+                    <img src="PLANTA_3_SUITES.jpeg" alt="Planta 3 Suítes" width="2000" height="1200" loading="lazy" onclick="openLightbox(this.src)">
                 </div>
                 <div class="planta-info">
                     <h3>3 Suítes</h3>
@@ -912,7 +953,7 @@
 
             <div class="planta-content" data-planta="1suite">
                 <div class="planta-img">
-                    <img src="planta-1suite.jpg" alt="Planta do apartamento 1 suíte de 108 m² — Madrid Casa Elevada" loading="lazy" onclick="openLightbox(this.src)">
+                    <img src="planta-1suite.jpg" alt="Planta do apartamento 1 suíte de 108 m² — Madrid Casa Elevada" width="1600" height="960" loading="lazy" onclick="openLightbox(this.src)">
                 </div>
                 <div class="planta-info">
                     <h3>1 Suíte</h3>
@@ -1161,6 +1202,17 @@
     </div>
 
     <!-- ===================== JS ===================== -->
+    <!-- SDKs do Firebase: aqui embaixo, para não segurar a primeira pintura.
+         App Check: esta página lê o cronograma da obra e grava o formulário de
+         lead SEM login. Se o App Check for exigido no console e só o index.html
+         mandasse token, a página pública quebrava — cronograma em branco e
+         formulário recusado. Por isso o SDK vive aqui também, e a chave é a
+         MESMA do index.html (o validar.js reprova se uma estiver preenchida e
+         a outra não). -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js" crossorigin="anonymous"></script>
+
     <script>
         // --------- CONFIG ----------
         // NÚMERO OFICIAL DE ATENDIMENTO — (77) 9 8134-6775
@@ -1391,11 +1443,44 @@
                 .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
         }
+        // Desenha só a fileira de etapas. Está separado do resto porque o esqueleto
+        // precisa dela ANTES de existir dado, para a seção já nascer com altura.
+        // Sem isso, quando o Firebase respondia (segundos, em rede fraca), mais de
+        // mil pixels de conteúdo eram empurrados para baixo e quem estava lendo
+        // "Como funciona a compra" ou o formulário perdia a linha.
+        function desenharEtapas(etapas, esqueleto) {
+            const tl = document.getElementById('timeline');
+            if (!tl) return;
+            tl.innerHTML = '';
+            (etapas || defaultCronograma.etapas).forEach(et => {
+                const div = document.createElement('div');
+                const status = esqueleto ? 'pendente' : (et.status || 'pendente');
+                div.className = 'timeline-stage' + (status === 'concluida' ? ' concluida' : (status === 'ativa' ? ' ativa' : ''));
+                if (esqueleto) div.style.opacity = '0.45';
+                // V386-fix (revisão): mapeia o legado gravado no banco — fa-bricks
+                // não existe no FA6 e renderizava um quadrado vazio na etapa Alvenaria.
+                const icone = ((et.icone || 'fa-circle') === 'fa-bricks' ? 'fa-trowel-bricks' : (et.icone || 'fa-circle')).replace(/[^a-z0-9\-]/gi, '');
+                const nome = escHtml(String(et.nome || '').slice(0, 40));
+                const pe = Math.max(0, Math.min(100, parseInt(et.percentual || 0)));
+                div.innerHTML = `
+                    <div class="stage-icon"><i class="fas ${icone}"></i></div>
+                    <div class="stage-name">${nome}</div>
+                    <div class="stage-pct">${esqueleto ? '—' : pe + '%'}</div>
+                `;
+                tl.appendChild(div);
+            });
+        }
         function renderCronograma(data) {
             const pct = data.geral_percentual || 0;
             const obraPct = document.getElementById('obraPct');
+            const barra = document.getElementById('obraFill');
+            // Se a conexão caiu e voltou, cronogramaIndisponivel() escondeu o numerão
+            // e a barra. Sem desfazer isso aqui, o dado chegava e a seção continuava
+            // escondida para sempre — o listener do Firebase é vivo e reemite.
+            if (obraPct) obraPct.style.display = '';
+            if (barra && barra.parentElement) barra.parentElement.style.display = '';
             animateNumber(obraPct, 0, pct, '%');
-            document.getElementById('obraFill').style.width = pct + '%';
+            barra.style.width = pct + '%';
             // V386 (auditoria): com "próxima etapa" vazia no banco, a página dizia
             // "Obra em planejamento" ao lado de 56% de avanço — contradição pública.
             document.getElementById('obraStatusText').textContent =
@@ -1407,33 +1492,36 @@
             if (atEl) atEl.textContent = data.ts
                 ? 'Atualizado pela engenharia em ' + new Date(data.ts).toLocaleDateString('pt-BR')
                 : '';
-            const tl = document.getElementById('timeline');
-            tl.innerHTML = '';
-            (data.etapas || defaultCronograma.etapas).forEach(et => {
-                const div = document.createElement('div');
-                const status = et.status || 'pendente';
-                div.className = 'timeline-stage' + (status === 'concluida' ? ' concluida' : (status === 'ativa' ? ' ativa' : ''));
-                // V386-fix (revisão): mapeia o legado gravado no banco — fa-bricks
-                // não existe no FA6 e renderizava um quadrado vazio na etapa Alvenaria.
-                const icone = ((et.icone || 'fa-circle') === 'fa-bricks' ? 'fa-trowel-bricks' : (et.icone || 'fa-circle')).replace(/[^a-z0-9\-]/gi, '');
-                const nome = escHtml(String(et.nome || '').slice(0, 40));
-                const pe = Math.max(0, Math.min(100, parseInt(et.percentual || 0)));
-                div.innerHTML = `
-                    <div class="stage-icon"><i class="fas ${icone}"></i></div>
-                    <div class="stage-name">${nome}</div>
-                    <div class="stage-pct">${pe}%</div>
-                `;
-                tl.appendChild(div);
-            });
+            desenharEtapas(data.etapas, false);
         }
-        // V386-fix (revisão): sem SDK (db null) a seção ficava em "Carregando…"
-        // pra sempre — cai no cronograma default, igual ao caminho de erro.
-        if (!db) renderCronograma(defaultCronograma);
+        // Quando a conexão falha, a página NÃO pode afirmar nada sobre a obra.
+        // Antes ela caía no cronograma padrão e anunciava "0%" e "Obra em
+        // planejamento" — a pior frase possível, dita por um sinal fraco e não
+        // pela realidade do canteiro, justamente na seção que existe para provar
+        // que a obra anda. O visitante não tem como saber a diferença.
+        function cronogramaIndisponivel() {
+            const pct = document.getElementById('obraPct');
+            const barra = document.getElementById('obraFill');
+            const st = document.getElementById('obraStatusText');
+            const at = document.getElementById('obraAtualizadoEm');
+            if (pct) pct.style.display = 'none';
+            if (barra && barra.parentElement) barra.parentElement.style.display = 'none';
+            if (st) st.textContent = 'Não foi possível carregar o andamento agora. Fale com a gente que informamos na hora.';
+            if (at) at.textContent = '';
+            desenharEtapas(defaultCronograma.etapas, true);
+        }
+
+        // A seção nasce desenhada, em cinza e sem número, ANTES de perguntar
+        // qualquer coisa ao Firebase.
+        desenharEtapas(defaultCronograma.etapas, true);
+
+        if (!db) cronogramaIndisponivel();
         if (db) db.ref('madrid_data/cronograma').on('value', snap => {
-            const data = snap.val() || defaultCronograma;
-            renderCronograma(data);
+            const data = snap.val();
+            if (data) renderCronograma(data);
+            else cronogramaIndisponivel();
         }, err => {
-            renderCronograma(defaultCronograma);
+            cronogramaIndisponivel();
         });
 
         // --------- FORMULÁRIO DE LEAD ----------
