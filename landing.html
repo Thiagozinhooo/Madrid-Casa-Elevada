@@ -158,7 +158,9 @@
             max-width: 1240px; margin: 0 auto;
             display: flex; align-items: center; justify-content: space-between; gap: 20px;
         }
-        nav.top-nav img.logo { height: 42px; width: auto; transition: opacity 0.3s; }
+        /* flex-shrink:0 — sem isto o flex espreme a LOGO quando o menu não cabe.
+           Com o item "Lazer" (o 9º) ela chegou a 15px de largura entre 901 e 1120px. */
+        nav.top-nav img.logo { height: 42px; width: auto; flex-shrink: 0; transition: opacity 0.3s; }
         nav.top-nav.scrolled img.logo { height: 38px; }
         nav.top-nav .logo-white { display: block; }
         nav.top-nav .logo-color { display: none; }
@@ -187,7 +189,9 @@
 
         .mobile-menu-btn { display: none; background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
         nav.top-nav.scrolled .mobile-menu-btn { color: var(--text-main); }
-        @media (max-width: 900px) {
+        /* Era 900px. Com 9 itens o menu completo só cabe a partir de ~1120px;
+           abaixo disso ele espremia o resto do topo. */
+        @media (max-width: 1120px) {
             nav.top-nav .nav-links { display: none; }
             .mobile-menu-btn { display: block; }
             nav.top-nav .nav-links.open {
@@ -365,6 +369,24 @@
             transition: all 0.4s var(--ease);
         }
         .diff-card:hover { transform: translateY(-4px); }
+        /* Os cards de LAZER são <button> (abrem a foto), então precisam perder a
+           aparência de botão do navegador. Ser botão de verdade dá teclado e
+           leitor de tela sem nenhum código extra. */
+        button.diff-card {
+            background: none; border: 0; font: inherit; color: inherit;
+            width: 100%; cursor: pointer; border-radius: var(--radius);
+        }
+        button.diff-card:hover { background: rgba(255,255,255,0.04); }
+        button.diff-card:focus-visible { outline: 2px solid var(--brand-gold); outline-offset: 3px; }
+        .lazer-section { background: var(--brand-primary); color: white; }
+        /* Especificidade (0,2,1): .diff-card h4 também é (0,1,1) e vem DEPOIS no
+           arquivo, então empate de especificidade a fazia vencer e os 7 títulos
+           saíam verde escuro sobre verde escuro — invisíveis, contraste 1,00:1.
+           Foi exatamente a seção que existe para LISTAR as áreas ficar sem lista. */
+        .lazer-section h2, .lazer-section .diff-card h4 { color: white; }
+        .lazer-section .section-eyebrow { color: var(--brand-gold); }
+        .lazer-section p { color: rgba(255,255,255,0.78); }
+        .lazer-dica { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 28px; text-align: center; }
         .diff-icon {
             width: 64px; height: 64px; margin: 0 auto 18px;
             background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%);
@@ -804,6 +826,7 @@
             </a>
             <div class="nav-links" id="navLinks">
                 <a href="#diferenciais">Diferenciais</a>
+                <a href="#lazer">Lazer</a>
                 <a href="#galeria">Galeria</a>
                 <a href="#plantas">Plantas</a>
                 <a href="#obra">Obra</a>
@@ -895,6 +918,62 @@
             </div>
         </div>
     </section>
+
+    <!-- ===================== LAZER =====================
+         As 7 áreas existiam SÓ como legenda de foto dentro da galeria, enquanto o
+         texto que vai pro Google promete "lazer completo". Quem compara dois
+         lançamentos põe as duas listas lado a lado — o Madrid não tinha lista.
+         Cada card abre a foto correspondente na galeria (índice em data-foto).
+         Zero CSS novo além do reset do <button>: reaproveita .diffs-grid/.diff-card. -->
+    <section class="section lazer-section" id="lazer">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Áreas comuns</span>
+                <h2>A vida que cabe dentro do condomínio</h2>
+                <div class="gold-divider"></div>
+                <p style="margin-top:16px;">Sete ambientes de uso comum. Toque em qualquer um para ver a foto.</p>
+            </div>
+            <div class="diffs-grid">
+                <button type="button" class="diff-card reveal" data-foto="4" aria-label="Ver foto: Piscina com Deck">
+                    <div class="diff-icon"><i class="fas fa-person-swimming"></i></div>
+                    <h4>Piscina com Deck</h4>
+                    <p>Área de piscina com deck — o fim de semana acontece em casa, sem estrada e sem reserva.</p>
+                </button>
+                <button type="button" class="diff-card reveal" data-foto="5" aria-label="Ver foto: Espaço Gourmet">
+                    <div class="diff-icon"><i class="fas fa-utensils"></i></div>
+                    <h4>Espaço Gourmet</h4>
+                    <p>Para receber sem transformar o seu apartamento em cozinha de restaurante.</p>
+                </button>
+                <button type="button" class="diff-card reveal" data-foto="6" aria-label="Ver foto: Salão de Festas">
+                    <div class="diff-icon"><i class="fas fa-champagne-glasses"></i></div>
+                    <h4>Salão de Festas</h4>
+                    <p>Aniversário, confraternização e reunião de família no próprio prédio.</p>
+                </button>
+                <button type="button" class="diff-card reveal" data-foto="7" aria-label="Ver foto: Academia">
+                    <div class="diff-icon"><i class="fas fa-dumbbell"></i></div>
+                    <h4>Academia</h4>
+                    <p>Treino antes do trabalho sem depender de trânsito nem de horário de terceiros.</p>
+                </button>
+                <button type="button" class="diff-card reveal" data-foto="8" aria-label="Ver foto: Coworking">
+                    <div class="diff-icon"><i class="fas fa-laptop"></i></div>
+                    <h4>Coworking</h4>
+                    <p>Um lugar para trabalhar concentrado quando a casa está cheia.</p>
+                </button>
+                <button type="button" class="diff-card reveal" data-foto="9" aria-label="Ver foto: Bicicletário">
+                    <div class="diff-icon"><i class="fas fa-bicycle"></i></div>
+                    <h4>Bicicletário</h4>
+                    <p>A bike fica guardada fora do apartamento — e fora do corredor.</p>
+                </button>
+                <button type="button" class="diff-card reveal" data-foto="10" aria-label="Ver foto: Oficina de Bikes">
+                    <div class="diff-icon"><i class="fas fa-wrench"></i></div>
+                    <h4>Oficina de Bikes</h4>
+                    <p>Manutenção rápida na hora, sem sujar a garagem nem sair do condomínio.</p>
+                </button>
+            </div>
+            <p class="lazer-dica">Imagens ilustrativas do projeto arquitetônico.</p>
+        </div>
+    </section>
+
 
     <!-- ===================== GALERIA ===================== -->
     <section class="section gallery-section" id="galeria">
@@ -1170,6 +1249,7 @@
                 <ul>
                     <li><a href="#topo">Início</a></li>
                     <li><a href="#diferenciais">Diferenciais</a></li>
+                    <li><a href="#lazer">Lazer</a></li>
                     <li><a href="#galeria">Galeria</a></li>
                     <li><a href="#plantas">Plantas</a></li>
                     <li><a href="#obra">Acompanhe a obra</a></li>
@@ -1369,6 +1449,17 @@
         // para desenhar quadrados de ~300px. Agora a primeira visita gasta 0,85 MB.
         // As miniaturas são geradas por `node gerar-miniaturas.js` e vivem em fotos-mini/.
         const miniatura = (arq) => 'fotos-mini/' + arq.replace(/[.](jpeg|png)$/i, '.jpg');
+
+        // Cada card de LAZER abre a foto correspondente da galeria. O índice vem do
+        // data-foto; se ele apontar para fora da lista, o card simplesmente não faz
+        // nada em vez de abrir a foto errada.
+        document.querySelectorAll('#lazer [data-foto]').forEach(botao => {
+            const i = parseInt(botao.dataset.foto, 10);
+            botao.addEventListener('click', () => {
+                if (!Number.isInteger(i) || !galleryFiles[i]) return;
+                openLightbox(galleryFiles[i].src, i);
+            });
+        });
 
         const galleryGrid = document.getElementById('galleryGrid');
         galleryFiles.forEach((g, idx) => {
