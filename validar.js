@@ -275,6 +275,70 @@ medicao.forEach(m => {
         'ligar rastreamento sem declarar é o tipo de coisa que a LGPD pune');
 });
 
+// A grade da galeria usa fotos-mini/. Adicionar foto em galleryFiles sem rodar
+// `node gerar-miniaturas.js` deixa um quadrado quebrado no site publico — e o
+// erro so aparece para quem visita, nunca para quem publicou.
+(function () {
+    const ini = lnd.indexOf('galleryFiles');
+    const fim = lnd.indexOf('];', ini);
+    if (ini < 0 || fim < 0) { erros.push('não achei a lista galleryFiles na landing.html'); return; }
+    const fotos = [...new Set([...lnd.slice(ini, fim).matchAll(/src: *['"`]([^'"`]+)['"`]/g)].map(m => m[1]))];
+    checar('a galeria tem fotos listadas', fotos.length > 0);
+    const semMini = fotos.filter(f => !fs.existsSync(path.join(DIR, 'fotos-mini', f.replace(/[.](jpeg|png)$/i, '.jpg'))));
+    checar('toda foto da galeria tem miniatura', semMini.length === 0,
+        semMini.length + ' sem miniatura (' + semMini.slice(0, 4).join(', ') + ') — rode: node gerar-miniaturas.js');
+    const semOriginal = fotos.filter(f => !fs.existsSync(path.join(DIR, f)));
+    checar('toda foto da galeria tem o arquivo original', semOriginal.length === 0,
+        'o lightbox abre o original: ' + semOriginal.slice(0, 4).join(', ') + ' não existe(m)');
+    checar('a grade usa a miniatura, não o arquivo grande',
+        lnd.includes('<img src="${miniatura(g.src)}"'),
+        'a grade voltou a apontar para o original — 8 MB por visita');
+})();
+
+// O resto deste arquivo confere o DISCO. Mas o site é servido pelo GitHub Pages
+// a partir do que está no REPOSITÓRIO: arquivo que existe aqui e não foi
+// versionado responde 404 no ar. Foi exatamente o risco das miniaturas — a pasta
+// fotos-mini/ nasceu fora do versionamento e todas as checagens passavam, porque
+// olhavam a máquina que já funciona em vez de olhar o que vai ao ar.
+(function () {
+    let rastreados = null;
+    try {
+        const saida = require('child_process').execSync('git ls-files -z', {
+            cwd: DIR, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 8 * 1024 * 1024
+        });
+        rastreados = new Set(saida.split(' ').map(x => x.trim()).filter(Boolean));
+    } catch (e) { rastreados = null; }
+
+    if (!rastreados || rastreados.size === 0) {
+        avisos.push('não consegui perguntar ao git quais arquivos estão versionados — confira à mão se todo arquivo novo entrou no commit');
+        return;
+    }
+
+    // todo arquivo local que a landing referencia
+    const refs = new Set();
+    const juntar = (re, grupo) => { for (const m of lnd.matchAll(re)) refs.add(m[grupo]); };
+    juntar(/src="([^"${}]+.(?:jpe?g|png|mp4|pdf))"/gi, 1);
+    juntar(/href="([^"${}]+.(?:jpe?g|png|mp4|pdf))"/gi, 1);
+    juntar(/src: *['"`]([^'"`${}]+[.](?:jpe?g|png))['"`]/gi, 1);
+    // as miniaturas correspondentes (a grade monta o caminho por JS)
+    [...refs].forEach(f => {
+        if (f.indexOf('fotos-mini/') === 0) return;
+        const mini = 'fotos-mini/' + f.replace(/[.](jpeg|png)$/i, '.jpg');
+        if (fs.existsSync(path.join(DIR, mini))) refs.add(mini);
+    });
+
+    const fora = [...refs].filter(f => !rastreados.has(f));
+    checar('todo arquivo que a landing usa está versionado', fora.length === 0,
+        fora.length + ' fora do repositório (' + fora.slice(0, 5).join(', ') + ') — existe aqui, mas daria 404 no ar. Rode: git add -A');
+
+    ['gerar-miniaturas.js', 'validar.js', 'privacidade.html'].forEach(f => {
+        if (fs.existsSync(path.join(DIR, f))) {
+            checar(f + ' está versionado', rastreados.has(f),
+                'existe na sua máquina mas não no repositório — some para quem clonar');
+        }
+    });
+})();
+
 // ─────────────────────────────────────────────────────────────
 // 7. ACESSO
 // ─────────────────────────────────────────────────────────────
