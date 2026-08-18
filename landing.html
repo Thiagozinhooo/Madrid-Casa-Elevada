@@ -167,7 +167,7 @@
         nav.top-nav.scrolled .logo-white { display: none; }
         nav.top-nav.scrolled .logo-color { display: block; }
 
-        nav.top-nav .nav-links { display: flex; gap: 28px; align-items: center; }
+        nav.top-nav .nav-links { display: flex; gap: 18px; align-items: center; }
         nav.top-nav .nav-links a {
             font-size: 13px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
             color: white; opacity: 0.92; transition: all 0.2s;
@@ -189,9 +189,12 @@
 
         .mobile-menu-btn { display: none; background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
         nav.top-nav.scrolled .mobile-menu-btn { color: var(--text-main); }
-        /* Era 900px. Com 9 itens o menu completo só cabe a partir de ~1120px;
-           abaixo disso ele espremia o resto do topo. */
-        @media (max-width: 1120px) {
+        /* Era 900px. Com 10 itens e gap 18px o menu precisa de ~1175px de janela.
+           A conta anterior saiu 65px CURTA porque eu medi o menu no estado JÁ
+           ESPREMIDO — um menu comprimido informa a largura comprimida, não a que
+           ele precisa. Sem isto, a logo era esmagada (chegou a 15px) e os rótulos
+           quebravam em duas linhas. */
+        @media (max-width: 1240px) {
             nav.top-nav .nav-links { display: none; }
             .mobile-menu-btn { display: block; }
             nav.top-nav .nav-links.open {
@@ -386,6 +389,16 @@
         .lazer-section h2, .lazer-section .diff-card h4 { color: white; }
         .lazer-section .section-eyebrow { color: var(--brand-gold); }
         .lazer-section p { color: rgba(255,255,255,0.78); }
+        .quem-nota {
+            max-width: 680px; margin: 40px auto 0; text-align: center;
+            font-size: 15px; line-height: 1.75; color: var(--text-secondary);
+            border-top: 1px solid var(--border-soft); padding-top: 28px;
+        }
+        .quem-nota strong { color: var(--text-main); }
+        .quem-papel {
+            display: block; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+            color: var(--brand-gold-text); margin-bottom: 6px; font-weight: 700;
+        }
         .lazer-dica { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 28px; text-align: center; }
         .diff-icon {
             width: 64px; height: 64px; margin: 0 auto 18px;
@@ -829,6 +842,7 @@
                 <a href="#lazer">Lazer</a>
                 <a href="#galeria">Galeria</a>
                 <a href="#plantas">Plantas</a>
+                <a href="#quem-constroi">Quem constrói</a>
                 <a href="#obra">Obra</a>
                 <a href="#como-funciona">Como funciona</a>
                 <a href="#localizacao">Localização</a>
@@ -908,7 +922,7 @@
                 <div class="diff-card reveal">
                     <div class="diff-icon"><i class="fas fa-shield-alt"></i></div>
                     <h4>SPE Dedicada</h4>
-                    <p>Patrimônio segregado em SPE (Sociedade de Propósito Específico) — proteção patrimonial pra cada comprador.</p>
+                    <p>Empresa criada só para este empreendimento: o Madrid não se mistura com as outras operações dos sócios. <a href="#quem-constroi" style="color:var(--brand-gold-text); font-weight:700;">Ver quem constrói</a>.</p>
                 </div>
                 <div class="diff-card reveal">
                     <div class="diff-icon"><i class="fas fa-arrow-up"></i></div>
@@ -1075,6 +1089,48 @@
     </section>
 
     <!-- ===================== CRONOGRAMA DE OBRA ===================== -->
+    
+    <!-- ===================== QUEM CONSTRÓI =====================
+         O card "SPE Dedicada" LEVANTAVA a pergunta ("SPE de quem?") e não
+         respondia — chamava atenção para o vazio. Comprar na planta é entregar
+         dinheiro por três anos; o visitante encontrava uma SPE com CNPJ e
+         nenhum nome. Aqui só entra o que foi confirmado pelo gestor. -->
+    <section class="section" id="quem-constroi">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Quem está por trás</span>
+                <h2>Quem constrói o Madrid</h2>
+                <div class="gold-divider"></div>
+                <p>Comprar na planta é confiar em quem entrega. Estes são os nomes por trás da obra.</p>
+            </div>
+            <div class="diffs-grid">
+                <div class="diff-card reveal">
+                    <div class="diff-icon"><i class="fas fa-helmet-safety"></i></div>
+                    <span class="quem-papel">Construtora</span>
+                    <h4>Loft</h4>
+                    <p>Responsável pela execução da obra do Madrid Casa Elevada.</p>
+                </div>
+                <div class="diff-card reveal">
+                    <div class="diff-icon"><i class="fas fa-handshake"></i></div>
+                    <span class="quem-papel">Sócio</span>
+                    <h4>Baumann</h4>
+                    <p>Sócio do empreendimento, junto com a Bella Vista.</p>
+                </div>
+                <div class="diff-card reveal">
+                    <div class="diff-icon"><i class="fas fa-building-columns"></i></div>
+                    <span class="quem-papel">Sócio</span>
+                    <h4>Bella Vista</h4>
+                    <p>Sócio do empreendimento, junto com a Baumann.</p>
+                </div>
+            </div>
+            <p class="quem-nota reveal">
+                O Madrid é tocado por uma <strong>SPE</strong> — uma empresa criada só para este
+                empreendimento, a <strong>Torre Madrid Empreendimentos Imobiliários SPE Ltda</strong>
+                (CNPJ 51.114.117/0001-37). Ela tem CNPJ, contabilidade e contratos próprios, separados
+                das outras empresas dos sócios.
+            </p>
+        </div>
+    </section>
     <section class="section cronograma-section" id="obra">
         <div class="container">
             <div class="section-header reveal">
@@ -1252,6 +1308,7 @@
                     <li><a href="#lazer">Lazer</a></li>
                     <li><a href="#galeria">Galeria</a></li>
                     <li><a href="#plantas">Plantas</a></li>
+                    <li><a href="#quem-constroi">Quem constrói</a></li>
                     <li><a href="#obra">Acompanhe a obra</a></li>
                     <li><a href="#como-funciona">Como funciona a compra</a></li>
                     <li><a href="#localizacao">Localização</a></li>
