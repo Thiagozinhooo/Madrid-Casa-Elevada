@@ -157,14 +157,29 @@ if (mWa) {
         !APOSENTADOS.includes(mWa[1]),
         `${mWa[1]} foi desativado — o gestor não atende mais nele`);
 }
-// Nenhum contato escrito na mão: wa.me com número fixo, api.whatsapp.com ou tel:
-const contatosDuros = [
-    ...(lnd.match(/wa\.me\/(?!\$\{WHATSAPP_NUM\})/g) || []),
-    ...(lnd.match(/api\.whatsapp\.com/g) || []),
-    ...(lnd.match(/tel:\+?\d/g) || []),
-];
-checar('todo botão de contato usa a mesma constante', contatosDuros.length === 0,
-    `${contatosDuros.length} contato(s) na mão (${contatosDuros.join(', ')}) — use \${WHATSAPP_NUM}`);
+// V397: a regra mudou de "proibido escrever o número" para "todo número escrito
+// É o da constante". Motivo: os href precisam do número literal como fallback
+// sem-JS (antes eram href="#" — sem JS, nenhum botão de WhatsApp funcionava).
+// A segurança continua a mesma: número divergente da constante REPROVA, então
+// trocar o número num lugar só ainda quebra o validador até acertar todos.
+if (mWa) {
+    const numsLnd = [
+        ...[...lnd.matchAll(/wa\.me\/(\d+)/g)].map(m => m[1]),
+        ...[...lnd.matchAll(/tel:\+(\d+)/g)].map(m => m[1]),
+    ];
+    const numsErrados = [...new Set(numsLnd.filter(n => n !== mWa[1]))];
+    checar('todo contato escrito na landing é o número da constante',
+        numsLnd.length > 0 && numsErrados.length === 0 && !/api\.whatsapp\.com/.test(lnd),
+        numsLnd.length === 0
+            ? 'os href de WhatsApp voltaram a ser "#" — sem JS nenhum botão funciona'
+            : `número(s) divergente(s): ${numsErrados.join(', ')} — a constante diz ${mWa[1]}`);
+    // O número visível no rodapé (o que a pessoa copia pra ligar) tem que ser
+    // o mesmo — formatado, mas o MESMO.
+    const mFone = lnd.match(/id="footFoneNum">([^<]+)</);
+    checar('o telefone por extenso no rodapé bate com a constante',
+        !!mFone && '55' + mFone[1].replace(/\D/g, '') === mWa[1],
+        mFone ? `o rodapé mostra "${mFone[1]}" mas a constante é ${mWa[1]}` : 'o rodapé perdeu o telefone por extenso (id="footFoneNum")');
+}
 
 if (mWa && priv) {
     const numsPriv = [...priv.matchAll(/wa\.me\/(\d+)/g)].map(m => m[1]);
@@ -342,8 +357,15 @@ medicao.forEach(m => {
 // ─────────────────────────────────────────────────────────────
 // 7. ACESSO
 // ─────────────────────────────────────────────────────────────
-checar('endereço curto leva o visitante à landing',
-    /window\.__madridIndoLanding = true;/.test(idx) && /location\.replace\('landing\.html'\);/.test(idx));
+// V397-fix (revisão): o replace tem que levar a QUERY junto — o anúncio aponta
+// pro endereço curto com ?utm_source=..., e jogar o search fora matava a
+// atribuição de campanha em silêncio.
+checar('endereço curto leva o visitante à landing com âncora E query',
+    /window\.__madridIndoLanding = true;/.test(idx) && /location\.replace\('landing\.html' \+ location\.search \+ location\.hash\);/.test(idx));
+// V397: o portão testava "tem âncora?" — /#galeria jogava o CLIENTE na tela de
+// login. Só o deep-link real do push (#agenda) pode abrir o app.
+checar('só a âncora #agenda abre o app (o resto é âncora da landing)',
+    /q\.has\('app'\) \|\| location\.hash === '#agenda'/.test(idx));
 checar('recarregamento de versão preserva o passe do corretor',
     /q\.set\('app', '1'\);/.test(idx));
 checar('aprovação de acesso dá papel de corretor (nunca gestor)',
@@ -375,6 +397,75 @@ if (/indexOf\(|numChildren\(/.test(rulesRaw)) {
     checar('rules com parênteses equilibrados', desbalanceadas.length === 0,
         desbalanceadas.length + ' expressão(ões) quebrada(s)');
 })();
+
+// ─────────────────────────────────────────────────────────────
+// 8b. V397 — o que a rodada "mais seguro, mais prático, mais bonito" travou
+// ─────────────────────────────────────────────────────────────
+// (a) O formulário da landing e a lista de campos aceitos nas rules têm que
+//     andar JUNTOS: se a landing mandar um campo fora da lista, o dia em que
+//     o gestor publicar as regras o formulário passa a falhar EM SILÊNCIO.
+(function () {
+    const rules = JSON.parse(rulesRaw);
+    const li = rules.rules && rules.rules.madrid_data && rules.rules.madrid_data.leads_inbox;
+    const lead = li && li['$leadId'];
+    checar('leads_inbox fecha campos desconhecidos ($other)',
+        !!lead && !!lead['$other'] && lead['$other']['.validate'] === false,
+        'sem "$other": um robô grava campos de megabytes por fora do formulário');
+    // Campos que a landing (submitLead) e o app (_registrarSolicitacao) enviam:
+    const enviados = ['nome', 'telefone', 'email', 'interesse', 'mensagem', 'origem', 'status', 'ts', 'ua', 'referrer', 'utm'];
+    const semRegra = lead ? enviados.filter(c => !lead[c]) : enviados;
+    checar('todo campo que o formulário envia está na lista das rules',
+        semRegra.length === 0,
+        `campo(s) sem regra: ${semRegra.join(', ')} — com $other fechado, o push seria recusado`);
+})();
+// (b) Histórico de login e de reajuste viram prova: ninguém apaga, ninguém
+//     assina pelo outro.
+checar('logs: sem .write no nível que permitiria apagar tudo',
+    !JSON.parse(rulesRaw).rules.madrid_data.logs['.write'],
+    'o .write no nó logs deixa qualquer corretor apagar o histórico inteiro');
+checar('price_history é só-acrescenta e assinado por quem gravou',
+    /!data\.exists\(\) && newData\.exists\(\)/.test(JSON.stringify(JSON.parse(rulesRaw).rules.madrid_data.price_history)) &&
+    JSON.parse(rulesRaw).rules.madrid_data.price_history['$snapId'].user['.validate'].includes('auth.token.email'),
+    'reajuste de preço apagável/assinável por outro = sistema não sustenta a versão de ninguém');
+// (c) Proteções da página pública: CSP + anti-iframe nos DOIS HTMLs públicos
+//     (o GitHub Pages não manda cabeçalho nenhum — conferido no ar em 19/08).
+checar('landing tem CSP em <meta>', /Content-Security-Policy/.test(lnd),
+    'a landing voltou a ficar sem CSP — única defesa possível no GitHub Pages');
+checar('landing tem anti-iframe (frame-ancestors não funciona em meta)',
+    /window\.top !== window\.self/.test(lnd));
+if (priv) {
+    checar('privacidade tem CSP em <meta>', /Content-Security-Policy/.test(priv));
+    checar('privacidade tem anti-iframe', /window\.top !== window\.self/.test(priv));
+}
+// (d) A documentação interna NÃO pode voltar ao ar: o _config.yml usa o Jekyll
+//     do GitHub Pages pra tirar esses arquivos do site (ficam só no repo).
+(function () {
+    const cfgPath = path.join(DIR, '_config.yml');
+    if (!fs.existsSync(cfgPath)) {
+        erros.push('_config.yml sumiu — agents.md, HISTORICO.md e as rules voltam a ser baixáveis do site');
+        return;
+    }
+    const cfg = ler('_config.yml');
+    // V397-fix (revisão): a lista tem que cobrir TUDO que o _config.yml exclui —
+    // com 9 de 12 conferidos, SECURITY.md, PUSH_SETUP.md e gerar-miniaturas.js
+    // podiam sumir do exclude e voltar ao ar sem o validador reclamar.
+    const devemSumir = ['agents.md', 'HISTORICO.md', 'SECURITY-SETUP.md', 'SECURITY.md', 'PUSH_SETUP.md',
+        'database.rules.json', 'publicar-regras.cmd', 'backup-madrid.cmd', 'validar.js',
+        'gerar-miniaturas.js', 'firebase.json', 'functions/'];
+    const fora = devemSumir.filter(f => !new RegExp('^\\s*-\\s*' + f.replace(/[.\/]/g, '\\$&') + '\\s*$', 'm').test(cfg));
+    checar('a documentação interna está excluída do site (_config.yml)',
+        fora.length === 0, `faltando no exclude: ${fora.join(', ')}`);
+    const nuncaExcluir = ['landing.html', 'index.html', 'privacidade.html', 'book-madrid.pdf', 'robots.txt', 'sitemap.xml', 'CNAME', 'firebase-messaging-sw.js', 'fotos-mini'];
+    const excluidoErrado = nuncaExcluir.filter(f => new RegExp('^\\s*-\\s*' + f.replace(/[.\/]/g, '\\$&'), 'm').test(cfg));
+    checar('nenhuma página/foto do site foi excluída por engano',
+        excluidoErrado.length === 0, `REMOVA do exclude: ${excluidoErrado.join(', ')}`);
+})();
+// (e) O cronograma da landing tem que continuar leitura pontual (.once) — o
+//     .on segura 1 conexão por visitante e o teto do plano é 100, dividido
+//     com o app dos corretores.
+checar('cronograma da landing lê com .once (não segura conexão)',
+    /madrid_data\/cronograma'\)\.once\('value'\)/.test(lnd) && !/madrid_data\/cronograma'\)\.on\(/.test(lnd),
+    'voltou o .on(\'value\') — cada visitante vira uma conexão presa no teto de 100');
 
 // ─────────────────────────────────────────────────────────────
 // 9. AVISOS (não impedem publicar)

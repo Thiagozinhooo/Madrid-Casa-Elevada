@@ -12,9 +12,9 @@
                monolítico do SPA; idealmente migrar para arquivos externos)
              - connect-src libera apenas os endpoints reais do Firebase + APIs
                de cotação que o painel admin consulta
-             - frame-ancestors 'none' impede que o site seja embedado em iframe
-               (anti-clickjacking; substitui o header X-Frame-Options que o
-               GitHub Pages não permite configurar)
+             - frame-ancestors NÃO está aqui: o navegador IGNORA essa diretiva
+               em <meta> (só vale como header HTTP, que o GitHub Pages não manda).
+               O anti-clickjacking real é o frame-buster em JS logo no início.
              - object-src 'none' bloqueia plugins (Flash/Java)
              - base-uri 'self' impede injeção de <base href> maliciosa
              ========================================================== -->
@@ -26,7 +26,7 @@
             img-src 'self' data: blob: https:;
             connect-src 'self' https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://*.firebaseapp.com https://api.bcb.gov.br https://economia.awesomeapi.com.br https://identitytoolkit.googleapis.com https://securetoken.googleapis.com;
             frame-src 'self' blob:;
-            frame-ancestors 'none';
+
             form-action 'self';
             base-uri 'self';
             object-src 'none';
@@ -34,7 +34,7 @@
         <meta name="referrer" content="strict-origin-when-cross-origin">
 
         <!-- Cache gerido pelo parâmetro ?v=353 no URL -->
-        <title>Madrid Casa Elevada | Premium V396</title>
+        <title>Madrid Casa Elevada | Premium V397</title>
 
         <!-- Hint para indexadores: o app interno NÃO deve ser indexado.
              A landing pública (landing.html) é quem fica nas buscas. -->
@@ -109,11 +109,20 @@
                     // o endereço do site sempre caia na landing, e essa marca era o
                     // caminho pelo qual um estranho sentado no computador do plantão
                     // caía dentro do sistema sem digitar nada.
-                    if (q.has('app') || location.hash) return;
+                    // V397: era "location.hash" (qualquer âncora) — mas o único
+                    // deep-link que o app conhece é #agenda (linha do push). Um
+                    // endereço colado com /#galeria no fim jogava o CLIENTE na
+                    // tela de login dos corretores, e ninguém ficava sabendo.
+                    if (q.has('app') || location.hash === '#agenda') return;
                     // Limpa a marca antiga dos navegadores que já a receberam.
                     try { localStorage.removeItem('madrid_equipe'); } catch (e) {}
                     window.__madridIndoLanding = true;
-                    location.replace('landing.html');
+                    // A âncora E a query seguem vivas: /#galeria abre a galeria
+                    // DA LANDING, e /?utm_source=instagram chega com a campanha
+                    // intacta — o anúncio aponta pro endereço curto, que cai
+                    // aqui primeiro; jogar o search fora mataria a atribuição
+                    // de campanha em silêncio. (?app nunca chega neste ponto.)
+                    location.replace('landing.html' + location.search + location.hash);
                 } catch (e) { /* qualquer imprevisto: segue para o app */ }
             })();
         </script>
@@ -1047,15 +1056,15 @@
     <body>
 
     <script>
-        // Frame-buster (anti-clickjacking) — defesa em profundidade.
-        // O header CSP frame-ancestors 'none' já bloqueia embedding,
-        // mas se um browser antigo ignorar, este código sai do iframe.
+        // Frame-buster (anti-clickjacking) — é a DEFESA REAL, não redundância:
+        // frame-ancestors em <meta> é ignorado pelo navegador (V397 removeu a
+        // diretiva morta da CSP; só header HTTP valeria, e o Pages não manda).
         if (window.self !== window.top) {
             try { window.top.location = window.self.location; }
             catch (e) { document.documentElement.innerHTML = ''; /* bloqueia tela */ }
         }
 
-        const CURRENT_APP_VERSION = "396";
+        const CURRENT_APP_VERSION = "397";
         const urlParams = new URLSearchParams(window.location.search);
 
         // O desvio do visitante para a landing acontece lá no <head>, antes dos
@@ -2188,7 +2197,7 @@
         </div>
 
     <script>
-        console.log("LOG: Versão Premium V396");
+        console.log("LOG: Versão Premium V397");
 
         // V371: dicas de toque — clique num ".help-tip" abre o balão com o texto
         // do data-tip; clique em qualquer outro lugar fecha. (title= só existe
@@ -3284,7 +3293,7 @@
                             <span style="font-size:10px; color:rgba(255,255,255,0.5);">${AppUtils.escapeHTML(quando)}</span>
                         </div>
                         <div style="font-size:12px; color:rgba(255,255,255,0.75); margin-top:4px;">
-                            ${AppUtils.escapeHTML(m.telefone || '')}${m.email ? ' · ' + AppUtils.escapeHTML(m.email) : ''}${m.interesse ? ' · interesse: ' + AppUtils.escapeHTML(m.interesse) : ''}
+                            ${AppUtils.escapeHTML(m.telefone || '')}${m.email ? ' · ' + AppUtils.escapeHTML(m.email) : ''}${m.interesse ? ' · interesse: ' + AppUtils.escapeHTML(m.interesse) : ''}${m.utm ? ' · campanha: ' + AppUtils.escapeHTML(m.utm) : ''}
                         </div>
                         ${m.mensagem ? `<div style="font-size:12px; color:rgba(255,255,255,0.9); margin-top:8px; padding:8px 10px; background:rgba(0,0,0,0.2); border-radius:6px;">${AppUtils.escapeHTML(m.mensagem)}</div>` : ''}
                         <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
@@ -5318,6 +5327,10 @@
                 // V364: remove o token de push deste aparelho ANTES do signOut (senão a
                 // sessão seguinte no mesmo aparelho compartilhado recebe push do usuário
                 // anterior). No-op se o push estiver inerte.
+                // V397: marca o logout INTENCIONAL — o beforeunload do rascunho
+                // não pode perguntar "Sair do site?" depois que a pessoa já
+                // clicou Sair (o rascunho acabou de ser limpo ali em cima).
+                window.__madridSaindo = true;
                 const finishLogout = () => firebase.auth().signOut().then(() => location.reload());
                 if (window.AppPush && AppPush.clearToken) { AppPush.clearToken().then(finishLogout, finishLogout); }
                 else { finishLogout(); }
@@ -6048,11 +6061,11 @@
                             <strong style="color:var(--brand-primary-text); font-size:15px; display:flex; align-items:center; gap:8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 65%;"><i class="fas fa-user-circle" style="color:var(--brand-gold);"></i> ${safeClient}</strong>
                             <div style="display:flex; align-items:center; gap:10px;">
                                 <span style="font-size:10px; color:var(--text-muted);"><i class="far fa-clock"></i> ${dateOnly}</span>
-                                <button onclick="AppCore.deleteProposal('${jsParentKey}', '${jsPropId}')" style="background:var(--bg-hover); border:none; color:#ef4444; cursor:pointer; font-size:12px; width: 26px; height: 26px; border-radius: 50%; display:flex; align-items:center; justify-content:center; transition:0.2s;" title="Excluir Proposta"><i class="fas fa-trash-alt"></i></button>
+                                <button onclick="AppCore.deleteProposal('${jsParentKey}', '${jsPropId}', '${AppUtils.escapeJSAttr(String(p.client || ''))}', '${AppUtils.escapeJSAttr(String(p.unit || ''))}')" style="background:var(--bg-hover); border:none; color:#ef4444; cursor:pointer; font-size:12px; width: 26px; height: 26px; border-radius: 50%; display:flex; align-items:center; justify-content:center; transition:0.2s;" title="Excluir Proposta"><i class="fas fa-trash-alt"></i></button>
                             </div>
                         </div>
                         <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px;">
-                            <select class="prop-status-sel" onchange="AppCore.setProposalStatus('${jsParentKey}', '${jsPropId}', this.value)" style="background:${stMeta.color}1A; color:${stMeta.color}; border:1px solid ${stMeta.color}55; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:800; cursor:pointer; font-family:inherit;">
+                            <select class="prop-status-sel" onchange="AppCore.setProposalStatus('${jsParentKey}', '${jsPropId}', this.value, this, '${stKey}')" style="background:${stMeta.color}1A; color:${stMeta.color}; border:1px solid ${stMeta.color}55; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:800; cursor:pointer; font-family:inherit;">
                                 ${statusOptions}
                             </select>
                             ${diasLabel ? `<span style="font-size:10px; color:${precisaFollowup ? '#ef4444' : 'var(--text-muted)'}; font-weight:${precisaFollowup ? '700' : '400'};">${precisaFollowup ? '⚠ ' : ''}${diasLabel}</span>` : ''}
@@ -6094,8 +6107,17 @@
 
             // V371: escolhe o status DIRETO pelo menu (substitui o cycleProposalStatus
             // do V347, que ciclava enviada→negociando→aceita→recusada a cada toque).
-            setProposalStatus: (parentKey, propId, novo) => {
+            setProposalStatus: (parentKey, propId, novo, sel, anterior) => {
                 if (!state.isAdmin && !state.user) return;
+                // V397: proposta antiga sem id gerava caminho ".../<email>/" — o
+                // update cairia SOLTO na pasta do corretor, misturado aos cards.
+                // E o select volta ao que estava: como nada é gravado, nenhum
+                // snapshot chega pra redesenhar — a tela mentiria o status.
+                if (!parentKey || !propId) {
+                    if (sel && anterior) sel.value = anterior;
+                    AppUI.showError("Esta proposta está sem identificador — avise o gestor antes de mexer nela.", "Proposta sem ID");
+                    return;
+                }
                 if (!AppCore._PROP_STATUS[novo]) return;
                 const propRef = database.ref(`madrid_data/proposals/${parentKey}/${propId}`);
                 propRef.update({
@@ -6125,8 +6147,14 @@
             contatoToggle: (propId, open) => {
                 if (open) AppCore._contatosAbertos.add(String(propId)); else AppCore._contatosAbertos.delete(String(propId));
             },
-            deleteProposal: (encodedEmail, propId) => {
-                if(confirm("Tem certeza que deseja excluir esta proposta definitivamente?")) {
+            deleteProposal: (encodedEmail, propId, cliente, unidade) => {
+                // V397: proposta antiga sem id fazia o caminho terminar em
+                // ".../<email>/" — o .remove() apagava a PASTA INTEIRA do
+                // corretor, todas as propostas de uma vez, e as rules deixam
+                // (o dono pode escrever no próprio nó). Caminho vazio = recusa.
+                if (!encodedEmail || !propId) { AppUI.showError("Esta proposta está sem identificador e não pode ser excluída com segurança. Avise o gestor.", "Proposta sem ID"); return; }
+                const quem = [cliente, unidade ? 'Apto ' + unidade : ''].filter(Boolean).join(' — ');
+                if(confirm(`Excluir definitivamente a proposta${quem ? ' de ' + quem : ''}?`)) {
                     database.ref(`madrid_data/proposals/${encodedEmail}/${propId}`).remove()
                     .then(() => AppUI.showToast("Proposta excluída com sucesso!", "success")).catch(e => AppUI.showError("Acesso Negado.", "Erro"));
                 }
@@ -6580,7 +6608,7 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border:1px solid var(--border-color); border-radius:8px; background:var(--bg-input);">
                         <div style="display:flex; align-items:center; gap:10px;"><input type="checkbox" class="lote-chk" ${AppCore._loteSel.has(String(u)) ? 'checked' : ''} onchange="AppCore.loteToggle('${jsU}', this.checked)" style="width:16px; height:16px; cursor:pointer; flex-shrink:0;"><strong style="font-size:14px; color:var(--text-main);">Apto ${safeU}</strong> <span style="font-size:10px; margin-left:4px; color:${color}; font-weight:800;">${stLabel.toUpperCase()}</span></div>
                         <div>
-                            <select onchange="AppCore.changeUnitStatus('${jsU}', this.value, { esperado: '${st}' })" class="control-input" style="height:32px; padding:0 10px; font-size:11px; width:120px; border: 1px solid ${color};">
+                            <select onchange="AppCore.painelChangeStatus('${jsU}', this, '${st}')" class="control-input" style="height:32px; padding:0 10px; font-size:11px; width:120px; border: 1px solid ${color};">
                                 <option value="livre" ${st==='livre'?'selected':''}>Disponível</option>
                                 <option value="reservado" ${st==='reservado'?'selected':''}>Reservado</option>
                                 <option value="vendido" ${st==='vendido'?'selected':''}>Vendido</option>
@@ -6604,6 +6632,23 @@
             // V373-fix (revisão): retorna Promise<{apt, ok}> pro lote agregar o
             // resultado, e opts.esperado aborta a transação quando o status no
             // servidor já não é o que o gestor via na tela (corrida entre dispositivos).
+            // V397: o select do Painel de Vendas gravava direto no onchange — era
+            // o ÚNICO caminho de mudança de status sem confirmação (o modal e o
+            // lote perguntam). E mudar pra Disponível apaga a reserva junto, sem
+            // avisar. Cancelou? O select volta ao valor que estava, senão a tela
+            // mostraria um status que nunca foi gravado.
+            painelChangeStatus: (apt, sel, esperado) => {
+                const novo = sel.value;
+                if (novo === esperado) return;
+                const labels = { livre: 'DISPONÍVEL', reservado: 'RESERVADA', vendido: 'VENDIDA' };
+                let msg = `Marcar a unidade ${apt} como ${labels[novo] || novo}?`;
+                if (novo !== 'reservado' && esperado === 'reservado') {
+                    const r = (state.reservas || {})[String(apt)];
+                    msg += `\n\nAtenção: a reserva${r && r.cliente ? ' de ' + r.cliente : ''} desta unidade será apagada.`;
+                }
+                if (!confirm(msg)) { sel.value = esperado; return; }
+                AppCore.changeUnitStatus(apt, novo, { esperado });
+            },
             changeUnitStatus: (apt, newStatus, opts = {}) => new Promise((resolve) => {
                 // Captura o status anterior ANTES da transação para registrar corretamente no audit_log.
                 let previousStatus = null;
@@ -8373,7 +8418,15 @@
                 const list = document.getElementById('notifList');
                 if (!badge || !list) return;
                 const avisos = [];
-                // 1) Visitas (comportamento original, pra todos)
+                // V397: o sino ordenava por criadoEm (quando a visita foi MARCADA)
+                // e nunca olhava s.data (quando ela ACONTECE). Uma visita agendada
+                // há 3 semanas pra hoje às 15h ficava no fim da lista, atrás de
+                // visitas de meses atrás que já aconteceram. Como o push por celular
+                // está desligado (sem VAPID key), o sino é o ÚNICO aviso que existe.
+                const hojeISO = AppAgenda._isoToday();
+                const visitasHoje = [];
+                // 1) Visitas (pra todos) — as de HOJE viram bloco fixo no topo;
+                //    as já passadas saem da lista (só entulhavam os 30 lugares).
                 Object.entries(AppAgenda._slots)
                     .filter(([id, s]) => AppAgenda._isNotifiable(s))
                     .forEach(([id, s]) => {
@@ -8381,6 +8434,16 @@
                         const quem = AppUtils.escapeHTML(priv.cliente || 'Cliente');
                         const uni = s.unidade ? ` · Apto ${AppUtils.escapeHTML(s.unidade)}` : '';
                         const corr = state.isAdmin ? ` — ${AppUtils.escapeHTML(s.corretorNome || s.corretor || '')}` : '';
+                        if (s.data === hojeISO) {
+                            visitasHoje.push({
+                                persist: true, unread: false, ts: 0, icone: 'fa-bell', hoje: true,
+                                hora: String(s.hora || ''),
+                                titulo: `HOJE ${AppUtils.escapeHTML(s.hora || '')} — ${quem}${uni}${corr}`,
+                                click: `AppAgenda._goToVisit('${AppUtils.escapeJSAttr(s.data)}')`
+                            });
+                            return;
+                        }
+                        if (s.data && s.data < hojeISO) return;   // já aconteceu
                         avisos.push({
                             ts: Number(s.criadoEm) || 0,
                             unread: s.criadoPor !== state.user && (Number(s.criadoEm) || 0) > AppAgenda._seenTs,
@@ -8389,6 +8452,7 @@
                             click: `AppAgenda._goToVisit('${AppUtils.escapeJSAttr(s.data)}')`
                         });
                     });
+                visitasHoje.sort((a, b) => a.hora.localeCompare(b.hora));
                 // 2) Propostas novas da equipe (só gestor; as do próprio usuário não avisam)
                 if (state.isAdmin) {
                     (state.allProposals || []).forEach(p => {
@@ -8424,12 +8488,24 @@
                     });
                 }
                 const unread = recentes.filter(a => a.unread).length;
-                const badgeN = unread + persistentes.length;
+                // V397: visita de HOJE conta no badge e não morre no "marcar lido"
+                // — amanhã ela sai sozinha. É o aviso que paga o sino.
+                const badgeN = unread + persistentes.length + visitasHoje.length;
                 if (badgeN > 0) { badge.style.display = 'flex'; badge.textContent = badgeN > 9 ? '9+' : String(badgeN); }
                 else { badge.style.display = 'none'; }
-                const todos = [...persistentes, ...recentes];
+                const todos = [...visitasHoje, ...persistentes, ...recentes];
                 if (!todos.length) { list.innerHTML = '<div class="notif-empty">Sem avisos por enquanto.</div>'; return; }
-                list.innerHTML = todos.map(a => `<div class="notif-item${a.unread ? ' unread' : ''}" onclick="${a.click}"><i class="fas ${a.icone}"${a.persist ? ' style="color:#ef4444;"' : ''}></i><div><div class="ni-txt"${a.persist ? ' style="color:#ef4444;"' : ''}>${a.titulo}</div>${a.ts ? `<div class="ni-time">${AppAgenda._relTime(a.ts)}</div>` : ''}</div></div>`).join('');
+                list.innerHTML = todos.map(a => {
+                    // V397-fix (revisão): --brand-gold puro media 2,44:1 como TEXTO
+                    // no tema claro (o tema das 6h às 18h — o expediente). O token
+                    // --brand-gold-text existe desde a V340 exatamente pra isso; o
+                    // ícone pode seguir decorativo em dourado puro.
+                    const corTxt = a.hoje ? 'var(--brand-gold-text)' : (a.persist ? '#ef4444' : '');
+                    const corIco = a.hoje ? 'var(--brand-gold)' : (a.persist ? '#ef4444' : '');
+                    const stTxt = corTxt ? ` style="color:${corTxt};${a.hoje ? ' font-weight:800;' : ''}"` : '';
+                    const stIco = corIco ? ` style="color:${corIco};"` : '';
+                    return `<div class="notif-item${a.unread ? ' unread' : ''}" onclick="${a.click}"><i class="fas ${a.icone}"${stIco}></i><div><div class="ni-txt"${stTxt}>${a.titulo}</div>${a.ts ? `<div class="ni-time">${AppAgenda._relTime(a.ts)}</div>` : ''}</div></div>`;
+                }).join('');
             },
 
             // V372: item de reserva vencida leva pro MAPA (onde se libera/vende).
@@ -8490,6 +8566,17 @@
             }
         };
         window.AppAgenda = AppAgenda;
+
+        // V397: o rascunho da proposta (nome, CPF, plano, permutas...) vive só
+        // em sessionStorage — fechar a aba sem querer apagava tudo, calado.
+        // Com um cliente digitado no simulador, o navegador agora pergunta antes.
+        window.addEventListener('beforeunload', (e) => {
+            // Logout intencional já limpou o sessionStorage — não há rascunho a
+            // proteger, e o diálogo depois de clicar "Sair" só confundiria.
+            if (window.__madridSaindo) return;
+            const nome = document.getElementById('inpClientName');
+            if (nome && nome.value.trim()) { e.preventDefault(); e.returnValue = ''; }
+        });
 
         // ════════════════════════════════════════════════════════════
         //  ══ AppPush ══  — Push de visitas (FCM) com o app fechado (V362, Camada 2)

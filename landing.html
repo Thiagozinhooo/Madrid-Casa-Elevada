@@ -4,6 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 
+    <!-- ==========================================================
+         CSP (V397) — o GitHub Pages não manda NENHUM cabeçalho de
+         proteção (conferido no ar: só Server/Cache), então a única
+         defesa possível é aqui dentro do HTML. A lista cobre o que a
+         página realmente usa HOJE + os serviços já preparados
+         (GA4, Pixel, App Check) para não quebrarem ao ganhar chave.
+         frame-ancestors NÃO funciona em <meta> — o anti-iframe é o
+         script logo abaixo.
+         ========================================================== -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://www.googletagmanager.com https://connect.facebook.net;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+        font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+        img-src 'self' data: https://www.facebook.com https://*.google-analytics.com;
+        connect-src 'self' https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://*.google-analytics.com https://*.analytics.google.com https://www.facebook.com;
+        frame-src https://www.google.com;
+        form-action 'self';
+        base-uri 'self';
+        object-src 'none';
+    ">
+    <script>
+        // Anti-clickjacking (V397): frame-ancestors é ignorado em <meta> e o
+        // GitHub Pages não deixa mandar X-Frame-Options. Se a página acordar
+        // dentro do site de outra pessoa, pula pra fora; se o iframe for
+        // sandboxed e impedir o pulo, se esconde.
+        if (window.top !== window.self) {
+            try { window.top.location.replace(window.location.href); }
+            catch (e) { document.documentElement.style.display = 'none'; }
+        }
+    </script>
+
     <!-- =========================================================================
          LANDING PÚBLICA — Madrid Casa Elevada
          Página pública do empreendimento. NÃO exige login. Lê apenas:
@@ -389,6 +421,15 @@
         .lazer-section h2, .lazer-section .diff-card h4 { color: white; }
         .lazer-section .section-eyebrow { color: var(--brand-gold); }
         .lazer-section p { color: rgba(255,255,255,0.78); }
+        /* V397: os 5 passos de "Como funciona a compra" eram os únicos quadros da
+           página com contorno e sem resposta ao mouse — pareciam de outro site,
+           justamente na seção que precisa passar segurança a quem nunca comprou
+           na planta. Mesma superfície (sombra, raio, elevação) dos demais cartões. */
+        .passo-card {
+            background: #fff; border-radius: var(--radius); padding: 26px 22px;
+            box-shadow: var(--shadow-sm); transition: all 0.4s var(--ease);
+        }
+        .passo-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
         .quem-nota {
             max-width: 680px; margin: 40px auto 0; text-align: center;
             font-size: 15px; line-height: 1.75; color: var(--text-secondary);
@@ -507,7 +548,11 @@
             padding: 16px 0; border-radius: 8px; text-align: center;
             border: 1px solid var(--border-soft); background: #fff;
             font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 18px;
-            color: var(--text-muted); transition: all 0.25s;
+            /* V397: --text-muted (#A3ACA5) media 2,33:1 sobre branco — as células
+               apagadas do esquema sumiam justo pra quem ele existe (45+, celular
+               ao sol). --text-secondary mede 4,90:1 e segue "apagado" perto das
+               células acesas. */
+            color: var(--text-secondary); transition: all 0.25s;
         }
         .final-cell.final-on { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
         .planta-content {
@@ -695,7 +740,9 @@
             position: absolute; left: -9999px; visibility: hidden;
         }
         .form-msg {
-            padding: 14px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 14px;
+            /* V397-fix (revisão): a mensagem mudou pra DEPOIS do botão, então o
+               respiro tem que ficar em cima (colava no botão com margin só embaixo). */
+            padding: 14px 16px; border-radius: 8px; font-size: 13px; margin: 14px 0 0;
             display: none;
         }
         .form-msg.success { background: rgba(16,185,129,0.1); color: #047857; border: 1px solid rgba(16,185,129,0.3); }
@@ -825,6 +872,15 @@
             .reveal, .hero-content, .hero-stats { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
             .wa-float { animation: none !important; }
             .wa-float::before { display: none; }
+            /* V397: faltavam os dois movimentos mais incômodos — o ponto verde
+               pulsando pra sempre (animação não é herdada, matar o pai não mata
+               o filho) e a página deslizando sozinha a cada clique no menu. */
+            .live-dot { animation: none !important; }
+            html { scroll-behavior: auto !important; }
+            /* E os cartões que deslizam sob o mouse — a sombra continua mudando
+               (feedback sem movimento). */
+            .passo-card, .diff-card { transition: none !important; }
+            .passo-card:hover, .diff-card:hover { transform: none !important; }
         }
     </style>
 </head>
@@ -870,7 +926,7 @@
             <p class="lead">14 andares de acabamento de alto padrão no Jardim Sol Nascente, em Luís Eduardo Magalhães. Apartamentos de 1 e 3 suítes com vagas duplas e escaninho privativo. Entrega Julho/2027.</p>
             <div class="cta-row">
                 <a href="#contato" class="btn btn-primary"><i class="fas fa-envelope-open-text"></i> Quero uma proposta</a>
-                <a id="waHeroBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                <a id="waHeroBtn" href="https://wa.me/5577981346775" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fab fa-whatsapp"></i> WhatsApp</a>
             </div>
         </div>
         <div class="hero-stats">
@@ -1002,7 +1058,7 @@
                 <!-- preenchido por JS -->
             </div>
             <div style="text-align:center; margin-top:36px;" class="reveal">
-                <a id="waGaleriaBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fab fa-whatsapp"></i> Receber mais imagens no WhatsApp</a>
+                <a id="waGaleriaBtn" href="https://wa.me/5577981346775" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fab fa-whatsapp"></i> Receber mais imagens no WhatsApp</a>
             </div>
         </div>
     </section>
@@ -1155,7 +1211,7 @@
                 <!-- preenchido pelo JS após ler madrid_data/cronograma -->
             </div>
             <div style="text-align:center; margin-top:36px;" class="reveal">
-                <a id="waObraBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fab fa-whatsapp"></i> Acompanhar a obra de perto</a>
+                <a id="waObraBtn" href="https://wa.me/5577981346775" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fab fa-whatsapp"></i> Acompanhar a obra de perto</a>
             </div>
         </div>
     </section>
@@ -1172,27 +1228,27 @@
                 <p>Do primeiro contato à entrega das chaves — sem mistério.</p>
             </div>
             <div class="reveal" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:18px;">
-                <div style="background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); padding:24px 20px;">
+                <div class="passo-card">
                     <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">1</div>
                     <h4 style="margin:10px 0 8px; font-size:15px;">A conversa</h4>
                     <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">Chame no WhatsApp ou envie o formulário. Um consultor te atende e entende o que você procura.</p>
                 </div>
-                <div style="background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); padding:24px 20px;">
+                <div class="passo-card">
                     <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">2</div>
                     <h4 style="margin:10px 0 8px; font-size:15px;">Proposta sob medida</h4>
                     <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">O consultor monta o plano com você: entrada (sinal), parcelas mensais, reforços periódicos (balões) e até permuta — usar um bem seu como parte do pagamento.</p>
                 </div>
-                <div style="background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); padding:24px 20px;">
+                <div class="passo-card">
                     <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">3</div>
                     <h4 style="margin:10px 0 8px; font-size:15px;">Contrato</h4>
                     <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">Fechou? Assinatura do contrato e documentação, com o consultor acompanhando cada etapa.</p>
                 </div>
-                <div style="background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); padding:24px 20px;">
+                <div class="passo-card">
                     <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">4</div>
                     <h4 style="margin:10px 0 8px; font-size:15px;">Obra à vista</h4>
                     <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">Você acompanha o avanço da obra em tempo real aqui no site, enquanto paga conforme o plano combinado.</p>
                 </div>
-                <div style="background:#fff; border:1px solid var(--border-soft); border-radius:var(--radius); padding:24px 20px;">
+                <div class="passo-card">
                     <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">5</div>
                     <h4 style="margin:10px 0 8px; font-size:15px;">Chaves em Julho/2027</h4>
                     <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">Vistoria e entrega das chaves. Até lá, a tabela é corrigida todo mês pelo INCC (o índice do custo da construção) — por isso, quanto antes, melhor.</p>
@@ -1244,11 +1300,6 @@
                     <h3>Receber proposta</h3>
                     <p class="lead-sub">Compartilhe seus dados — sem spam, prometemos.</p>
 
-                    <div class="form-msg success" id="formSuccess"><i class="fas fa-check-circle"></i> Recebemos seus dados! Um consultor entra em contato em breve.
-                        <a id="formWhatsBtn" href="#" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; padding:12px 22px; border-radius:100px; background:#25D366; color:#fff; font-weight:800; font-size:13px; text-decoration:none; width:100%;"><i class="fab fa-whatsapp"></i> Falar agora no WhatsApp</a>
-                    </div>
-                    <div class="form-msg error" id="formError"><i class="fas fa-exclamation-triangle"></i> <span id="formErrorText">Algo deu errado. Tente novamente ou nos chame no WhatsApp.</span></div>
-
                     <div class="form-group">
                         <label for="lNome">Nome completo *</label>
                         <input type="text" id="lNome" maxlength="80" required autocomplete="name">
@@ -1283,6 +1334,15 @@
                     <button type="submit" class="btn btn-primary" id="btnSubmitLead">
                         <i class="fas fa-paper-plane"></i> Enviar para um consultor
                     </button>
+
+                    <!-- V397: as mensagens nasciam no TOPO do formulário, cinco campos
+                         acima do botão — no celular, quem tocava em Enviar não via
+                         resposta nenhuma. Agora nascem ao lado do dedo, e o erro fica
+                         na tela até ser corrigido (sumia sozinho em 7s, invisível). -->
+                    <div class="form-msg success" id="formSuccess" role="status"><i class="fas fa-check-circle"></i> Recebemos seus dados! Um consultor entra em contato em breve.
+                        <a id="formWhatsBtn" href="https://wa.me/5577981346775" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; justify-content:center; gap:8px; margin-top:12px; padding:12px 22px; border-radius:100px; background:#25D366; color:#fff; font-weight:800; font-size:13px; text-decoration:none; width:100%;"><i class="fab fa-whatsapp"></i> Falar agora no WhatsApp</a>
+                    </div>
+                    <div class="form-msg error" id="formError" role="alert"><i class="fas fa-exclamation-triangle"></i> <span id="formErrorText">Algo deu errado. Tente novamente ou nos chame no WhatsApp.</span></div>
                     <!-- V395 (auditoria): a página citava uma política que não existia
                          em lugar nenhum — com a LGPD, é promessa sem lastro. Agora o
                          texto aponta para privacidade.html. -->
@@ -1318,7 +1378,11 @@
             <div>
                 <h5>Contato</h5>
                 <ul>
-                    <li><a id="waFootBtn" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                    <li><a id="waFootBtn" href="https://wa.me/5577981346775" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+                    <!-- V397: o número POR EXTENSO — quem quer ligar, salvar na
+                         agenda ou repassar pro cônjuge não tinha de onde copiar.
+                         O texto é preenchido pelo JS a partir da constante única. -->
+                    <li><a id="footFone" href="tel:+5577981346775"><i class="fas fa-phone"></i> <span id="footFoneNum">(77) 9 8134-6775</span></a></li>
                     <li><i class="fas fa-map-marker-alt"></i> Jardim Sol Nascente — Luís Eduardo Magalhães, BA</li>
                     <li><i class="fas fa-calendar-alt"></i> Entrega: Julho/2027</li>
                 </ul>
@@ -1329,7 +1393,9 @@
             </div>
         </div>
         <div class="copyright">
-            © <span id="copyYear"></span> Torre Madrid SPE Ltda. Todos os direitos reservados. As imagens são meramente ilustrativas e podem sofrer alterações sem aviso prévio. Lançamento autorizado pelo CRECI/BA. <br>
+            <!-- V397: 176 caracteres numa linha só atravessando a tela — o olho
+                 perde a linha na volta. Medida de leitura, centrada. -->
+            <p style="max-width: 68ch; margin: 0 auto 6px; color: inherit; font-size: inherit;">© <span id="copyYear"></span> Torre Madrid SPE Ltda. Todos os direitos reservados. As imagens são meramente ilustrativas e podem sofrer alterações sem aviso prévio. Lançamento autorizado pelo CRECI/BA.</p>
             <!-- V395-fix (revisão): a política precisa ser alcançável de qualquer
                  ponto da página, não só pela letra miúda dentro do formulário. -->
             <a href="privacidade.html">Política de privacidade</a> &nbsp;·&nbsp;
@@ -1339,10 +1405,10 @@
 
     <!-- ===================== WHATSAPP FLUTUANTE ===================== -->
     <div class="mobile-cta-bar" id="mobileCtaBar">
-        <a id="waMobileBar" href="#" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Falar com um especialista</a>
+        <a id="waMobileBar" href="https://wa.me/5577981346775" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Falar com um especialista</a>
     </div>
 
-    <a id="waFloat" class="wa-float" href="#" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+    <a id="waFloat" class="wa-float" href="https://wa.me/5577981346775" target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 
@@ -1377,6 +1443,31 @@
         const WHATSAPP_NUM = '5577981346775';          // sem o +, sem espaços
         const WHATSAPP_MSG = 'Olá! Vi o site do Madrid Casa Elevada e quero saber mais sobre as unidades disponíveis.';
 
+        // V397: captura a campanha do link do anúncio (utm_source/medium/campaign)
+        // logo na chegada — a pessoa navega, o parâmetro some da barra, mas a
+        // origem fica guardada pra ir junto com o lead. Só letras/números/traço,
+        // curto, sem nada pessoal.
+        const UTM_ORIGEM = (() => {
+            try {
+                const p = new URLSearchParams(location.search);
+                const limpo = (k) => (p.get(k) || '').replace(/[^\w\- ]/g, '').slice(0, 40);
+                const partes = ['utm_source', 'utm_medium', 'utm_campaign'].map(limpo).filter(Boolean);
+                if (partes.length) { sessionStorage.setItem('madrid_utm', partes.join(' / ')); }
+                return sessionStorage.getItem('madrid_utm') || '';
+            } catch (e) { return ''; }
+        })();
+
+        // V397: o número por extenso no rodapé nasce da MESMA constante dos botões
+        // — trocar o número em um lugar troca na tela também.
+        (function () {
+            const link = document.getElementById('footFone');
+            const num = document.getElementById('footFoneNum');
+            if (!link || !num || !/^55\d{11}$/.test(WHATSAPP_NUM)) return;
+            const ddd = WHATSAPP_NUM.slice(2, 4), n = WHATSAPP_NUM.slice(4);
+            num.textContent = `(${ddd}) ${n.slice(0, 1)} ${n.slice(1, 5)}-${n.slice(5)}`;
+            link.href = 'tel:+' + WHATSAPP_NUM;
+        })();
+
         // Firebase (mesma config do index.html — leitura pública dos nós permitidos)
         const firebaseConfig = {
             apiKey: "AIzaSyAMoE5JkohMp632zSUSublIuSx_JL1rxv4",
@@ -1409,6 +1500,9 @@
             const v = document.getElementById('heroVideo');
             if (!v) return;
             const carregar = () => {
+                // V397: quem pediu ao aparelho "reduzir animações" (labirintite,
+                // enxaqueca) não recebe uma fachada em loop infinito — fica a foto.
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
                 const con = navigator.connection || {};
                 const lenta = /2g/.test(con.effectiveType || '') || con.saveData === true;
                 if (lenta || window.innerWidth < 768) return;   // fica só a foto
@@ -1709,13 +1803,26 @@
         desenharEtapas(defaultCronograma.etapas, true);
 
         if (!db) cronogramaIndisponivel();
-        if (db) db.ref('madrid_data/cronograma').on('value', snap => {
-            const data = snap.val();
-            if (data) renderCronograma(data);
-            else cronogramaIndisponivel();
-        }, err => {
-            cronogramaIndisponivel();
-        });
+        // V397: .once, não .on — o cronograma muda poucas vezes por MÊS, e cada
+        // .on segura um canal permanente no teto de 100 conexões do plano Spark,
+        // que é o MESMO teto do app dos corretores. Um grupo de WhatsApp com o
+        // link da página não pode derrubar a tabela no stand. Sem listener vivo,
+        // o SDK solta a conexão sozinho logo depois da leitura.
+        function lerCronograma() {
+            db.ref('madrid_data/cronograma').once('value').then(snap => {
+                const data = snap.val();
+                if (data) renderCronograma(data);
+                else cronogramaIndisponivel();
+            }).catch(() => cronogramaIndisponivel());
+        }
+        if (db) {
+            lerCronograma();
+            // Aba que volta do bolso relê uma vez — cobre o celular que ficou
+            // horas em segundo plano e voltou com o esqueleto de erro na tela.
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') lerCronograma();
+            });
+        }
 
         // --------- FORMULÁRIO DE LEAD ----------
         function showFormMsg(kind, text) {
@@ -1723,9 +1830,12 @@
             const el = document.getElementById('form' + (kind === 'success' ? 'Success' : 'Error'));
             if (text && kind === 'error') document.getElementById('formErrorText').textContent = text;
             el.classList.add('visible');
-            // Sucesso fica na tela: tem o botão "Falar agora no WhatsApp" pro lead
-            // quente — sumir em 7s mataria o clique. Só erro se auto-esconde.
-            if (kind === 'error') setTimeout(() => el.classList.remove('visible'), 7000);
+            // V397: mensagem entra na tela DE VERDADE — no celular ela podia nascer
+            // fora do enquadramento. E erro não se auto-esconde mais: quem rolava
+            // pra procurar já não encontrava nada (o contato nem tinha sido salvo).
+            // O erro sai quando a pessoa corrige e reenvia (o clear no topo desta função).
+            const suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            try { el.scrollIntoView({ behavior: suave ? 'smooth' : 'auto', block: 'center' }); } catch (e) {}
         }
         async function submitLead(e) {
             e.preventDefault();
@@ -1759,6 +1869,10 @@
                     ua: (navigator.userAgent || '').slice(0, 200),
                     referrer: (document.referrer || '').slice(0, 200)
                 };
+                // V397: de qual anúncio veio? O Instagram/WhatsApp não mandam
+                // referrer — a UTM do link é o único rastro. Sem ela, todo lead
+                // chegava igual e o gestor não sabia qual campanha pagou a conta.
+                if (UTM_ORIGEM) payload.utm = UTM_ORIGEM;
                 if (!db) throw new Error('sem conexão com o sistema');
                 await db.ref('madrid_data/leads_inbox').push(payload);
                 // Lead quente não espera "1 dia útil": o botão de WhatsApp já sai

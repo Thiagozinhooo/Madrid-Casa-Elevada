@@ -1,0 +1,30 @@
+# =====================================================================
+# _config.yml — Madrid Casa Elevada (V397)
+#
+# O GitHub Pages monta o site com Jekyll (confirmado no ar: /agents.html
+# existe porque ele converte os .md). Este arquivo usa isso a nosso favor:
+# tudo que está em "exclude" FICA NO REPOSITÓRIO mas SAI DO SITE — passa
+# a responder 404 em madridcasaelevada.com.
+#
+# Por que: a documentação interna estava publicada no endereço do site —
+# o checklist de segurança (com o que ainda não foi protegido), a conta
+# Google dona do banco, um preço em R$ no agents.md e as regras do banco.
+# Qualquer um baixava tudo isso sem abrir o GitHub.
+#
+# ATENÇÃO: NÃO excluir daqui: landing.html, index.html, privacidade.html,
+# book-madrid.pdf, fotos, fotos-mini/, robots.txt, sitemap.xml, CNAME,
+# firebase-messaging-sw.js (o push precisa dele NA RAIZ do site).
+# =====================================================================
+exclude:
+  - agents.md
+  - HISTORICO.md
+  - SECURITY-SETUP.md
+  - SECURITY.md
+  - PUSH_SETUP.md
+  - database.rules.json
+  - publicar-regras.cmd
+  - backup-madrid.cmd
+  - validar.js
+  - gerar-miniaturas.js
+  - firebase.json
+  - functions/

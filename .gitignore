@@ -36,3 +36,6 @@ _propostas/
 Thumbs.db
 .DS_Store
 node_modules/
+
+# Backups do banco tem CPF e valor de contrato - JAMAIS no repo publico
+madrid-backup-*.json

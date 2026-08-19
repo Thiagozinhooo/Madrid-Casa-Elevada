@@ -3,6 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- V397: mesma lógica da landing — GitHub Pages não manda cabeçalho de
+         proteção nenhum; CSP em <meta> e anti-iframe em script são o possível. -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        form-action 'self';
+        base-uri 'self';
+        object-src 'none';
+    ">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <script>
+        if (window.top !== window.self) {
+            try { window.top.location.replace(window.location.href); }
+            catch (e) { document.documentElement.style.display = 'none'; }
+        }
+    </script>
     <title>Política de Privacidade | Madrid Casa Elevada</title>
     <meta name="description" content="Como o Madrid Casa Elevada trata os dados enviados pelo formulário do site, conforme a LGPD.">
     <link rel="canonical" href="https://www.madridcasaelevada.com/privacidade.html">
