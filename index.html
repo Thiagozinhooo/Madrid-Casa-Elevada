@@ -100,16 +100,20 @@
             (function () {
                 try {
                     var q = new URLSearchParams(location.search);
-                    // Passe do corretor: link "Sou corretor" da landing (?app=1),
-                    // deep-link de notificação (#agenda) ou aparelho que já entrou
-                    // no app. A sessão do Firebase 9.22 vive no IndexedDB (leitura
-                    // assíncrona, impossível aqui), então o app deixa esta marca
-                    // própria no primeiro login.
+                    // Passe do corretor: SÓ o link "Sou corretor" da landing (?app=1)
+                    // ou um deep-link de notificação (#agenda). Todo o resto vai para
+                    // a landing, inclusive quem já entrou no app neste aparelho.
+                    //
+                    // Antes existia uma marca no navegador (madrid_equipe) que abria
+                    // o app direto. Foi removida por dois motivos: o gestor pediu que
+                    // o endereço do site sempre caia na landing, e essa marca era o
+                    // caminho pelo qual um estranho sentado no computador do plantão
+                    // caía dentro do sistema sem digitar nada.
                     if (q.has('app') || location.hash) return;
-                    var equipe = false;
-                    try { equipe = localStorage.getItem('madrid_equipe') === '1'; }
-                    catch (e) { return; /* storage bloqueado: não sequestra o acesso */ }
-                    if (!equipe) { window.__madridIndoLanding = true; location.replace('landing.html'); }
+                    // Limpa a marca antiga dos navegadores que já a receberam.
+                    try { localStorage.removeItem('madrid_equipe'); } catch (e) {}
+                    window.__madridIndoLanding = true;
+                    location.replace('landing.html');
                 } catch (e) { /* qualquer imprevisto: segue para o app */ }
             })();
         </script>
@@ -8634,7 +8638,10 @@
                             // endereço curto continuar abrindo o app pra quem trabalha
                             // aqui (a sessão do Firebase vive no IndexedDB e não pode
                             // ser consultada no desvio síncrono do <head>).
-                            try { localStorage.setItem('madrid_equipe', '1'); } catch (e) {}
+                            // A marca madrid_equipe foi removida: o endereço do site
+                            // sempre cai na landing, e o corretor entra pelo link
+                            // "Sou corretor". Gravá-la de novo faria o app voltar a
+                            // abrir sozinho neste aparelho.
                             AppAuth.initApp();
                         }
                         else { 
