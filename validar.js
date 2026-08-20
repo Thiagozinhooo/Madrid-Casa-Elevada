@@ -369,7 +369,7 @@ checar('só a âncora #agenda abre o app (o resto é âncora da landing)',
 checar('recarregamento de versão preserva o passe do corretor',
     /q\.set\('app', '1'\);/.test(idx));
 checar('aprovação de acesso dá papel de corretor (nunca gestor)',
-    /database\.ref\('madrid_data\/permissions\/' \+ enc\)\.set\(\{ email: email, role: 'corretor' \}\)/.test(idx));
+    /database\.ref\('madrid_data\/permissions\/' \+ enc\)\.set\(AppAuthManager\._entradaPermissao\(email, 'corretor'/.test(idx));
 checar('gestor não consegue se auto-rebaixar/remover',
     (idx.match(/Você não pode rebaixar a própria conta/g) || []).length === 2 &&
     /Você não pode remover a própria conta/.test(idx));
@@ -466,6 +466,49 @@ if (priv) {
 checar('cronograma da landing lê com .once (não segura conexão)',
     /madrid_data\/cronograma'\)\.once\('value'\)/.test(lnd) && !/madrid_data\/cronograma'\)\.on\(/.test(lnd),
     'voltou o .on(\'value\') — cada visitante vira uma conexão presa no teto de 100');
+
+// ─────────────────────────────────────────────────────────────
+// 8b. NOME NAS CONTAS (V398) — o nome tem que sobreviver ao caminho
+//     cadastro → aprovação → EQUIPE, e o set() não pode apagá-lo.
+// ─────────────────────────────────────────────────────────────
+// A rule do nome tem que estar pendurada em ".write" E exigir que a entrada
+// JÁ tenha papel — sem isso, escrever o nome MATERIALIZA a entrada e todas as
+// leituras do banco que liberam por .exists() (units, statusMap, reservas,
+// agenda, master_admins) abrem pra conta não aprovada. Achado g9 da V398.
+const rulesFlat = rulesRaw.replace(/\s+/g, ' ');
+checar('rules: dono escreve só o próprio nome — e só se JÁ tem papel',
+    /"nome": \{ "\.write": "auth != null && \$emailKey === auth\.token\.email/.test(rulesFlat) &&
+    /&& data\.parent\(\)\.child\('role'\)\.exists\(\)/.test(rulesFlat),
+    'sem o exists(role) no .write, conta não aprovada se auto-provisiona e lê o banco inteiro');
+checar('rules: validate do nome exige tamanho 2..80 E entrada com papel',
+    /newData\.isString\(\) && newData\.val\(\)\.length >= 2 && newData\.val\(\)\.length <= 80 && newData\.parent\(\)\.child\('role'\)\.exists\(\)/.test(rulesFlat),
+    'o validate é a segunda tranca contra o nó órfão só-com-nome');
+// Contagem POSITIVA: todo set de OBJETO em /permissions passa pelo helper.
+// (Os sets de valor único em …/nome' não entram na conta — regex exige ")" logo
+// antes do .set.) Lista negra de literal já falhou aberto uma vez.
+const setsPerm = (idx.match(/permissions\/(?:' \+ \w+\)|\$\{\w+\}`\))\.set\(/g) || []).length;
+const setsOk = (idx.match(/permissions\/(?:' \+ \w+\)|\$\{\w+\}`\))\.set\(AppAuthManager\._entradaPermissao\(/g) || []).length;
+checar('toda gravação de permissão passa por _entradaPermissao (preserva o nome)',
+    setsPerm === setsOk && setsPerm >= 4 && !/permissions\/[^\n)]{0,40}\)\.update\(/.test(idx),
+    `${setsOk}/${setsPerm} sets usam o helper — um set/update cru apaga o nome em silêncio`);
+checar('_entradaPermissao preserva o nome já gravado',
+    /else if \(antigo\) entrada\.nome = antigo;/.test(idx),
+    'o helper deixou de reaproveitar o nome existente — changeRole volta a apagar nome');
+checar('EQUIPE salva só o nome quando o e-mail não mudou (vale na própria linha)',
+    /permissions\/' \+ oldKey \+ '\/nome'\)\.set\(novoNome \|\| null\)/.test(idx),
+    'o caminho nome-só do updateEmail sumiu — gestor não corrige mais nome de conta existente');
+checar('fila de pedidos filtra por PAPEL, não por existência da entrada',
+    /state\.permissions\[enc\] && state\.permissions\[enc\]\.role\) return;/.test(idx),
+    'nó órfão só-com-nome esconderia o pedido de acesso da fila do gestor');
+checar('aprovação copia o nome do pedido', /_entradaPermissao\(email, 'corretor', sol && sol\.nome/.test(idx));
+checar('EQUIPE tem campo de nome por linha', /id="edit_nome_\$\{safeKey\}"/.test(idx));
+checar('formulário do gestor tem campo de nome', /id="newAuthNome"/.test(idx));
+checar('cadastro grava displayName no Firebase Auth', /updateProfile\(\{ displayName: nome \}\)/.test(idx));
+checar('crachá do topo mostra o nome (pintura única)',
+    /_pintaBadge/.test(idx) && /state\.userNome/.test(idx) &&
+    (idx.match(/badge\.innerHTML/g) || []).length === 1,
+    'a pintura do crachá voltou a ser inline sem nome (qualquer papel, qualquer ícone)');
+checar('botão "Mudar meu nome" existe', /AppAuth\.mudarMeuNome\(\)/.test(idx));
 
 // ─────────────────────────────────────────────────────────────
 // 9. AVISOS (não impedem publicar)

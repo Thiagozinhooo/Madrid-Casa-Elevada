@@ -14,7 +14,11 @@
         ".read":  "auth != null && (root.child('madrid_data/master_admins/' + auth.token.email.replace('.','_').replace('#','_').replace('$','_').replace('[','_').replace(']','_')).exists() || root.child('madrid_data/permissions/' + auth.token.email.replace('.','_').replace('#','_').replace('$','_').replace('[','_').replace(']','_') + '/role').val() === 'gestor')",
         ".write": "auth != null && (root.child('madrid_data/master_admins/' + auth.token.email.replace('.','_').replace('#','_').replace('$','_').replace('[','_').replace(']','_')).exists() || root.child('madrid_data/permissions/' + auth.token.email.replace('.','_').replace('#','_').replace('$','_').replace('[','_').replace(']','_') + '/role').val() === 'gestor')",
         "$emailKey": {
-          ".read": "auth != null && $emailKey === auth.token.email.replace('.','_').replace('#','_').replace('$','_').replace('[','_').replace(']','_')"
+          ".read": "auth != null && $emailKey === auth.token.email.replace('.','_').replace('#','_').replace('$','_').replace('[','_').replace(']','_')",
+          "nome": {
+            ".write": "auth != null && $emailKey === auth.token.email.replace('.','_').replace('#','_').replace('$','_').replace('[','_').replace(']','_') && data.parent().child('role').exists()",
+            ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 80 && newData.parent().child('role').exists()"
+          }
         }
       },
 

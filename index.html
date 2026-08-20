@@ -34,7 +34,7 @@
         <meta name="referrer" content="strict-origin-when-cross-origin">
 
         <!-- Cache gerido pelo parâmetro ?v=353 no URL -->
-        <title>Madrid Casa Elevada | Premium V397</title>
+        <title>Madrid Casa Elevada | Premium V398</title>
 
         <!-- Hint para indexadores: o app interno NÃO deve ser indexado.
              A landing pública (landing.html) é quem fica nas buscas. -->
@@ -1064,7 +1064,7 @@
             catch (e) { document.documentElement.innerHTML = ''; /* bloqueia tela */ }
         }
 
-        const CURRENT_APP_VERSION = "397";
+        const CURRENT_APP_VERSION = "398";
         const urlParams = new URLSearchParams(window.location.search);
 
         // O desvio do visitante para a landing acontece lá no <head>, antes dos
@@ -1359,6 +1359,7 @@
             <img id="logoHeader" src="MADRID LOGO MUSGO-01-01.png" alt="Madrid" class="header-logo">
             <div class="user-controls">
                 <span id="userBadge" class="user-badge" title="Usuário Logado">...</span>
+                <button onclick="AppAuth.mudarMeuNome()" class="btn-icon" title="Mudar meu nome"><i class="fas fa-user-edit"></i></button>
                 <div class="notif-wrap">
                     <button onclick="AppAgenda.toggleBell()" class="btn-icon" title="Avisos: visitas, propostas e reservas" style="position:relative;">
                         <i class="fas fa-bell"></i>
@@ -2016,6 +2017,7 @@
                 <div id="accessRequests"></div>
 
                 <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap: wrap;">
+                    <input type="text" id="newAuthNome" class="control-input" placeholder="Nome da pessoa" maxlength="80" style="flex: 1; min-width: 160px;">
                     <input type="email" id="newAuthEmail" class="control-input" placeholder="Adicionar e-mail manualmente" style="flex: 1; min-width: 200px;">
                     <select id="newAuthRole" class="control-input" style="width:150px; flex-shrink: 0;">
                         <option value="corretor">Corretor</option>
@@ -2197,7 +2199,7 @@
         </div>
 
     <script>
-        console.log("LOG: Versão Premium V397");
+        console.log("LOG: Versão Premium V398");
 
         // V371: dicas de toque — clique num ".help-tip" abre o balão com o texto
         // do data-tip; clique em qualquer outro lugar fecha. (title= só existe
@@ -3080,8 +3082,20 @@
             // Mesma validação simples de e-mail usada no resto do código.
             _isValidEmail: (e) => typeof e === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e),
 
+            // V398: monta a entrada de /permissions preservando o nome que já
+            // existe quando quem chama não informou um novo — set() substitui o
+            // nó inteiro, e um changeRole sem isso APAGARIA o nome em silêncio.
+            _entradaPermissao: (email, role, nomeNovo, chaveExistente) => {
+                const entrada = { email: email, role: role };
+                const nome = String(nomeNovo || '').trim().slice(0, 80);
+                const antigo = (chaveExistente && state.permissions && state.permissions[chaveExistente] && state.permissions[chaveExistente].nome) || '';
+                if (nome.length >= 2) entrada.nome = nome;
+                else if (antigo) entrada.nome = antigo;
+                return entrada;
+            },
             addUser: () => {
                 if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                const nomeNovo = document.getElementById('newAuthNome').value;
                 const email = document.getElementById('newAuthEmail').value.trim().toLowerCase();
                 const role = document.getElementById('newAuthRole').value;
 
@@ -3103,9 +3117,10 @@
                 if (state.permissions && state.permissions[encoded] && state.permissions[encoded].role !== role) {
                     if (!confirm(`${email} já está cadastrado como ${state.permissions[encoded].role}. Trocar para ${role}?`)) return;
                 }
-                database.ref('madrid_data/permissions/' + encoded).set({ email: email, role: role }).then(() => {
+                database.ref('madrid_data/permissions/' + encoded).set(AppAuthManager._entradaPermissao(email, role, nomeNovo, encoded)).then(() => {
                     AppUI.showToast("Usuário adicionado/atualizado com sucesso!", "success");
                     document.getElementById('newAuthEmail').value = '';
+                    document.getElementById('newAuthNome').value = '';
                 }).catch(err => AppUI.showError("Erro ao gravar: " + err.message));
             },
             removeUser: (encoded) => {
@@ -3150,7 +3165,7 @@
                     AppAuthManager.renderTable();
                     return;
                 }
-                database.ref('madrid_data/permissions/' + encoded).set({ email: email, role: newRole }).then(() => {
+                database.ref('madrid_data/permissions/' + encoded).set(AppAuthManager._entradaPermissao(email, newRole, '', encoded)).then(() => {
                     AppUI.showToast("Permissão atualizada com sucesso!", "success");
                 }).catch(err => AppUI.showError("Erro ao gravar: " + err.message));
             },
@@ -3158,12 +3173,26 @@
                 if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
                 const inputEl = document.getElementById('edit_email_' + oldKey);
                 const newEmail = inputEl.value.trim().toLowerCase();
+                const nomeEl = document.getElementById('edit_nome_' + oldKey);
+                const novoNome = nomeEl ? nomeEl.value.trim().slice(0, 80) : '';
 
                 if(!AppAuthManager._isValidEmail(newEmail)) { AppUI.showError("Digite um e-mail válido para guardar."); return; }
                 if(!AppAuthManager.VALID_ROLES.includes(currentRole)) { AppUI.showError("Role inválida.", "Erro"); return; }
+                if (novoNome && novoNome.length < 2) { AppUI.showError("Nome muito curto (mínimo 2 letras) — ou deixe vazio para remover.", "Erro"); return; }
 
                 const newKey = newEmail.replace(/[.#$[\]]/g, '_');
-                if (oldKey === newKey) { AppUI.showToast("Nenhuma alteração de texto detetada.", "success"); return; }
+                // V398: e-mail igual = só o NOME mudou. Esse caminho vale inclusive
+                // pra própria linha (mexer no nome não mexe na entrada que autoriza
+                // o login — o bloqueio logo abaixo é só pra troca de e-mail).
+                if (oldKey === newKey) {
+                    const nomeAntes = (state.permissions && state.permissions[oldKey] && state.permissions[oldKey].nome) || '';
+                    if (novoNome === nomeAntes) { AppUI.showToast("Nenhuma alteração de texto detetada.", "success"); return; }
+                    database.ref('madrid_data/permissions/' + oldKey + '/nome').set(novoNome || null).then(() => {
+                        AppUI.showToast("Nome atualizado com sucesso!", "success");
+                        if (oldKey === state.user.replace(/[.#$[\]]/g, '_')) { state.userNome = novoNome; AppAuth._pintaBadge(); }
+                    }).catch(e => AppUI.showError("Erro ao atualizar o nome: " + e.message));
+                    return;
+                }
                 // V386-fix (revisão): editar o e-mail da PRÓPRIA linha remove a
                 // entrada que casa com o seu login — auto-lockout no próximo acesso.
                 if (oldKey === state.user.replace(/[.#$[\]]/g, '_')) {
@@ -3181,7 +3210,10 @@
                     return;
                 }
 
-                database.ref('madrid_data/permissions/' + newKey).set({ email: newEmail, role: currentRole }).then(() => {
+                // V398-fix (revisão): chaveExistente = null DE PROPÓSITO — o campo
+                // de nome vem preenchido na tela, então vazio aqui é intenção de
+                // apagar; repassar oldKey ressuscitaria o nome antigo na chave nova.
+                database.ref('madrid_data/permissions/' + newKey).set(AppAuthManager._entradaPermissao(newEmail, currentRole, novoNome, null)).then(() => {
                     database.ref('madrid_data/permissions/' + oldKey).remove().then(() => { AppUI.showToast("E-mail atualizado com sucesso!", "success"); });
                 }).catch(e => AppUI.showError("Erro ao atualizar o e-mail: " + e.message));
             },
@@ -3207,7 +3239,9 @@
                     const email = String(l.email).toLowerCase().trim();
                     if (!AppAuthManager._isValidEmail(email)) return;
                     const enc = email.replace(/[.#$[\]]/g, '_');
-                    if (state.permissions && state.permissions[enc]) return;
+                    // V398-fix (revisão): checa o ROLE, não a existência — um nó
+                    // órfão (só nome, sem papel) não pode esconder o pedido da fila.
+                    if (state.permissions && state.permissions[enc] && state.permissions[enc].role) return;
                     if (EMAILS_MASTER.includes(email)) return;
                     const ts = l.ts || 0;
                     if (recusados[enc] && recusados[enc] >= ts) return;
@@ -3345,9 +3379,12 @@
                 email = String(email).toLowerCase().trim();
                 if (!AppAuthManager._isValidEmail(email) || EMAILS_MASTER.includes(email)) { AppUI.showError("E-mail inválido.", "Erro"); return; }
                 const enc = email.replace(/[.#$[\]]/g, '_');
-                if (state.permissions && state.permissions[enc]) { AppUI.showToast('Este e-mail já está liberado.', 'success'); return; }
+                if (state.permissions && state.permissions[enc] && state.permissions[enc].role) { AppUI.showToast('Este e-mail já está liberado.', 'success'); return; }
                 if (!confirm(`Liberar o acesso de ${email} como CORRETOR?`)) return;
-                database.ref('madrid_data/permissions/' + enc).set({ email: email, role: 'corretor' }).then(() => {
+                // V398: o nome que a pessoa digitou no cadastro sobrevive à
+                // aprovação — antes morria no pedido e a EQUIPE só via e-mail.
+                const sol = AppAuthManager._solicitacoesPendentes().find(x => x.email === email);
+                database.ref('madrid_data/permissions/' + enc).set(AppAuthManager._entradaPermissao(email, 'corretor', sol && sol.nome, enc)).then(() => {
                     AppUI.showToast('Acesso liberado! A tela da pessoa destrava sozinha.', 'success');
                     AppAuthManager._auditAcesso('access_approved', email);
                     AppAuthManager._limpaSolicitacoes(email);
@@ -3421,17 +3458,22 @@
                 if(state.permissions && Object.keys(state.permissions).length > 0) {
                     Object.keys(state.permissions).forEach(k => {
                         let user = state.permissions[k];
-                        if (EMAILS_MASTER.includes(user.email)) return; 
+                        // V398: entrada sem e-mail (ex.: nó órfão só com nome) não
+                        // vira linha fantasma sem botões funcionais.
+                        if (!user || !user.email) return;
+                        if (EMAILS_MASTER.includes(user.email)) return;
                         
                         let safeEmail = AppUtils.escapeHTML(user.email);
+                        let safeNome = AppUtils.escapeHTML(user.nome || '');
                         let safeRole = AppUtils.escapeHTML(user.role);
                         let safeKey = AppUtils.escapeHTML(k);
                         let jsKey = AppUtils.escapeJSAttr(k);
                         let jsEmail = AppUtils.escapeJSAttr(user.email);
                         let jsRole = AppUtils.escapeJSAttr(user.role);
-                        
+
                         html += `<tr>
                             <td style="padding:12px; border-bottom:1px solid var(--bg-hover);">
+                                <input type="text" id="edit_nome_${safeKey}" value="${safeNome}" placeholder="Nome (quem usa esta conta)" maxlength="80" class="control-input" style="height:32px; padding:0 10px; font-size:12px; width: 100%; min-width: 180px; font-weight:700; margin-bottom:6px;">
                                 <input type="email" id="edit_email_${safeKey}" value="${safeEmail}" class="control-input" style="height:32px; padding:0 10px; font-size:12px; width: 100%; min-width: 180px; font-weight:600;">
                             </td>
                             <td style="padding:12px; border-bottom:1px solid var(--bg-hover);">
@@ -3441,7 +3483,7 @@
                                 </select>
                             </td>
                             <td style="padding:12px; border-bottom:1px solid var(--bg-hover); text-align:center; display: flex; gap: 5px; justify-content: center;">
-                                <button onclick="AppAuthManager.updateEmail('${jsKey}', '${jsRole}')" style="background:#10B981; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; transition:0.3s;" title="Salvar Edição de E-mail"><i class="fas fa-save"></i></button>
+                                <button onclick="AppAuthManager.updateEmail('${jsKey}', '${jsRole}')" style="background:#10B981; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; transition:0.3s;" title="Salvar nome e e-mail"><i class="fas fa-save"></i></button>
                                 <button onclick="AppAuthManager.sendPasswordReset('${jsEmail}')" style="background:#3B82F6; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; transition:0.3s;" title="Enviar Link de Reset de Senha"><i class="fas fa-key"></i></button>
                                 <button onclick="AppAuthManager.removeUser('${jsKey}')" style="background:#ef4444; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer; transition:0.3s;" title="Remover Usuário"><i class="fas fa-trash"></i></button>
                             </td>
@@ -3578,6 +3620,9 @@
                     // Se o e-mail NÃO tem entrada em /permissions, o usuário não pode operar.
                     // (Antes virava corretor automaticamente — vetor de invasão por signup público.)
                     const role = permSnap.exists() ? permSnap.val().role : null;
+                    // V398: nome de exibição — vive na própria permissão (self-read
+                    // é liberado nas rules pros dois papéis).
+                    state.userNome = permSnap.exists() ? String(permSnap.val().nome || '') : '';
                     const isMaster = EMAILS_MASTER.includes(state.user);
                     state.isAdmin = isMaster || role === 'gestor';
 
@@ -3591,13 +3636,11 @@
                         return;
                     }
                     
-                    const badge = document.getElementById('userBadge');
                     if(state.isAdmin) {
                         document.body.setAttribute('data-admin', 'true');
-                        // V332: usa textContent para o e-mail (que vem do Firebase Auth).
-                        // Cinto + suspensórios — o Auth não permite < no e-mail, mas
-                        // não custa nada blindar contra XSS aqui.
-                        badge.innerHTML = `<i class="fas fa-crown" style="margin-right:5px; color: var(--brand-gold);"></i> Gestor: <span style="font-weight:600; opacity:0.9;">${AppUtils.escapeHTML(state.user)}</span>`;
+                        // V332: escapeHTML no que vem do Auth/banco (cinto+suspensórios).
+                        // V398: a pintura virou AppAuth._pintaBadge (nome + e-mail).
+                        AppAuth._pintaBadge();
 
                         AppDB._track(database.ref('madrid_data/permissions'), 'value', snap => {
                             state.permissions = snap.val() || {}; AppAuthManager.renderTable();
@@ -3726,7 +3769,7 @@
                         }).catch(() => {});
                     } else {
                         document.body.removeAttribute('data-admin');
-                        badge.innerHTML = `<i class="fas fa-user" style="margin-right:5px; color: var(--brand-gold);"></i> Corretor: <span style="font-weight:600; opacity:0.9;">${AppUtils.escapeHTML(state.user)}</span>`;
+                        AppAuth._pintaBadge();
 
                         // V356: LEADS e DESEMPENHO foram removidas do app inteiro. Para o corretor,
                         // removemos também os botões das abas admin restantes (GESTÃO/EQUIPE/OBRA)
@@ -5107,6 +5150,44 @@
         //  ══ AppAuth ══  — Login, logout, idle timer (30min), init do app
         // ════════════════════════════════════════════════════════════
         const AppAuth = {
+            // V398: pintura única do crachá do topo — Nome (e-mail) quando a
+            // permissão tem nome, só o e-mail quando não tem. Chamada pelo load()
+            // dos dois papéis e pelo mudarMeuNome.
+            _pintaBadge: () => {
+                const badge = document.getElementById('userBadge');
+                if (!badge) return;
+                const rotulo = state.isAdmin ? 'Gestor' : 'Corretor';
+                const icone = state.isAdmin ? 'fa-crown' : 'fa-user';
+                const quem = state.userNome
+                    ? `${AppUtils.escapeHTML(state.userNome)} <span style="font-weight:400; opacity:0.65; font-size:0.92em;">${AppUtils.escapeHTML(state.user)}</span>`
+                    : AppUtils.escapeHTML(state.user);
+                badge.innerHTML = `<i class="fas ${icone}" style="margin-right:5px; color: var(--brand-gold);"></i> ${rotulo}: <span style="font-weight:600; opacity:0.9;">${quem}</span>`;
+            },
+            // V398: qualquer conta corrige o PRÓPRIO nome (a rule nova só libera o
+            // campo nome da própria entrada — papel e e-mail continuam trancados).
+            mudarMeuNome: () => {
+                if (!state.user) return;
+                // Master não tem entrada em /permissions — gravar criaria um nó
+                // órfão só com nome, invisível na EQUIPE. O crachá dele já mostra
+                // o e-mail; não há onde o nome aparecer.
+                if (EMAILS_MASTER.includes(state.user) && !(state.permissions && state.permissions[state.user.replace(/[.#$[\]]/g, '_')] && state.permissions[state.user.replace(/[.#$[\]]/g, '_')].email)) {
+                    AppUI.showError('Conta master não tem cadastro na aba EQUIPE — o nome não teria onde aparecer. O crachá continua com o e-mail.', 'Mudar nome');
+                    return;
+                }
+                const novo = (prompt('Seu nome, como deve aparecer no app:', state.userNome || '') || '').trim().slice(0, 80);
+                if (!novo || novo === state.userNome) return;
+                if (novo.length < 2) { AppUI.showError('Nome muito curto (mínimo 2 letras).', 'Mudar nome'); return; }
+                const enc = state.user.replace(/[.#$[\]]/g, '_');
+                database.ref('madrid_data/permissions/' + enc + '/nome').set(novo).then(() => {
+                    state.userNome = novo;
+                    AppAuth._pintaBadge();
+                    // Espelha no cadastro do Firebase Auth (lista do console) — best-effort.
+                    try { const u = firebase.auth().currentUser; if (u) u.updateProfile({ displayName: novo }).catch(() => {}); } catch (e) {}
+                    AppUI.showToast('Nome atualizado!', 'success');
+                }).catch(() => {
+                    AppUI.showError('Não deu para gravar ainda — a regra nova do banco precisa ser publicada (duplo clique no publicar-regras.cmd). Enquanto isso, um gestor pode corrigir seu nome na aba EQUIPE.', 'Mudar nome');
+                });
+            },
             login: () => {
                 const e = document.getElementById('loginEmail').value.trim();
                 const p = document.getElementById('loginPass').value;
@@ -5210,7 +5291,11 @@
                 // (plantão de vendas), o registro de um usuário anterior suprimia o
                 // auto-reenvio do seguinte e trocava a identidade do pedido.
                 try { localStorage.setItem('madrid_signup_info_' + email.replace(/[.#$[\]]/g, '_'), JSON.stringify({ nome: nome, fone: fone })); } catch (e) {}
-                firebase.auth().createUserWithEmailAndPassword(email, pass).then(() => {
+                firebase.auth().createUserWithEmailAndPassword(email, pass).then((cred) => {
+                    // V398: o nome também vai pro cadastro do Firebase Auth — na
+                    // lista de usuários do console dá pra ver quem é quem sem
+                    // decorar e-mail. Best-effort: falhar aqui não trava o fluxo.
+                    try { if (cred && cred.user) cred.user.updateProfile({ displayName: nome }).catch(() => {}); } catch (e) {}
                     // O onAuthStateChanged assume daqui (load → tela de espera).
                     AppAuth._registrarSolicitacao(nome, fone, email);
                 }).catch(err => {
