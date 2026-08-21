@@ -34,7 +34,7 @@
         <meta name="referrer" content="strict-origin-when-cross-origin">
 
         <!-- Cache gerido pelo parâmetro ?v=353 no URL -->
-        <title>Madrid Casa Elevada | Premium V399</title>
+        <title>Madrid Casa Elevada | Premium V400</title>
 
         <!-- Hint para indexadores: o app interno NÃO deve ser indexado.
              A landing pública (landing.html) é quem fica nas buscas. -->
@@ -1063,7 +1063,7 @@
             catch (e) { document.documentElement.innerHTML = ''; /* bloqueia tela */ }
         }
 
-        const CURRENT_APP_VERSION = "399";
+        const CURRENT_APP_VERSION = "400";
         const urlParams = new URLSearchParams(window.location.search);
 
         // O desvio do visitante para a landing acontece lá no <head>, antes dos
@@ -2198,7 +2198,7 @@
         </div>
 
     <script>
-        console.log("LOG: Versão Premium V399");
+        console.log("LOG: Versão Premium V400");
 
         // V371: dicas de toque — clique num ".help-tip" abre o balão com o texto
         // do data-tip; clique em qualquer outro lugar fecha. (title= só existe
@@ -3142,7 +3142,10 @@
                     AppUI.showError("Você não pode remover a própria conta. Peça a outro gestor.", "Ação bloqueada");
                     return;
                 }
-                if(confirm("Tem a certeza que deseja remover as permissões deste usuário?")) {
+                // V400: a demissão tem DOIS passos, e o segundo não é opcional —
+                // a conta antiga continua conseguindo ler/apagar as propostas
+                // que criou (com nome, CPF e valor) até ser desativada no Auth.
+                if(confirm("Remover as permissões deste usuário?\n\nIMPORTANTE — 2º PASSO OBRIGATÓRIO: desative também a conta dele no painel do Firebase (Authentication > Users > menu da conta > Disable). Sem isso, a pessoa demitida ainda consegue baixar ou apagar as propostas que criou, com nome, CPF e valor dos clientes.")) {
                     // V388-fix (revisão): sem o carimbo de recusa, os registros
                     // antigos de ACESSO_APP do removido (indeletáveis nas rules
                     // vivas) RESSUSCITAVAM na fila de solicitações + toast falso.
@@ -4225,9 +4228,16 @@
             DELIVERY_DATE: ENTREGA_ISO,  // V394: deriva da constante única do topo
 
             // Helpers de data (yyyy-mm-dd <-> Date, sem timezone surpresa).
+            // V400 (auditoria, com aval do gestor): quando o mês destino não tem
+            // o dia, usa o ÚLTIMO dia do mês. Antes, gerar no dia 29-31 perto de
+            // fevereiro "transbordava": 31/01 + 1 mês virava 03/03 — fevereiro
+            // ficava sem parcela e março ganhava duas, impresso no PDF do
+            // cliente. Nos dias 1-28 o resultado é idêntico ao de sempre.
             _addMonths: (base, n) => {
-                const d = new Date(base.getFullYear(), base.getMonth() + n, base.getDate());
-                return d;
+                const alvo = new Date(base.getFullYear(), base.getMonth() + n, 1);
+                const ultimo = new Date(alvo.getFullYear(), alvo.getMonth() + 1, 0).getDate();
+                alvo.setDate(Math.min(base.getDate(), ultimo));
+                return alvo;
             },
             _isoDate: (d) => {
                 const y = d.getFullYear();

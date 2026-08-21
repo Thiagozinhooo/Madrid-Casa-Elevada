@@ -106,6 +106,19 @@ checar('data de entrega em constante única',
 checar('nenhuma parcela vence depois da entrega',
     (idx.match(/_capEntrega\(AppSim\._isoDate\(/g) || []).length === 3,
     'sinal, mensais e balões precisam passar pelo _capEntrega (V387)');
+// V400 (aval do gestor): mês sem o dia usa o ÚLTIMO dia — gerar dia 29-31
+// perto de fevereiro pulava um mês e empilhava duas parcelas no mesmo.
+checar('soma de mês não transborda o dia (29-31 vira último dia do mês)',
+    // As TRÊS linhas do clamp, pinadas: revisão da V400 provou por mutação que
+    // sem a âncora do dia 1, um revert parcial dava 31/03 (PIOR que o bug
+    // original) com o validador verde.
+    /const alvo = new Date\(base\.getFullYear\(\), base\.getMonth\(\) \+ n, 1\);/.test(idx) &&
+    /const ultimo = new Date\(alvo\.getFullYear\(\), alvo\.getMonth\(\) \+ 1, 0\)\.getDate\(\);/.test(idx) &&
+    /alvo\.setDate\(Math\.min\(base\.getDate\(\), ultimo\)\);/.test(idx),
+    'o _addMonths perdeu o clamp — 31/01 volta a virar 03/03 no PDF do cliente');
+checar('remover usuário lembra o 2º passo da demissão (Disable no Auth)',
+    /2º PASSO OBRIGATÓRIO/.test(idx),
+    'sem o aviso, a conta demitida segue com acesso à carteira dela');
 checar('colunas da tabela seguem o percentual, não o nome do plano',
     (idx.match(/const showM = pMensal > 0;/g) || []).length === 2,
     'plano "Personalizado" escondia parcelas na tela e no PDF (V392)');
