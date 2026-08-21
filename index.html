@@ -34,7 +34,7 @@
         <meta name="referrer" content="strict-origin-when-cross-origin">
 
         <!-- Cache gerido pelo parâmetro ?v=353 no URL -->
-        <title>Madrid Casa Elevada | Premium V398</title>
+        <title>Madrid Casa Elevada | Premium V399</title>
 
         <!-- Hint para indexadores: o app interno NÃO deve ser indexado.
              A landing pública (landing.html) é quem fica nas buscas. -->
@@ -134,8 +134,9 @@
         <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" crossorigin="anonymous"></script>
         <!-- App Check (V332): bloqueia requisições que não venham do nosso site/app.
              O SDK é carregado e fica pronto; a ativação real depende do site key
-             do reCAPTCHA v3 que o admin precisa gerar no console (ver
-             window._APP_CHECK_SITE_KEY no bloco JS principal). -->
+             do reCAPTCHA v3 que o admin precisa gerar no console — cole-o na
+             constante APP_CHECK_SITE_KEY no bloco JS principal (o validar.js
+             confere os dois arquivos). -->
         <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-check-compat.js" crossorigin="anonymous"></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
@@ -975,8 +976,6 @@
                 .login-box { padding: 0 8px; }
                 .inp-login { font-size: 12px; }
 
-                /* Legend pills da garagem ocupam linha cheia */
-                .garage-legend-v2 .legend-pill { font-size: 10px; padding: 6px 10px; }
             }
 
             /* ---------- LANDSCAPE PHONE ---------- */
@@ -1064,7 +1063,7 @@
             catch (e) { document.documentElement.innerHTML = ''; /* bloqueia tela */ }
         }
 
-        const CURRENT_APP_VERSION = "398";
+        const CURRENT_APP_VERSION = "399";
         const urlParams = new URLSearchParams(window.location.search);
 
         // O desvio do visitante para a landing acontece lá no <head>, antes dos
@@ -2131,7 +2130,7 @@
                 <input type="text" id="visitNotes" class="control-input" maxlength="200" placeholder="Ex: interessado em 2 quartos" style="margin-bottom:18px;">
                 <div style="display:flex; gap:10px;">
                     <button id="visitDeleteBtn" onclick="AppAgenda.deleteVisit()" class="btn-outline" style="height:44px; padding:0 16px; margin:0; color:#D98888; border-color:rgba(217,136,136,0.4); display:none;"><i class="fas fa-trash"></i></button>
-                    <button onclick="AppAgenda.saveVisit()" class="btn-primary" style="flex:1; height:44px; margin:0;"><i class="fas fa-check"></i> Salvar visita</button>
+                    <button onclick="AppAgenda.saveVisit()" id="btnSalvarVisita" class="btn-primary" style="flex:1; height:44px; margin:0;"><i class="fas fa-check"></i> Salvar visita</button>
                 </div>
             </div>
         </div>
@@ -2199,7 +2198,7 @@
         </div>
 
     <script>
-        console.log("LOG: Versão Premium V398");
+        console.log("LOG: Versão Premium V399");
 
         // V371: dicas de toque — clique num ".help-tip" abre o balão com o texto
         // do data-tip; clique em qualquer outro lugar fecha. (title= só existe
@@ -2284,6 +2283,9 @@
         //  ══ AppUtils ══  — Máscaras CPF/CNPJ/telefone + sanitização XSS
         // ════════════════════════════════════════════════════════════
         const AppUtils = {
+            // V399 (faxina): chave de e-mail para nós do Firebase — era copiada
+            // inline 24 vezes; TODO encode novo passa por aqui.
+            chaveEmail: (e) => String(e || '').replace(/[.#$[\]]/g, '_'),
             maskCPF: (v) => {
                 v = v.replace(/\D/g, ""); 
                 if (v.length <= 11) { 
@@ -2501,8 +2503,10 @@
         
         // V337: preço de vaga de garagem avulsa (extra ao par já incluso na unidade).
         // 8 vagas avulsas existem na garagem (52, 53, 54, 55, 56, 57, 58, 28) — podem
-        // ser comercializadas como adicional à proposta. Valor fixo, NÃO subjudge ao
-        // globalMultiplier (foi definido pela diretoria como valor de tabela).
+        // ser comercializadas como adicional à proposta. Este é o valor BASE:
+        // desde a V387 ele REAJUSTA junto com a tabela (getExtraVagaUnit multiplica
+        // pelo globalMultiplier — decisão do gestor; o comentário antigo dizia o
+        // contrário e mentia sobre o código).
         const EXTRA_VAGA_PRICE = 55000;
 
         let state = {
@@ -2578,7 +2582,8 @@
         // ════════════════════════════════════════════════════════════
         const AppUI = {
             initTheme: () => {
-                let theme = localStorage.getItem('madrid_theme');
+                let theme = null;
+                try { theme = localStorage.getItem('madrid_theme'); } catch (e) {}
                 if (!theme) {
                     const horaAtual = new Date().getHours();
                     theme = (horaAtual >= 18 || horaAtual < 6) ? 'dark' : 'light';
@@ -2589,7 +2594,8 @@
             toggleTheme: () => {
                 const next = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
                 document.body.setAttribute('data-theme', next);
-                localStorage.setItem('madrid_theme', next);
+                // V399-fix (auditoria): storage bloqueado não pode pular o updateAssets.
+                try { localStorage.setItem('madrid_theme', next); } catch (e) {}
                 AppUI.updateAssets(next);
             },
             updateAssets: (t) => {
@@ -2654,7 +2660,10 @@
             // V344: Esc fecha qualquer modal aberto (UX padrão de browsers/apps modernos).
             // Listener instalado uma vez no DOMContentLoaded.
             _closeAllModals: () => {
-                ['errorModal','unitDetailsModal','specialPaymentModal','statusManagerModal','floorPlanModal','logsModal','auditLogModal','reservaModal','tourModal','vendasModal']
+                // V399-fix (auditoria): visitModal e priceHistoryModal tinham ficado
+                // fora da lista — Esc não os fechava (o open sempre repopula os
+                // campos, então só esconder é seguro).
+                ['errorModal','unitDetailsModal','specialPaymentModal','statusManagerModal','floorPlanModal','logsModal','auditLogModal','reservaModal','tourModal','vendasModal','visitModal','priceHistoryModal']
                     .forEach(id => {
                         const el = document.getElementById(id);
                         if (el && !el.classList.contains('hidden')) el.classList.add('hidden');
@@ -2697,7 +2706,7 @@
             _tourAbriuSessao: false, // auto-abre no máximo 1x por login
             _tourAuto: null,         // null=pref ainda não resolvida | true/false
             _renderPronto: false,    // 1º renderAll concluído (loader saindo)
-            _prefsKey: () => (state.user || '').replace(/[.#$[\]]/g, '_'),
+            _prefsKey: () => AppUtils.chaveEmail(state.user),
             tourAutoLoad: () => {
                 // O Firebase manda (a preferência segue o usuário em qualquer
                 // aparelho); o localStorage é reserva pra enquanto as rules de
@@ -3076,6 +3085,8 @@
         //  ══ AppAuthManager ══  — CRUD de usuários e roles (admin only)
         // ════════════════════════════════════════════════════════════
         const AppAuthManager = {
+            // V399 (faxina): a guarda de gestor era copiada 14x. Um lugar so.
+            _exigeAdmin: () => { if (state.isAdmin) return true; AppUI.showError("Acesso negado.", "Erro"); return false; },
             // V332: única fonte de verdade das roles permitidas. Qualquer função que
             // grave 'role' em /permissions tem que validar contra esta lista.
             VALID_ROLES: ['corretor', 'gestor'],
@@ -3094,7 +3105,7 @@
                 return entrada;
             },
             addUser: () => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 const nomeNovo = document.getElementById('newAuthNome').value;
                 const email = document.getElementById('newAuthEmail').value.trim().toLowerCase();
                 const role = document.getElementById('newAuthRole').value;
@@ -3102,11 +3113,11 @@
                 if(!AppAuthManager._isValidEmail(email)) { AppUI.showError("Digite um e-mail válido.", "Erro"); return; }
                 if(!AppAuthManager.VALID_ROLES.includes(role)) { AppUI.showError("Role inválida. Use 'corretor' ou 'gestor'.", "Erro"); return; }
 
-                const encoded = email.replace(/[.#$[\]]/g, '_');
+                const encoded = AppUtils.chaveEmail(email);
                 // V386-fix (revisão): os MESMOS guards do changeRole/updateEmail —
                 // digitar o próprio e-mail com role corretor era auto-rebaixamento
                 // irreversível, e e-mail já cadastrado era sobrescrito em silêncio.
-                if (encoded === state.user.replace(/[.#$[\]]/g, '_') && role !== 'gestor') {
+                if (encoded === AppUtils.chaveEmail(state.user) && role !== 'gestor') {
                     AppUI.showError("Você não pode rebaixar a própria conta. Peça a outro gestor.", "Ação bloqueada");
                     return;
                 }
@@ -3124,10 +3135,10 @@
                 }).catch(err => AppUI.showError("Erro ao gravar: " + err.message));
             },
             removeUser: (encoded) => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 // V386 (auditoria): auto-lockout — remover a si mesmo derrubava o
                 // gestor no meio da sessão e o bloqueava no próximo login.
-                if (encoded === state.user.replace(/[.#$[\]]/g, '_')) {
+                if (encoded === AppUtils.chaveEmail(state.user)) {
                     AppUI.showError("Você não pode remover a própria conta. Peça a outro gestor.", "Ação bloqueada");
                     return;
                 }
@@ -3147,7 +3158,7 @@
                 }
             },
             changeRole: (encoded, email, newRole) => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 // V332: blindagem contra escalada de privilégio — antes a função aceitava
                 // qualquer string como role (inclusive 'master' ou roles inventadas).
                 if (!AppAuthManager.VALID_ROLES.includes(newRole)) {
@@ -3160,7 +3171,7 @@
                 }
                 // V386 (auditoria): rebaixar a si mesmo pra corretor era irreversível
                 // (escrever em permissions exige role gestor).
-                if (encoded === state.user.replace(/[.#$[\]]/g, '_') && newRole !== 'gestor') {
+                if (encoded === AppUtils.chaveEmail(state.user) && newRole !== 'gestor') {
                     AppUI.showError("Você não pode rebaixar a própria conta. Peça a outro gestor.", "Ação bloqueada");
                     AppAuthManager.renderTable();
                     return;
@@ -3170,7 +3181,7 @@
                 }).catch(err => AppUI.showError("Erro ao gravar: " + err.message));
             },
             updateEmail: (oldKey, currentRole) => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 const inputEl = document.getElementById('edit_email_' + oldKey);
                 const newEmail = inputEl.value.trim().toLowerCase();
                 const nomeEl = document.getElementById('edit_nome_' + oldKey);
@@ -3180,7 +3191,7 @@
                 if(!AppAuthManager.VALID_ROLES.includes(currentRole)) { AppUI.showError("Role inválida.", "Erro"); return; }
                 if (novoNome && novoNome.length < 2) { AppUI.showError("Nome muito curto (mínimo 2 letras) — ou deixe vazio para remover.", "Erro"); return; }
 
-                const newKey = newEmail.replace(/[.#$[\]]/g, '_');
+                const newKey = AppUtils.chaveEmail(newEmail);
                 // V398: e-mail igual = só o NOME mudou. Esse caminho vale inclusive
                 // pra própria linha (mexer no nome não mexe na entrada que autoriza
                 // o login — o bloqueio logo abaixo é só pra troca de e-mail).
@@ -3189,13 +3200,13 @@
                     if (novoNome === nomeAntes) { AppUI.showToast("Nenhuma alteração de texto detetada.", "success"); return; }
                     database.ref('madrid_data/permissions/' + oldKey + '/nome').set(novoNome || null).then(() => {
                         AppUI.showToast("Nome atualizado com sucesso!", "success");
-                        if (oldKey === state.user.replace(/[.#$[\]]/g, '_')) { state.userNome = novoNome; AppAuth._pintaBadge(); }
+                        if (oldKey === AppUtils.chaveEmail(state.user)) { state.userNome = novoNome; AppAuth._pintaBadge(); }
                     }).catch(e => AppUI.showError("Erro ao atualizar o nome: " + e.message));
                     return;
                 }
                 // V386-fix (revisão): editar o e-mail da PRÓPRIA linha remove a
                 // entrada que casa com o seu login — auto-lockout no próximo acesso.
-                if (oldKey === state.user.replace(/[.#$[\]]/g, '_')) {
+                if (oldKey === AppUtils.chaveEmail(state.user)) {
                     AppUI.showError("Você não pode alterar o e-mail da própria conta por aqui (a entrada que autoriza o seu login seria removida). Peça a outro gestor.", "Ação bloqueada");
                     return;
                 }
@@ -3213,12 +3224,18 @@
                 // V398-fix (revisão): chaveExistente = null DE PROPÓSITO — o campo
                 // de nome vem preenchido na tela, então vazio aqui é intenção de
                 // apagar; repassar oldKey ressuscitaria o nome antigo na chave nova.
-                database.ref('madrid_data/permissions/' + newKey).set(AppAuthManager._entradaPermissao(newEmail, currentRole, novoNome, null)).then(() => {
-                    database.ref('madrid_data/permissions/' + oldKey).remove().then(() => { AppUI.showToast("E-mail atualizado com sucesso!", "success"); });
+                // V399-fix (auditoria): criar a chave nova e remover a antiga em UMA
+                // gravação atômica (update multi-caminho) — em 2 passos, falha no
+                // meio deixava os DOIS e-mails autorizados no banco.
+                const mover = {};
+                mover[newKey] = AppAuthManager._entradaPermissao(newEmail, currentRole, novoNome, null);
+                mover[oldKey] = null;
+                database.ref('madrid_data/permissions').update(mover).then(() => {
+                    AppUI.showToast("E-mail atualizado com sucesso!", "success");
                 }).catch(e => AppUI.showError("Erro ao atualizar o e-mail: " + e.message));
             },
             sendPasswordReset: (email) => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 if(confirm(`Tem a certeza que deseja enviar um link de redefinição de senha para ${email}?`)) {
                     firebase.auth().sendPasswordResetEmail(email).then(() => {
                         AppUI.showToast(`Link de recuperação enviado para ${email}.`, "success");
@@ -3238,7 +3255,7 @@
                     if (!l || l.interesse !== 'ACESSO_APP' || !l.email) return;
                     const email = String(l.email).toLowerCase().trim();
                     if (!AppAuthManager._isValidEmail(email)) return;
-                    const enc = email.replace(/[.#$[\]]/g, '_');
+                    const enc = AppUtils.chaveEmail(email);
                     // V398-fix (revisão): checa o ROLE, não a existência — um nó
                     // órfão (só nome, sem papel) não pode esconder o pedido da fila.
                     if (state.permissions && state.permissions[enc] && state.permissions[enc].role) return;
@@ -3286,6 +3303,9 @@
                 if (d.length >= 12 && d.slice(0, 2) === '55') return 'https://wa.me/' + d;   // já tem DDI
                 d = d.replace(/^0+/, '');                                                    // DDD com zero
                 if (d.length === 10 || d.length === 11) return 'https://wa.me/55' + d;
+                // V399 (revisão): DDI estrangeiro (12-15 dígitos não-55) abre como
+                // está — comprador de fora existe e o link antes funcionava.
+                if (d.length >= 12 && d.length <= 15) return 'https://wa.me/' + d;
                 return '';
             },
             _msgLidas: () => {
@@ -3375,10 +3395,10 @@
                 box.innerHTML = html + `</div>`;
             },
             approveRequest: (email) => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 email = String(email).toLowerCase().trim();
                 if (!AppAuthManager._isValidEmail(email) || EMAILS_MASTER.includes(email)) { AppUI.showError("E-mail inválido.", "Erro"); return; }
-                const enc = email.replace(/[.#$[\]]/g, '_');
+                const enc = AppUtils.chaveEmail(email);
                 if (state.permissions && state.permissions[enc] && state.permissions[enc].role) { AppUI.showToast('Este e-mail já está liberado.', 'success'); return; }
                 if (!confirm(`Liberar o acesso de ${email} como CORRETOR?`)) return;
                 // V398: o nome que a pessoa digitou no cadastro sobrevive à
@@ -3391,7 +3411,7 @@
                 }).catch(err => AppUI.showError("Erro ao gravar: " + err.message));
             },
             rejectRequest: (email) => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 email = String(email).toLowerCase().trim();
                 if (!confirm(`Recusar a solicitação de ${email}?\n\nA pessoa continua sem acesso à tabela (a conta dela não é apagada; se pedir de novo, volta pra esta fila).`)) return;
                 AppAuthManager._marcaRecusado(email);
@@ -3403,7 +3423,7 @@
             // PEDIDO mesmo se o relógio do solicitante estiver adiantado —
             // senão o pedido nunca some da fila. Usa max(agora, maior ts)+1.
             _marcaRecusado: (email) => {
-                const enc = email.replace(/[.#$[\]]/g, '_');
+                const enc = AppUtils.chaveEmail(email);
                 let maxTs = 0;
                 Object.values(state._leadsInbox || {}).forEach(l => {
                     if (l && l.interesse === 'ACESSO_APP' && String(l.email || '').toLowerCase().trim() === email) {
@@ -3413,6 +3433,17 @@
                 const carimbo = Math.max(Date.now(), maxTs + 1);
                 if (!state._acessosRecusados) state._acessosRecusados = {};
                 state._acessosRecusados[enc] = carimbo;
+                // V399-fix (auditoria): o carimbo no audit_log sai da janela do
+                // limitToLast em semanas (o nó cresce a cada operação) e o pedido
+                // recusado RESSUSCITAVA na fila. Cópia local segura o carimbo
+                // neste aparelho para sempre; o load() une as duas fontes.
+                // Revisão: parse e gravação em try SEPARADOS — um valor corrompido
+                // no storage não pode desligar a persistência para sempre (a
+                // gravação com {} zerado se auto-repara).
+                let locais = {};
+                try { locais = JSON.parse(localStorage.getItem('madrid_recusas') || '{}') || {}; } catch (e) { locais = {}; }
+                locais[enc] = carimbo;
+                try { localStorage.setItem('madrid_recusas', JSON.stringify(locais)); } catch (e) {}
                 AppAuthManager._auditAcesso('access_rejected', email, carimbo);
             },
             _auditAcesso: (acao, email, ts) => {
@@ -3516,7 +3547,7 @@
                 const d = new Date();
                 const today = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,'0') + "-" + String(d.getDate()).padStart(2,'0');
                 const time = d.toLocaleTimeString('pt-BR');
-                const safeEmail = email.replace(/[.#$[\]]/g, '_');
+                const safeEmail = AppUtils.chaveEmail(email);
 
                 // V388: catch — conta pendente (sem papel) não pode escrever em
                 // logs e o update rejeitado virava unhandled rejection no console.
@@ -3528,7 +3559,7 @@
             _propSessao: null,
             saveProposalRecord: (client, cpf, phone, unit, totalValue, planDetails) => {
                 if(!state.user) return Promise.reject(new Error('sem login'));
-                const safeEmail = state.user.replace(/[.#$[\]]/g, '_');
+                const safeEmail = AppUtils.chaveEmail(state.user);
                 const chaveDedupe = `${unit}|${String(client).trim().toLowerCase()}`;
                 const reusando = !!(AppDB._propSessao && AppDB._propSessao.chave === chaveDedupe);
                 const propId = reusando ? AppDB._propSessao.id : Date.now().toString();
@@ -3603,7 +3634,7 @@
                 AppDB._unsubscribers.push(() => ref.off(eventType, callback));
             },
             load: () => {
-                const encodedEmail = state.user.replace(/[.#$[\]]/g, '_');
+                const encodedEmail = AppUtils.chaveEmail(state.user);
 
                 // V388-fix (revisão): .catch(() => null) — com o cadastro público,
                 // as rules NOVAS fecham master_admins pra quem não tem papel;
@@ -3756,11 +3787,18 @@
                         // reajuste, importação e aprovação de acesso). limitToLast sem
                         // orderByChild usa a ORDEM DA CHAVE (cronológica, gerada no
                         // servidor) e não exige índice nas rules — funciona hoje.
-                        database.ref('madrid_data/audit_log').limitToLast(300).once('value').then(s => {
+                        // V399: janela maior (300→1000, continua limitada) + união
+                        // com os carimbos locais — o do audit_log some da janela em
+                        // semanas e o pedido recusado ressuscitava na fila.
+                        database.ref('madrid_data/audit_log').limitToLast(1000).once('value').then(s => {
                             const rec = {};
+                            try {
+                                const locais = JSON.parse(localStorage.getItem('madrid_recusas') || '{}');
+                                Object.keys(locais).forEach(k => { rec[k] = locais[k]; });
+                            } catch (e) {}
                             Object.values(s.val() || {}).forEach(a => {
                                 if (a && a.action === 'access_rejected' && a.email) {
-                                    const k = String(a.email).toLowerCase().replace(/[.#$[\]]/g, '_');
+                                    const k = AppUtils.chaveEmail(String(a.email).toLowerCase());
                                     if (!rec[k] || (a.timestamp || 0) > rec[k]) rec[k] = a.timestamp || 0;
                                 }
                             });
@@ -3851,7 +3889,7 @@
                 }).catch(e => { AppUI.showError("Acesso Negado: O seu e-mail não tem permissão no Firebase. Verifique as Regras de Segurança. Detalhe: " + e.message, "Erro de Permissão"); });
             },
             forceSync: () => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 // V390: os preços NÃO moram mais no código — sincronizar a estrutura
                 // não pode apagá-los. Lê o que está no banco e preserva cada `valor`.
                 if(confirm("Sincronizar os dados estruturais (tipologia, áreas, vagas, escaninhos) com o banco?\n\nOs PREÇOS e os status de venda não são alterados.")) {
@@ -3873,7 +3911,7 @@
                 }
             },
             reset: () => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 const confirmWord = prompt('⚠️ ATENÇÃO: ZERAR REAJUSTES E VOLTAR AOS PREÇOS ORIGINAIS!\n\nSe tem certeza, digite a palavra "ZERAR" abaixo (em maiúsculo):');
                 if(confirmWord === 'ZERAR') {
                     // V332: encadeia as 3 escritas para evitar render no meio de estado inconsistente.
@@ -4494,11 +4532,18 @@
             },
 
             // Handler do oninput dos 3 inputs. Lê (% ou R$), converte para %, grava em state e dispara cálculo.
+            // V399-fix (auditoria): a tabela de 50 unidades era reconstruída a CADA
+            // TECLA digitada nos campos %/R$ (2 rebuilds de innerHTML por tecla,
+            // com a tabela nem visível). O resultado do simulador continua
+            // síncrono — só a tabela espera a pausa de digitação (150ms, mesmo
+            // padrão do debounce dos snapshots).
+            _pctRenderTimer: null,
             onPercentInputChange: (field) => {
                 document.getElementById('selPlano').value = 'personalizado';
                 state.planPercents['p' + AppSim._cap(field)] = AppSim._readFieldAsPct(field);
                 AppSim.calculate();
-                AppCore.renderTable();
+                if (AppSim._pctRenderTimer) clearTimeout(AppSim._pctRenderTimer);
+                AppSim._pctRenderTimer = setTimeout(() => { AppCore.renderTable(); }, 150);
             },
             // Normaliza as 4 fatias de pagamento (Sinal/Mensal/Balão/Chaves) garantindo:
             //  - valores não-negativos
@@ -4832,9 +4877,12 @@
                 doc.setFontSize(10); doc.setTextColor(80,80,80); let y = 60;
                 doc.setFont("helvetica", "bold"); doc.text("DADOS DO PROPONENTE", 14, y); y += 8;
                 doc.setFont("helvetica", "normal");
-                doc.text(`Nome: ${d.client}`, 14, y); y += 6;
-                doc.text(`CPF/CNPJ: ${d.cpf}`, 14, y); y += 6;
-                doc.text(`Telefone: ${d.phone}`, 14, y); y += 12;
+                // V399-fix (auditoria): nome/CPF sem limite estouravam a margem
+                // direita do PDF. splitTextToSize quebra em linhas dentro da página.
+                const nomeLinhas = doc.splitTextToSize(`Nome: ${d.client}`, 182);
+                doc.text(nomeLinhas, 14, y); y += 6 * nomeLinhas.length;
+                doc.text(`CPF/CNPJ: ${String(d.cpf || '').slice(0, 40)}`, 14, y); y += 6;
+                doc.text(`Telefone: ${String(d.phone || '').slice(0, 40)}`, 14, y); y += 12;
                 
                 doc.setFont("helvetica", "bold"); doc.text("DADOS DO IMÓVEL", 14, y); y += 8;
                 doc.setFont("helvetica", "normal");
@@ -5133,9 +5181,12 @@
             // anexar manualmente e abre a conversa do WhatsApp já com o texto.
             _whatsFallback: (d, msg, doc, fileName) => {
                 try { doc.save(fileName); } catch (e) {}
-                const phoneDigits = (d.phone || '').replace(/\D/g, '');
-                const url = (phoneDigits.length >= 10 && phoneDigits.length <= 13)
-                    ? `https://wa.me/${phoneDigits.length <= 11 ? '55' + phoneDigits : phoneDigits}?text=${encodeURIComponent(msg)}`
+                // V399-fix (auditoria): usa o normalizador da V395 (zero no DDD,
+                // DDI) em vez de remontar '55'+digits na mão. Sem número válido,
+                // abre a conversa só com o texto (o corretor escolhe o contato).
+                const base = AppAuthManager._linkWhats(d.phone);
+                const url = base
+                    ? `${base}?text=${encodeURIComponent(msg)}`
                     : `https://wa.me/?text=${encodeURIComponent(msg)}`;
                 // 'noopener,noreferrer': a nova aba não acessa window.opener e não vaza Referer.
                 window.open(url, '_blank', 'noopener,noreferrer');
@@ -5170,14 +5221,14 @@
                 // Master não tem entrada em /permissions — gravar criaria um nó
                 // órfão só com nome, invisível na EQUIPE. O crachá dele já mostra
                 // o e-mail; não há onde o nome aparecer.
-                if (EMAILS_MASTER.includes(state.user) && !(state.permissions && state.permissions[state.user.replace(/[.#$[\]]/g, '_')] && state.permissions[state.user.replace(/[.#$[\]]/g, '_')].email)) {
+                if (EMAILS_MASTER.includes(state.user) && !(state.permissions && state.permissions[AppUtils.chaveEmail(state.user)] && state.permissions[AppUtils.chaveEmail(state.user)].email)) {
                     AppUI.showError('Conta master não tem cadastro na aba EQUIPE — o nome não teria onde aparecer. O crachá continua com o e-mail.', 'Mudar nome');
                     return;
                 }
                 const novo = (prompt('Seu nome, como deve aparecer no app:', state.userNome || '') || '').trim().slice(0, 80);
                 if (!novo || novo === state.userNome) return;
                 if (novo.length < 2) { AppUI.showError('Nome muito curto (mínimo 2 letras).', 'Mudar nome'); return; }
-                const enc = state.user.replace(/[.#$[\]]/g, '_');
+                const enc = AppUtils.chaveEmail(state.user);
                 database.ref('madrid_data/permissions/' + enc + '/nome').set(novo).then(() => {
                     state.userNome = novo;
                     AppAuth._pintaBadge();
@@ -5201,11 +5252,15 @@
                 
                 AppUI.setBtnLoading('btnLoginBtn', true, 'Entrar no Sistema');
                 
-                if (remember) {
-                    localStorage.setItem('madrid_saved_email', e);
-                } else {
-                    localStorage.removeItem('madrid_saved_email');
-                }
+                // V399-fix (auditoria): sem o try, Safari privado/quota cheia
+                // lançava AQUI — antes do signIn — e o botão girava para sempre.
+                try {
+                    if (remember) {
+                        localStorage.setItem('madrid_saved_email', e);
+                    } else {
+                        localStorage.removeItem('madrid_saved_email');
+                    }
+                } catch (err) {}
                 
                 firebase.auth().signInWithEmailAndPassword(e, p).catch(err => { 
                     AppUI.setBtnLoading('btnLoginBtn', false, 'Entrar no Sistema');
@@ -5290,7 +5345,7 @@
                 // V388-fix (revisão): chaveado POR E-MAIL — em máquina compartilhada
                 // (plantão de vendas), o registro de um usuário anterior suprimia o
                 // auto-reenvio do seguinte e trocava a identidade do pedido.
-                try { localStorage.setItem('madrid_signup_info_' + email.replace(/[.#$[\]]/g, '_'), JSON.stringify({ nome: nome, fone: fone })); } catch (e) {}
+                try { localStorage.setItem('madrid_signup_info_' + AppUtils.chaveEmail(email), JSON.stringify({ nome: nome, fone: fone })); } catch (e) {}
                 firebase.auth().createUserWithEmailAndPassword(email, pass).then((cred) => {
                     // V398: o nome também vai pro cadastro do Firebase Auth — na
                     // lista de usuários do console dá pra ver quem é quem sem
@@ -5320,20 +5375,20 @@
                     mensagem: 'Criou login no aplicativo e aguarda liberação de acesso.',
                     interesse: 'ACESSO_APP', status: 'novo', origem: 'landing', ts: Date.now()
                 }).then(() => {
-                    try { localStorage.setItem('madrid_acesso_solicitado_' + String(email).replace(/[.#$[\]]/g, '_'), '1'); } catch (e) {}
+                    try { localStorage.setItem('madrid_acesso_solicitado_' + AppUtils.chaveEmail(email), '1'); } catch (e) {}
                     return true;
                 }).catch(() => false);
             },
             reenviarSolicitacao: () => {
                 let info = null;
-                try { info = JSON.parse(localStorage.getItem('madrid_signup_info_' + state.user.replace(/[.#$[\]]/g, '_')) || 'null'); } catch (e) {}
+                try { info = JSON.parse(localStorage.getItem('madrid_signup_info_' + AppUtils.chaveEmail(state.user)) || 'null'); } catch (e) {}
                 let nome = (info && info.nome) || '';
                 let fone = (info && info.fone) || '';
                 if (nome.length < 3) nome = (prompt('Seu nome completo:') || '').trim();
                 if (nome.length < 3) return;
                 if (fone.replace(/\D/g, '').length < 8) fone = (prompt('Seu telefone com DDD:') || '').trim();
                 if (fone.replace(/\D/g, '').length < 8) return;
-                try { localStorage.setItem('madrid_signup_info_' + state.user.replace(/[.#$[\]]/g, '_'), JSON.stringify({ nome: nome, fone: fone })); } catch (e) {}
+                try { localStorage.setItem('madrid_signup_info_' + AppUtils.chaveEmail(state.user), JSON.stringify({ nome: nome, fone: fone })); } catch (e) {}
                 AppAuth._registrarSolicitacao(nome, fone, state.user).then(ok => {
                     if (ok) AppUI.showToast('Solicitação reenviada ao gestor.', 'success');
                     else AppUI.showError('Não foi possível enviar agora (conexão?). Tente de novo em instantes.', 'Reenviar solicitação');
@@ -5359,7 +5414,7 @@
                 if (ov) ov.style.display = 'flex';
                 const ldr = document.getElementById('appLoader');
                 if (ldr) { ldr.style.opacity = '0'; setTimeout(() => { ldr.classList.add('hidden'); ldr.style.display = 'none'; }, 400); }
-                const enc = state.user.replace(/[.#$[\]]/g, '_');
+                const enc = AppUtils.chaveEmail(state.user);
                 AppDB._track(database.ref('madrid_data/permissions/' + enc), 'value', snap => {
                     if (snap.exists() && snap.val().role) location.reload();
                 }, () => {});
@@ -5369,7 +5424,7 @@
                 // V388-fix (revisão): flags POR E-MAIL — em máquina compartilhada
                 // o flag de outra pessoa suprimia a rede de segurança e o info
                 // alheio trocava a identidade do pedido.
-                const chaveUser = state.user.replace(/[.#$[\]]/g, '_');
+                const chaveUser = AppUtils.chaveEmail(state.user);
                 let ja = null; try { ja = localStorage.getItem('madrid_acesso_solicitado_' + chaveUser); } catch (e) {}
                 let info = null; try { info = JSON.parse(localStorage.getItem('madrid_signup_info_' + chaveUser) || 'null'); } catch (e) {}
                 if (!ja && info && info.nome) AppAuth._registrarSolicitacao(info.nome, (info.fone && info.fone.length >= 8) ? info.fone : '00000000', state.user);
@@ -5445,7 +5500,10 @@
                     // Gravação em voo: adia em vez de derrubar (a escrita morreria
                     // junto com a página, e o corretor tinha sido instruído a
                     // "manter o app aberto que ela sobe sozinha").
-                    if (AppDB._gravacoesPendentes > 0 && adiamentos < MAX_ADIAMENTOS) {
+                    // V399-fix (auditoria): rascunho da OBRA também é pendência —
+                    // o logout por inatividade descartava 30 min de digitação do
+                    // gestor sem aviso. Mesmo adiamento com teto das gravações.
+                    if ((AppDB._gravacoesPendentes > 0 || (window.AppObra && AppObra._dirty)) && adiamentos < MAX_ADIAMENTOS) {
                         adiamentos++;
                         AppAuth._idleTimerId = setTimeout(encerrar, 60 * 1000);
                         return;
@@ -5995,7 +6053,10 @@
                 const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `Propostas_Madrid_${new Date().toISOString().slice(0, 10)}.csv`;
+                // V399-fix (auditoria): toISOString é UTC — exportar à noite (após
+                // 21h no Brasil) carimbava o arquivo com a data de AMANHÃ.
+                const dl = new Date();
+                link.download = `Propostas_Madrid_${dl.getFullYear()}-${String(dl.getMonth() + 1).padStart(2, '0')}-${String(dl.getDate()).padStart(2, '0')}.csv`;
                 link.click(); URL.revokeObjectURL(link.href);
                 AppUI.showToast(`CSV com ${state.allProposals.length} propostas exportado.`, 'success');
             },
@@ -6215,12 +6276,14 @@
 
             // V347: abre WhatsApp com mensagem de retomada de contato (follow-up).
             followupWhatsApp: (phone, client, unit) => {
-                const digits = String(phone || '').replace(/\D/g, '');
-                if (!digits) { AppUI.showError("Proposta sem telefone válido.", "WhatsApp"); return; }
-                const num = digits.length <= 11 ? '55' + digits : digits;
+                // V399-fix (auditoria): montava '55'+digits na mão e repetia o bug
+                // que a V395 já corrigiu no _linkWhats (zero no DDD vira número que
+                // o WhatsApp recusa). Agora TODO link sai do normalizador.
+                const base = AppAuthManager._linkWhats(phone);
+                if (!base) { AppUI.showError("Proposta sem telefone válido.", "WhatsApp"); return; }
                 const primeiroNome = String(client || '').trim().split(' ')[0] || '';
                 const msg = `Olá ${primeiroNome}! Tudo bem? Passando para saber se ficou alguma dúvida sobre a proposta do apartamento ${unit} aqui no Madrid Casa Elevada. Posso te ajudar com mais alguma informação ou condição especial?`;
-                window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+                window.open(`${base}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
             },
             // V374-fix (revisão): renderProposals foi REMOVIDO — era código morto
             // (zero chamadas; os listeners de proposals chamam filterProposals
@@ -6645,7 +6708,7 @@
                 AppCore.renderStatusManager();
             },
             aplicarStatusLote: () => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 const alvos = [...AppCore._loteSel];
                 if (!alvos.length) { AppUI.showToast('Marque ao menos uma unidade na lista.', 'info'); return; }
                 const destino = document.getElementById('loteDestino').value;
@@ -6804,7 +6867,7 @@
             // dias depois ninguém lembrava qual cliente segurava a unidade.
             _reservaApt: null,
             reservar: (apt) => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 AppCore._reservaApt = apt;
                 // V391-fix (revisão): o botão é um nó único do documento — sem este
                 // reset, uma gravação pendurada deixava TODA reserva seguinte
@@ -6844,8 +6907,10 @@
                 // de checar o status sobrescrevia a reserva de OUTRO gestor, e o
                 // rollback (remove) apagava o registro dele junto — a unidade ficava
                 // "reservada" sem dono, invisível pro aviso de 7 dias, pra sempre.
-                // Agora o status vem PRIMEIRO: se a transação não commitar, nada foi
-                // escrito e a mensagem "Nada foi alterado" é verdade.
+                // Agora o status vem PRIMEIRO: se a transação ABORTAR (status
+                // esperado mudou), nada foi escrito. TIMEOUT é outra história:
+                // a transação segue na fila e pode commitar depois — a mensagem
+                // de erro reflete isso (V399).
                 if (AppCore._reservaEmVoo) return;   // Enter nos campos furava o botão desabilitado
                 AppCore._reservaEmVoo = true;
                 const btn = document.getElementById('btnConfirmarReserva');
@@ -6856,13 +6921,19 @@
                 };
                 // Sem prazo, uma gravação enfileirada offline deixava o botão morto
                 // pelo resto da sessão (mesmo padrão de timeout do saveProposalRecord).
-                const prazo = new Promise((_, rej) => setTimeout(() => rej(new Error('sem confirmação do servidor')), 8000));
-                Promise.race([AppCore.changeUnitStatus(apt, 'reservado', { esperado: 'livre' }), prazo])
+                // V399-fix (auditoria): o timeout rejeita a PROMESSA, não cancela a
+                // transação — ela fica na fila do SDK e commita quando a conexão
+                // volta. Então: (1) a mensagem não pode jurar "nada foi alterado";
+                // (2) quando o commit tardio acontecer, o toast do changeUnitStatus
+                // avisa o que de fato aconteceu. E cada gravação ganha o SEU prazo
+                // de 8s (o objeto único era compartilhado: a 2ª herdava o resto).
+                const novoPrazo = () => new Promise((_, rej) => setTimeout(() => rej(new Error('sem confirmação do servidor')), 8000));
+                Promise.race([AppCore.changeUnitStatus(apt, 'reservado', { esperado: 'livre' }), novoPrazo()])
                     .then((r) => {
                         if (!r || !r.ok) { destrava(); return; }   // changeUnitStatus já explicou o motivo
                         // Status garantido: agora grava os dados do cliente por cima
                         // da entrada mínima que o changeUnitStatus cria (V386).
-                        return Promise.race([database.ref('madrid_data/reservas/' + apt).set(reservaPayload), prazo])
+                        return Promise.race([database.ref('madrid_data/reservas/' + apt).set(reservaPayload), novoPrazo()])
                             .then(() => {
                                 destrava();
                                 document.getElementById('reservaModal').classList.add('hidden');
@@ -6875,7 +6946,7 @@
                                 AppUI.showError(`O apto ${apt} foi reservado, mas os dados do cliente ainda não subiram (conexão instável?). Abra os detalhes da unidade e reserve de novo para registrar o nome.`, "Reserva sem os dados do cliente");
                             });
                     })
-                    .catch(err => { destrava(); AppUI.showError("Não foi possível reservar: " + err.message + ".\n\nNada foi alterado — tente de novo quando a conexão estabilizar.", "Erro ao reservar"); });
+                    .catch(err => { destrava(); AppUI.showError("Não foi possível confirmar a reserva: " + err.message + ".\n\nATENÇÃO: a gravação ainda NÃO foi confirmada — ela pode ser aplicada sozinha quando a conexão voltar. Antes de reservar outra unidade para este cliente, confira o status desta na tabela.", "Reserva sem confirmação"); });
             },
             _reservaEmVoo: false,
             _BTN_RESERVA: '<i class="fas fa-check"></i> Reservar',
@@ -6979,6 +7050,10 @@
                                 const aprov = log.action === 'access_approved';
                                 actionLabel = `<i class="fas fa-user-${aprov ? 'check' : 'slash'}" style="color:${aprov ? '#10B981' : '#ef4444'};"></i> Acesso ${aprov ? 'liberado' : 'recusado'}`;
                                 detail = `<strong>${AppUtils.escapeHTML(log.email || '—')}</strong>${aprov ? ' — entrou como corretor' : ' — solicitação negada'}`;
+                            } else if (log.action === 'prices_seed') {
+                                // V399-fix (auditoria): caía no dump de JSON cru.
+                                actionLabel = '<i class="fas fa-database" style="color:var(--brand-gold);"></i> Tabela de preços enviada';
+                                detail = `<strong>${AppUtils.escapeHTML(String(log.qtd || '?'))}</strong> preço(s) base enviados pela Manutenção avançada`;
                             } else {
                                 actionLabel = '<i class="fas fa-circle"></i> Ação';
                                 detail = AppUtils.escapeHTML(JSON.stringify(log));
@@ -7012,6 +7087,10 @@
                         html += '</ul>';
                     } else { html = '<p style="text-align:center; color:var(--text-muted); font-weight:600; padding: 20px 0;">Nenhum acesso registado hoje.</p>'; }
                     document.getElementById('logsContent').innerHTML = html; document.getElementById('logsModal').classList.remove('hidden');
+                }).catch(err => {
+                    // V399-fix (auditoria): sem o catch, falha de rede/permissão
+                    // deixava o botão mudo e a rejeição sem tratamento.
+                    AppUI.showError("Não deu para carregar os acessos de hoje: " + err.message, "Histórico de acessos");
                 });
             },
             // V391 (auditoria): status COM QUE O MODAL FOI DESENHADO. Os botões de
@@ -7148,7 +7227,7 @@
             // fecha o modal, dispara o changeUnitStatus existente (que já tem
             // audit log e transação). Apenas admin.
             quickChangeStatus: (apt, newStatus) => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 const labels = { livre: 'DISPONÍVEL', reservado: 'RESERVADA', vendido: 'VENDIDA' };
                 const newLabel = labels[newStatus] || newStatus.toUpperCase();
                 if (!confirm(`Marcar a unidade ${apt} como ${newLabel}?`)) return;
@@ -7679,7 +7758,10 @@
                 content.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Carregando…</div>';
                 modal.classList.remove('hidden');
 
-                database.ref('madrid_data/price_history').orderByChild('timestamp').limitToLast(48).once('value').then(snap => {
+                // V399-fix (auditoria): orderByChild sem .indexOn faz o servidor
+                // mandar o NÓ INTEIRO e ordenar no cliente — o mesmo anti-padrão
+                // corrigido no audit_log na V396. A chave push() já é cronológica.
+                database.ref('madrid_data/price_history').limitToLast(48).once('value').then(snap => {
                     const data = snap.val() || {};
                     const entries = Object.entries(data)
                         .map(([id, v]) => ({ id, ...v }))
@@ -7840,7 +7922,7 @@
                 content.innerHTML = html;
             },
             undoGlobalAdjustment: () => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 if (state.previousMultiplier && state.previousMultiplier !== state.globalMultiplier) {
                     if(confirm(`Tem a certeza que quer desfazer o último reajuste?`)) {
                         // V332: encadeia escritas (igual ao apply). Antes saíam em paralelo,
@@ -8190,7 +8272,7 @@
             },
 
             save: () => {
-                if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }
+                if (!AppAuthManager._exigeAdmin()) return;
                 if (!AppObra._current) return;
                 AppObra._current.proxima_etapa = (document.getElementById('obraProximaEtapa').value || '').slice(0, 80);
                 // V367: o Avanço Geral vem do input editável (clamp 0-100) — não é
@@ -8247,7 +8329,7 @@
             _MESES: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
             _DIAS: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
 
-            _encodeEmail: (e) => String(e || '').replace(/[.#$\[\]]/g, '_'),
+            _encodeEmail: (e) => AppUtils.chaveEmail(e),
             _firstName: (email) => String(email || '').split('@')[0],
             _isNotifiable: (s) => !!s && (state.isAdmin || s.corretor === state.user),
             _isoToday: () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; },
@@ -8276,7 +8358,12 @@
                 const now = new Date();
                 AppAgenda._viewYear = now.getFullYear();
                 AppAgenda._viewMonth = now.getMonth();
-                AppAgenda._seenTs = Number(localStorage.getItem('madrid_notif_seen') || 0) || 0;
+                // V399-fix (auditoria): a marca de "lido" era UMA pro aparelho —
+                // no computador do plantão, o corretor da manhã marcava lido e o
+                // da tarde perdia os avisos. Agora é por usuário (com migração da
+                // marca antiga na primeira leitura).
+                AppAgenda._seenKey = 'madrid_notif_seen_' + AppUtils.chaveEmail(state.user);
+                try { AppAgenda._seenTs = Number(localStorage.getItem(AppAgenda._seenKey) || localStorage.getItem('madrid_notif_seen') || 0) || 0; } catch (e) { AppAgenda._seenTs = 0; }
                 AppAgenda._initOutsideClose();
                 AppDB._track(database.ref('madrid_data/agenda'), 'value', snap => {
                     AppAgenda._slots = snap.val() || {};
@@ -8434,6 +8521,12 @@
             closeVisitModal: () => { document.getElementById('visitModal').classList.add('hidden'); },
 
             saveVisit: () => {
+                // V399-fix (auditoria): trava de voo — no 4G do stand o toque duplo
+                // gerava DUAS chaves push() e a visita nascia em dobro (a reserva
+                // ganhou a mesma trava na V391; a agenda tinha ficado de fora).
+                // Revisão: a trava não pode ser MUDA — clique bloqueado ganha toast,
+                // e o botão mostra o estado (igual à reserva).
+                if (AppAgenda._visitaEmVoo) { AppUI.showToast('Aguarde — a visita anterior ainda está gravando...', 'info'); return; }
                 const gv = (elId) => (document.getElementById(elId).value || '').trim();
                 const id = gv('visitEditId');
                 const cliente = gv('visitCliente').slice(0, 120);
@@ -8469,14 +8562,36 @@
                 const updates = {};
                 updates['agenda/' + vid] = slot;
                 updates['visitas/' + emailKey + '/' + vid] = priv;
-                database.ref('madrid_data').update(updates)
+                AppAgenda._visitaEmVoo = true;
+                const btnV = document.getElementById('btnSalvarVisita');
+                if (btnV) { btnV.disabled = true; btnV.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...'; }
+                const destravaV = () => {
+                    AppAgenda._visitaEmVoo = false;
+                    if (btnV) { btnV.disabled = false; btnV.innerHTML = '<i class="fas fa-check"></i> Salvar visita'; }
+                };
+                // Mesmo padrão de prazo da reserva: sem ele, conexão pendurada
+                // deixava a trava presa (e o corretor sem conseguir salvar nada).
+                const prazoVisita = new Promise((_, rej) => setTimeout(() => rej(new Error('sem confirmação do servidor')), 8000));
+                Promise.race([database.ref('madrid_data').update(updates), prazoVisita])
                     .then(() => {
+                        destravaV();
                         AppAgenda._selectedDay = data;
                         AppAgenda.closeVisitModal();
                         AppUI.showToast(id ? "Visita atualizada." : "Visita marcada na agenda.", "success");
                     })
-                    .catch(err => AppUI.showError("Erro ao salvar a visita: " + err.message, "Erro"));
+                    .catch(err => {
+                        destravaV();
+                        // Revisão: só o TIMEOUT deixa a gravação na fila. Recusa
+                        // das rules é DEFINITIVA — dizer "pode gravar sozinha"
+                        // seria a mesma mentira que esta versão eliminou.
+                        if (err && err.message === 'sem confirmação do servidor') {
+                            AppUI.showError("A visita ainda NÃO foi confirmada (internet lenta) — ela pode ser gravada sozinha quando a conexão voltar. Confira a agenda antes de salvar de novo, senão pode duplicar.", "Visita sem confirmação");
+                        } else {
+                            AppUI.showError("Erro ao salvar a visita: " + err.message, "Erro");
+                        }
+                    });
             },
+            _visitaEmVoo: false,
 
             deleteVisit: () => {
                 const id = (document.getElementById('visitEditId').value || '').trim();
@@ -8630,7 +8745,7 @@
                 // senão, com relógio local atrasado, o aviso não "morria" nunca.
                 (state.allProposals || []).forEach(p => { const t = Number(p && p.timestamp) || 0; if (t > mx) mx = t; });
                 AppAgenda._seenTs = mx;
-                try { localStorage.setItem('madrid_notif_seen', String(mx)); } catch(e) {}
+                try { localStorage.setItem(AppAgenda._seenKey || 'madrid_notif_seen', String(mx)); } catch(e) {}
             },
             _goToVisit: (data) => {
                 const dd = document.getElementById('notifDropdown'); if (dd) dd.classList.remove('open');
@@ -8660,7 +8775,10 @@
             // proteger, e o diálogo depois de clicar "Sair" só confundiria.
             if (window.__madridSaindo) return;
             const nome = document.getElementById('inpClientName');
-            if (nome && nome.value.trim()) { e.preventDefault(); e.returnValue = ''; }
+            // V399-fix (auditoria): o rascunho do CRONOGRAMA DE OBRA também é
+            // trabalho digitado — fechar a aba o descartava sem perguntar.
+            const obraSuja = window.AppObra && AppObra._dirty;
+            if ((nome && nome.value.trim()) || obraSuja) { e.preventDefault(); e.returnValue = ''; }
         });
 
         // ════════════════════════════════════════════════════════════
@@ -8716,8 +8834,8 @@
                     messaging.getToken({ vapidKey: FCM_VAPID_KEY, serviceWorkerRegistration: reg })
                         .then((token) => {
                             if (!token || !state.user) return;
-                            const emailKey = state.user.replace(/[.#$\[\]]/g, '_');
-                            const tokenKey = token.replace(/[.#$\[\]\/]/g, '_');
+                            const emailKey = AppUtils.chaveEmail(state.user);
+                            const tokenKey = token.replace(/[.#$\[\]\/]/g, '_');   // token tem '/', regex própria
                             AppPush._lastToken = tokenKey;
                             AppPush._lastEmailKey = emailKey;
                             database.ref('madrid_data/fcm_tokens/' + emailKey + '/' + tokenKey).set({
@@ -8799,7 +8917,9 @@
                 const elEntrega = document.getElementById('txtEntregaFixa');
                 if (elEntrega) elEntrega.textContent = ENTREGA_BR;
 
-                const savedEmail = localStorage.getItem('madrid_saved_email');
+                // V399-fix (auditoria): storage bloqueado não pode derrubar o boot.
+                let savedEmail = null;
+                try { savedEmail = localStorage.getItem('madrid_saved_email'); } catch (e) {}
                 if (savedEmail) { document.getElementById('loginEmail').value = savedEmail; document.getElementById('rememberMe').checked = true; }
 
                 firebase.auth().onAuthStateChanged((u) => {

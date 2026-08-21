@@ -74,7 +74,10 @@ catch (e) { erros.push('database.rules.json inválido: ' + e.message); }
         precos.length + ' preço(s) encontrado(s) — os valores vivem só no Firebase');
     // tabela de preços formatada (agents.md). Comentários explicativos não contam
     // — o que não pode é preço REAL de unidade servido ao visitante.
-    const formatados = (semComentario.match(/\d\.\d{3}\.\d{3},\d{2}/g) || []);
+    // V399 (auditoria): a forma antiga só via preço >= 1 milhão — 950.000,00
+    // passava com o validador verde. Agora pega também XXX.XXX,XX (o 55.000,00
+    // da vaga extra tem 2 dígitos antes do ponto e continua permitido).
+    const formatados = (semComentario.match(/\d\.\d{3}\.\d{3},\d{2}|\d{3}\.\d{3},\d{2}/g) || []);
     checar(`${nome}: sem tabela de preços formatada`, formatados.length === 0,
         formatados.slice(0, 3).join(', '));
     // dados de cliente
@@ -119,16 +122,26 @@ checar('rótulo das vagas extras é único nos 3 documentos',
 checar('gravação da proposta tem prazo de resposta',
     /return Promise\.race\(\[confirmada, timeout\]\);/.test(idx),
     'sem isso o app fica "salvando" para sempre offline (V386)');
-checar('logout de inatividade não descarta gravação em voo',
-    /if \(AppDB\._gravacoesPendentes > 0 && adiamentos < MAX_ADIAMENTOS\)/.test(idx));
+// V399: a pendência inclui também o rascunho da OBRA (AppObra._dirty).
+checar('logout de inatividade não descarta gravação em voo nem rascunho da obra',
+    /if \(\(AppDB\._gravacoesPendentes > 0 \|\| \(window\.AppObra && AppObra\._dirty\)\) && adiamentos < MAX_ADIAMENTOS\)/.test(idx));
 checar('adiamento do logout tem teto', /const MAX_ADIAMENTOS = \d+;/.test(idx),
     'sem teto a sessão nunca encerra (V391)');
 checar('mudança de status confere quem mexeu antes',
     /\{ esperado: AppCore\._detStatusRender \}/.test(idx),
     'evita desfazer venda feita em outro acesso (V391)');
 checar('reserva grava o status ANTES dos dados do cliente',
-    /Promise\.race\(\[AppCore\.changeUnitStatus\(apt, 'reservado', \{ esperado: 'livre' \}\), prazo\]\)/.test(idx),
+    /Promise\.race\(\[AppCore\.changeUnitStatus\(apt, 'reservado', \{ esperado: 'livre' \}\), novoPrazo\(\)\]\)/.test(idx) &&
+    // Revisão V399: a 2ª gravação também precisa do prazo PRÓPRIO (o objeto
+    // único reusado herdava o resto dos 8s).
+    /reservaPayload\), novoPrazo\(\)\]/.test(idx),
     'a ordem inversa apagava a reserva de outro gestor (V391)');
+// V399: e o timeout não pode voltar a jurar "Nada foi alterado" — a transação
+// segue na fila do SDK e pode commitar quando a conexão volta.
+checar('mensagem de timeout da reserva é honesta',
+    /a gravação ainda NÃO foi confirmada — ela pode ser aplicada sozinha/.test(idx) ||
+    /ATENÇÃO: a gravação ainda NÃO foi confirmada/.test(idx),
+    'o timeout de reserva voltou a prometer "Nada foi alterado"');
 checar('cronograma da obra avisa antes de descartar',
     /Você tem alterações NÃO SALVAS no cronograma/.test(idx));
 
@@ -321,7 +334,7 @@ medicao.forEach(m => {
         const saida = require('child_process').execSync('git ls-files -z', {
             cwd: DIR, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], maxBuffer: 8 * 1024 * 1024
         });
-        rastreados = new Set(saida.split(' ').map(x => x.trim()).filter(Boolean));
+        rastreados = new Set(saida.split('\0').map(x => x.trim()).filter(Boolean));
     } catch (e) { rastreados = null; }
 
     if (!rastreados || rastreados.size === 0) {
@@ -341,6 +354,10 @@ medicao.forEach(m => {
         const mini = 'fotos-mini/' + f.replace(/[.](jpeg|png)$/i, '.jpg');
         if (fs.existsSync(path.join(DIR, mini))) refs.add(mini);
     });
+
+    // V399 (auditoria): arquivos que o JS injeta em runtime não aparecem nos
+    // atributos do HTML — lista explícita do que o varredor não enxerga.
+    ['fachada-video.mp4'].forEach(f => refs.add(f));
 
     const fora = [...refs].filter(f => !rastreados.has(f));
     checar('todo arquivo que a landing usa está versionado', fora.length === 0,
@@ -488,9 +505,17 @@ checar('rules: validate do nome exige tamanho 2..80 E entrada com papel',
 // antes do .set.) Lista negra de literal já falhou aberto uma vez.
 const setsPerm = (idx.match(/permissions\/(?:' \+ \w+\)|\$\{\w+\}`\))\.set\(/g) || []).length;
 const setsOk = (idx.match(/permissions\/(?:' \+ \w+\)|\$\{\w+\}`\))\.set\(AppAuthManager\._entradaPermissao\(/g) || []).length;
+// V399: a troca de e-mail virou update atômico multi-caminho — são 3 sets de
+// objeto (addUser, changeRole, approveRequest) + o mover, que também usa o helper.
 checar('toda gravação de permissão passa por _entradaPermissao (preserva o nome)',
-    setsPerm === setsOk && setsPerm >= 4 && !/permissions\/[^\n)]{0,40}\)\.update\(/.test(idx),
+    setsPerm === setsOk && setsPerm >= 3 && !/permissions\/[^\n)]{0,40}\)\.update\(/.test(idx) &&
+    /mover\[newKey\] = AppAuthManager\._entradaPermissao\(/.test(idx) &&
+    // Revisão V399: update no NÓ RAIZ de permissions só pode existir 1 (o mover).
+    (idx.match(/permissions'\)\.update\(/g) || []).length === 1,
     `${setsOk}/${setsPerm} sets usam o helper — um set/update cru apaga o nome em silêncio`);
+checar('troca de e-mail é atômica (criar nova + apagar antiga numa gravação)',
+    /const mover = \{\};/.test(idx) && /mover\[oldKey\] = null;/.test(idx),
+    'em 2 passos, falha no meio deixava os DOIS e-mails autorizados');
 checar('_entradaPermissao preserva o nome já gravado',
     /else if \(antigo\) entrada\.nome = antigo;/.test(idx),
     'o helper deixou de reaproveitar o nome existente — changeRole volta a apagar nome');
@@ -509,6 +534,49 @@ checar('crachá do topo mostra o nome (pintura única)',
     (idx.match(/badge\.innerHTML/g) || []).length === 1,
     'a pintura do crachá voltou a ser inline sem nome (qualquer papel, qualquer ícone)');
 checar('botão "Mudar meu nome" existe', /AppAuth\.mudarMeuNome\(\)/.test(idx));
+
+// ─────────────────────────────────────────────────────────────
+// 8c. CLASSES RECORRENTES (V399) — bugs que já voltaram 2+ vezes
+//     ganham guarda permanente.
+// ─────────────────────────────────────────────────────────────
+// wa.me montado na mão voltou 3x (V395, follow-up, fallback). TODO link com
+// número tem que sair do AppAuthManager._linkWhats. A checagem varre o arquivo
+// FORA do corpo do helper (revisão V399: contagem de literal era cega a
+// concatenação) — só o fallback sem número (wa.me/?text=) é permitido fora.
+{
+    const iniHelper = idx.indexOf('_linkWhats:');
+    const fimHelper = idx.indexOf('},', iniHelper);
+    const foraHelper = (idx.slice(0, iniHelper) + idx.slice(fimHelper))
+        .split('\n').filter(l => !/^\s*(\/\/|\*)/.test(l)).join('\n');
+    checar('nenhum link de WhatsApp montado fora do _linkWhats',
+        iniHelper > 0 && (foraHelper.match(/wa\.me\/(?!\?text=)/g) || []).length === 0,
+        'monte o link com AppAuthManager._linkWhats (zero no DDD quebrava o número)');
+}
+// O encode de e-mail era copiado inline 24x — agora só o helper pode ter a
+// regex, em QUALQUER grafia (revisão V399: a variante com \[ escapado passava).
+checar('encode de e-mail só existe dentro de AppUtils.chaveEmail',
+    (idx.split("replace(/[.#$[\\]]/g, '_')").length - 1)
+    + (idx.split("replace(/[.#$\\[\\]]/g, '_')").length - 1) === 1,
+    'use AppUtils.chaveEmail(email) em vez de copiar a regex');
+// Revisão V399: pinar o CORPO do helper e contar os call-sites — sem isso,
+// _exigeAdmin: () => true passava verde.
+checar('guarda de gestor usa o helper _exigeAdmin (corpo íntegro + 14 usos)',
+    idx.indexOf('if (!state.isAdmin) { AppUI.showError("Acesso negado.", "Erro"); return; }') === -1 &&
+    /_exigeAdmin: \(\) => \{ if \(state\.isAdmin\) return true; AppUI\.showError\("Acesso negado\.", "Erro"\); return false; \},/.test(idx) &&
+    (idx.match(/if \(!AppAuthManager\._exigeAdmin\(\)\) return;/g) || []).length >= 14);
+// Revisão V399: exigir a CONSTRUÇÃO do prazo (o literal do catch sobrevivia
+// à remoção do próprio race) + a chave reusada que impede lead duplicado.
+checar('formulário da landing tem prazo e chave reusada (sem lead duplicado)',
+    /Promise\.race\(\[\s*leadRef\.set\(payload\)/.test(lnd) &&
+    /window\.__leadRefPendente/.test(lnd) && /tempo esgotado/.test(lnd),
+    'sem o race o botão morria em Enviando...; sem a chave reusada o reenvio duplicava o lead');
+// Revisão V399: a mera DECLARAÇÃO da flag satisfazia — exigir a GUARDA em uso,
+// o set, e o feedback (trava muda engolia cliques em silêncio).
+checar('salvar visita tem trava de voo com feedback',
+    /if \(AppAgenda\._visitaEmVoo\) \{ AppUI\.showToast\(/.test(idx) &&
+    /AppAgenda\._visitaEmVoo = true;/.test(idx) &&
+    /btnSalvarVisita/.test(idx),
+    'toque duplo no 4G gravava a visita em dobro — e trava sem aviso engole cliques');
 
 // ─────────────────────────────────────────────────────────────
 // 9. AVISOS (não impedem publicar)

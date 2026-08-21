@@ -1874,7 +1874,26 @@
                 // chegava igual e o gestor não sabia qual campanha pagou a conta.
                 if (UTM_ORIGEM) payload.utm = UTM_ORIGEM;
                 if (!db) throw new Error('sem conexão com o sistema');
-                await db.ref('madrid_data/leads_inbox').push(payload);
+                // V399-fix (auditoria): sem conexão, o push fica PENDENTE para
+                // sempre — o finally nunca rodava e o botão morria em
+                // "Enviando...". Prazo de 8s devolve o botão com a verdade.
+                // Revisão: o reenvio depois do timeout REUSA a mesma chave — o
+                // envio antigo (ainda na fila) e o novo gravam no MESMO registro,
+                // então tentar de novo não duplica o lead.
+                if (!window.__leadRefPendente) window.__leadRefPendente = db.ref('madrid_data/leads_inbox').push();
+                const leadRef = window.__leadRefPendente;
+                try {
+                    await Promise.race([
+                        leadRef.set(payload),
+                        new Promise((_, rej) => setTimeout(() => rej(new Error('tempo esgotado')), 8000))
+                    ]);
+                } catch (e) {
+                    // Se o envio ANTERIOR (mesma chave) já chegou, as regras do
+                    // banco recusam regravar — para o visitante isso é sucesso.
+                    const jaGravou = String((e && (e.code || e.message)) || '').toUpperCase().indexOf('PERMISSION_DENIED') >= 0;
+                    if (!jaGravou) throw e;
+                }
+                window.__leadRefPendente = null;
                 // Lead quente não espera "1 dia útil": o botão de WhatsApp já sai
                 // com nome e tipologia na mensagem — o contato fica gravado no banco
                 // E a conversa começa agora.
@@ -1889,7 +1908,9 @@
                 try { if (window.fbq) fbq('track', 'Lead'); } catch(_) {}
             } catch (err) {
                 console.error(err);
-                showFormMsg('error', 'Não foi possível enviar. Tente pelo WhatsApp.');
+                showFormMsg('error', (err && err.message === 'tempo esgotado')
+                    ? 'A internet está lenta e não conseguimos confirmar o envio — ele pode completar sozinho em instantes. Se preferir, fale direto pelo WhatsApp.'
+                    : 'Não foi possível enviar. Tente pelo WhatsApp.');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar para um consultor';
