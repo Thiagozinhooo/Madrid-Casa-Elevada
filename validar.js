@@ -549,6 +549,44 @@ checar('crachá do topo mostra o nome (pintura única)',
 checar('botão "Mudar meu nome" existe', /AppAuth\.mudarMeuNome\(\)/.test(idx));
 
 // ─────────────────────────────────────────────────────────────
+// 8d. TRAVA DE E-MAIL / COLISÃO DE CHAVE (V401) — a falha g9.
+//     A chave é many-to-one (joao.silva e joao_silva colidem). A
+//     autorização NÃO pode confiar só na chave: todo check tem que
+//     comparar o campo `email` gravado com auth.token.email.
+// ─────────────────────────────────────────────────────────────
+{
+    const DEC = "auth.token.email.replace('.','_').replace('#','_').replace('$','_').replace('[','_').replace(']','_')";
+    const bareGestor = "+ '/role').val() === 'gestor'";
+    const emailCheck = "+ '/email').val() === auth.token.email";
+    const barePermExists = "root.child('madrid_data/permissions/' + " + DEC + ").exists()";
+    const bareMasterExists = "root.child('madrid_data/master_admins/' + " + DEC + ").exists()";
+    const nGestor = rulesRaw.split(bareGestor).length - 1;
+    const nEmail = rulesRaw.split(emailCheck).length - 1;
+    // Todo check de gestor por role tem que ter um email-check companheiro
+    // (31 dentro dos gestor + 10 dos permissions-exists = 41).
+    checar('trava de e-mail: todo check de gestor tem o email do dono ao lado',
+        nGestor > 0 && nEmail >= nGestor,
+        `${nGestor} checks de gestor mas só ${nEmail} comparações de email — a colisão de chave reabre (g9)`);
+    checar('nenhum check de permissão confia só na chave (permissions.exists cru)',
+        rulesRaw.indexOf(barePermExists) === -1,
+        'permissions/<chave>.exists() sem email deixa joao_silva se passar por joao.silva');
+    checar('nenhum check de master confia só na chave (master.exists cru)',
+        rulesRaw.indexOf(bareMasterExists) === -1,
+        'master_admins/<chave>.exists() sem comparar o e-mail reabre a colisão');
+    checar('a regra do nome exige o e-mail do dono (não só a chave)',
+        /data\.parent\(\)\.child\('email'\)\.val\(\) === auth\.token\.email/.test(rulesRaw),
+        'sem isso o impostor da colisão sobrescreve o nome do gestor');
+    // g6 da revisão: propostas/visitas se autorizavam pelo ramo self ($emailKey
+    // === chave) SEM email — a colisão deixava o impostor ler/apagar a carteira
+    // do gêmeo com ponto. O ramo self com ' || ' (só propostas+visitas) tem que
+    // vir travado com o email do dono.
+    const ramoSelfCru = "$emailKey === " + DEC + " || ";
+    checar('propostas/visitas: ramo self travado pelo e-mail do dono (não só a chave)',
+        rulesRaw.indexOf(ramoSelfCru) === -1,
+        'o ramo self cru ($emailKey === chave || ...) deixa o impostor ler/apagar a carteira do gêmeo com ponto');
+}
+
+// ─────────────────────────────────────────────────────────────
 // 8c. CLASSES RECORRENTES (V399) — bugs que já voltaram 2+ vezes
 //     ganham guarda permanente.
 // ─────────────────────────────────────────────────────────────
