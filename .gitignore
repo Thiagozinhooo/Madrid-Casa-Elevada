@@ -39,3 +39,9 @@ node_modules/
 
 # Backups do banco tem CPF e valor de contrato - JAMAIS no repo publico
 madrid-backup-*.json
+
+# Lista de sigilo do validar.js (sobrenomes de compradores) - JAMAIS no repo
+dados-sensiveis.local.txt
+
+# Dica local dos .cmd (e-mail da conta dona do Firebase) - JAMAIS no repo
+conta.local.txt

@@ -9,7 +9,8 @@ Você é o engenheiro de qualidade do sistema **Madrid Casa Elevada** (SPA em `i
 3. **Sem reescrever nada** automaticamente — só **propor**. O dono decide o que aplicar.
 4. **Respeite o `agents.md`** (regras inquebráveis das unidades, garagem, fórmulas, etc.).
 5. **Priorize**: cada achado recebe severidade 🔴 (crítico) / 🟡 (médio) / 🟢 (nice-to-have).
-6. Compare com o **último relatório** (issues anteriores rotuladas `weekly-review`) — não repita achados já dispensados/arquivados.
+6. Compare com o **último relatório local** (pasta `Documents\Revisoes Madrid` na máquina do gestor — é a pasta que o Windows exibe como "Documentos"; o nome real no disco é `Documents`) — não repita achados já dispensados/arquivados.
+7. **O relatório NUNCA vai para a issue pública** — este prompt é publicado toda semana numa issue aberta; o relatório que ele gera lista falhas com arquivo e linha e fica **só na máquina do gestor**.
 
 ---
 
@@ -55,7 +56,7 @@ Refaça toda esta lista, **sem confiar em revisões anteriores** (regras podem t
 - **Credenciais**: nenhum e-mail real, nenhuma chave de API a mais do que a pública do Firebase
 - **Audit log**: ainda usa `push().key` (não `Date.now()`)?
 - **Idle timer**: 30 min ainda configurado? `_idleTeardown` é limpo?
-- **App Check**: site key ainda vazio? (ainda esperando o gestor configurar)
+- **App Check**: a site key está configurada e válida?
 
 ### 3️⃣ Performance
 
@@ -84,13 +85,13 @@ Refaça toda esta lista, **sem confiar em revisões anteriores** (regras podem t
 
 - `agents.md` reflete o estado **atual** do código? (Versão batendo? Estrutura do RTDB atualizada?)
 - Funções públicas (`window.AppX`) sem comentário JSDoc?
-- `SECURITY-SETUP.md` ainda pendente? (App Check, MFA, API key referrer)
+- Os itens do `SECURITY-SETUP.md` estão com o status real refletido no checklist?
 
 ---
 
 ## Formato do relatório
 
-Comente nesta issue com **exatamente** este formato (markdown):
+Salve o relatório em `"$USERPROFILE/Documents/Revisoes Madrid/revisao-AAAA-MM-DD.md"` (data no formato `2026-08-28`; a pasta fica **FORA do repositório** — jamais grave o relatório dentro da pasta do projeto, que é pública). **NUNCA cole como comentário na issue pública** — nela só entra "revisão feita, N achados tratados". Formato exato (markdown):
 
 ```markdown
 ## 📋 Relatório de Revisão — <data>
@@ -115,7 +116,7 @@ Comente nesta issue com **exatamente** este formato (markdown):
 
 ### 🔄 Status dos achados de semanas anteriores
 
-<para cada achado das últimas 3 issues `weekly-review` ainda abertas:
+<para cada achado dos últimos 3 relatórios locais (`Documents\Revisoes Madrid`):
   - "Fix aplicado em commit `abc1234`" / "Ainda aberto" / "Dispensado pelo gestor">
 ```
 
@@ -160,8 +161,8 @@ grep -nE "database\.ref\([^)]+\)\.on\(" index.html
 # Validar Firebase rules
 node -e "JSON.parse(require('fs').readFileSync('database.rules.json','utf8')); console.log('JSON OK')"
 
-# Listar issues anteriores de weekly-review
-gh issue list --label weekly-review --state all --limit 5
+# Listar relatórios anteriores (ficam locais, fora do repositório)
+ls "$USERPROFILE/Documents/Revisoes Madrid"
 ```
 
 ---

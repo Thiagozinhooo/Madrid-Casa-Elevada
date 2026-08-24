@@ -9,7 +9,11 @@
 #   2. Você abre a Issue e copia o prompt.
 #   3. Cola no Claude Code aberto neste repo (ou no claude.ai).
 #   4. O Claude faz a análise completa e devolve o relatório.
-#   5. Você cola o relatório como comentário na própria Issue.
+#   5. O relatório fica LOCAL (Documents\Revisoes Madrid — a pasta que o
+#      Windows exibe como "Documentos") — NUNCA na
+#      Issue: a Issue é pública, e um relatório de segurança colado nela
+#      publicaria as falhas ainda abertas (auditoria 24/08/2026).
+#      Na Issue vai só "revisão feita, N achados tratados" — e fecha.
 #
 # Trigger manual: vá em Actions → "Refatoração Semanal" → Run workflow.
 # =====================================================================
@@ -74,9 +78,11 @@ jobs:
 
             1. Abra o Claude Code dentro do repositório (\`cd "C:/Projetos/Tabela Madri"\`)
             2. Cole **tudo entre os \`---\`** acima
-            3. O Claude vai produzir o relatório
-            4. **Cole o relatório como comentário desta issue** (não feche a issue até resolver/arquivar os achados)
-            5. Para cada achado, decida: 🔧 corrigir agora · 📌 backlog · 🚮 dispensar
+            3. O Claude vai produzir o relatório e **salvá-lo em \`Documents\\Revisoes Madrid\`** (fora do repositório)
+            4. ⚠️ **NÃO cole o relatório nesta issue** — ela é pública, e o relatório
+               lista falhas ainda abertas com arquivo e linha. Aqui vai só um comentário
+               curto: "revisão feita, N achados (X corrigidos, Y backlog, Z dispensados)"
+            5. Para cada achado, decida: 🔧 corrigir agora · 📌 backlog · 🚮 dispensar — e **feche a issue**
 
             ---
 

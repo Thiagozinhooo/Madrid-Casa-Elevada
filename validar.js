@@ -66,7 +66,39 @@ catch (e) { erros.push('database.rules.json inválido: ' + e.message); }
 // ─────────────────────────────────────────────────────────────
 // 3. SIGILO — o repositório e o site são PÚBLICOS
 // ─────────────────────────────────────────────────────────────
-[['index.html', idx], ['landing.html', lnd], ['agents.md', agents]].forEach(([nome, txt]) => {
+// A lista de dados de cliente NÃO fica em claro aqui: este arquivo vive num
+// repositório público, e os próprios sobrenomes eram o vazamento (auditoria
+// 24/08/2026 — o guardião do sigilo entregava os nomes que devia esconder).
+// Ela mora em dados-sensiveis.local.txt (no .gitignore; uma entrada por linha;
+// # comenta). FALHA-FECHADA: sem o arquivo, o validador REPROVA — conferir
+// sigilo sem a lista seria fingir que conferiu.
+const ARQ_SIGILO = 'dados-sensiveis.local.txt';
+let DADOS_CLIENTE = [];
+// A dica muda conforme o problema real — "crie o arquivo" quando ele NÃO existe
+// confundia quando ele existia mas estava vazio/corrompido (revisão 24/08).
+let dicaSigilo = `crie ${ARQ_SIGILO} nesta pasta (identificadores sigilosos, um por linha; ` +
+    `o conteúdo real está com o gestor e nos backups do banco)`;
+if (fs.existsSync(path.join(DIR, ARQ_SIGILO))) {
+    // Sobrenome acentuado salvo em ANSI viraria U+FFFD e NUNCA casaria — a
+    // checagem ficaria verde sem conferir nada (falha-aberta). Melhor reprovar.
+    const bruto = ler(ARQ_SIGILO).replace(/^\uFEFF/, '');
+    if (bruto.includes('\uFFFD')) {
+        dicaSigilo = `${ARQ_SIGILO} tem caracteres corrompidos (não é UTF-8) — abra no Bloco de Notas e salve de novo escolhendo UTF-8`;
+    } else {
+        DADOS_CLIENTE = bruto.split(/\r\n|\r|\n/)
+            .map(l => l.trim().toUpperCase().normalize('NFC'))
+            .filter(l => l && !l.startsWith('#'));
+        dicaSigilo = `${ARQ_SIGILO} existe mas está sem entrada válida (uma por linha; # comenta; salve em UTF-8)`;
+    }
+}
+checar('lista local de dados sigilosos carregada (falha-fechada)', DADOS_CLIENTE.length >= 1, dicaSigilo);
+
+// Os .cmd entram na varredura: foi neles que o e-mail da conta dona vazou —
+// sem isso na lista de arquivos, nada impedia o e-mail de voltar (revisão 24/08).
+const bkpCmd = ler('backup-madrid.cmd');
+const pubCmd = ler('publicar-regras.cmd');
+[['index.html', idx], ['landing.html', lnd], ['agents.md', agents],
+ ['backup-madrid.cmd', bkpCmd], ['publicar-regras.cmd', pubCmd]].forEach(([nome, txt]) => {
     // preços-base de unidade (formato 1234567.89) fora de comentário
     const semComentario = txt.split('\n').filter(l => !/^\s*(\/\/|\*|<!--)/.test(l)).join('\n');
     const precos = semComentario.match(/valor: \d{6,7}\.\d+/g) || [];
@@ -80,9 +112,12 @@ catch (e) { erros.push('database.rules.json inválido: ' + e.message); }
     const formatados = (semComentario.match(/\d\.\d{3}\.\d{3},\d{2}|\d{3}\.\d{3},\d{2}/g) || []);
     checar(`${nome}: sem tabela de preços formatada`, formatados.length === 0,
         formatados.slice(0, 3).join(', '));
-    // dados de cliente
-    ['SCHILLER', 'CHIAPETTI', 'BIRCK', 'VENTIMIGLIA', '28351926'].forEach(t => {
-        if (txt.toUpperCase().includes(t)) erros.push(`${nome}: DADO DE CLIENTE no código ("${t}")`);
+    // dados sigilosos (a lista vem de fora do repositório — ver topo da seção 3).
+    // normalize('NFC') nos dois lados: um acento decomposto (arquivo vindo de
+    // Mac) casaria byte diferente e passaria batido.
+    const alvoSigilo = txt.toUpperCase().normalize('NFC');
+    DADOS_CLIENTE.forEach(t => {
+        if (alvoSigilo.includes(t)) erros.push(`${nome}: DADO SIGILOSO no código ("${t}")`);
     });
     const cpfs = (txt.match(/\d{3}\.\d{3}\.\d{3}-\d{2}/g) || []).filter(c => c !== '000.000.000-00');
     if (cpfs.length) erros.push(`${nome}: CPF no código (${cpfs.join(', ')})`);
