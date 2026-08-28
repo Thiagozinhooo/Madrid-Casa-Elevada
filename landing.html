@@ -440,6 +440,17 @@
             display: block; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
             color: var(--brand-gold-text); margin-bottom: 6px; font-weight: 700;
         }
+        /* Tile de logo dos construtores. Loft e Baumann são escuros sobre claro →
+           tile branco; Bella Vista é branco sobre preto → tile escuro (.dark). */
+        .quem-logo {
+            height: 82px; width: 100%; max-width: 190px; margin: 0 auto 18px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 12px; padding: 14px 20px;
+            background: #fff; border: 1px solid var(--border-soft); box-shadow: var(--shadow-sm);
+        }
+        .quem-logo.dark { background: #0d0d0d; border-color: #0d0d0d; }
+        .quem-logo.vazio { display: none; }
+        .quem-logo img { max-height: 100%; max-width: 100%; width: auto; object-fit: contain; }
         .lazer-dica { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 28px; text-align: center; }
         .diff-icon {
             width: 64px; height: 64px; margin: 0 auto 18px;
@@ -450,6 +461,45 @@
         }
         .diff-card h4 { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--brand-primary); margin-bottom: 8px; }
         .diff-card p { font-size: 13px; }
+
+        /* ---------- APARTAMENTO DECORADO + PARCEIROS ---------- */
+        .decorado-cta { text-align: center; max-width: 620px; margin: 0 auto 60px; }
+        .decorado-sub { margin-bottom: 40px; }
+        .decorado-sub h3 {
+            font-family: 'Cormorant Garamond', serif; font-size: clamp(24px, 3vw, 34px);
+            color: var(--brand-primary); margin: 0 0 4px;
+        }
+        .parceiros-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 18px;
+        }
+        .parceiro-card {
+            background: #fff; border: 1px solid var(--border-soft); border-radius: var(--radius);
+            padding: 22px 16px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            box-shadow: var(--shadow-sm); transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+        }
+        .parceiro-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .parceiro-cat {
+            font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;
+            color: var(--brand-gold-text); line-height: 1.3;
+        }
+        /* Com o logo carregado, a caixa reserva 56px e os cartões ficam alinhados.
+           Enquanto o logo não subiu, o JS marca a caixa como .vazio e ela SOME — sem
+           isso sobrava um vão morto de ~80px no meio de cada cartão (revisão 24/08).
+           O nome abaixo já identifica o parceiro. Logos são pretos: fundo branco serve. */
+        .parceiro-logo { height: 56px; width: 100%; display: flex; align-items: center; justify-content: center; }
+        .parceiro-logo.vazio { display: none; }
+        /* Future Tec: o logo é branco sobre azul (não vira preto sem descaracterizar
+           a marca). Por opção do gestor, o card dela ganha um tile azul e o logo real
+           aparece por cima — o azul casa com o fundo do próprio banner. */
+        .parceiro-logo.azul { background: #06578c; border-radius: 8px; padding: 5px 10px; }
+        .parceiro-logo-img { max-height: 56px; max-width: 100%; width: auto; object-fit: contain; }
+        .parceiro-logo-img.is-missing { display: none; }
+        .parceiro-nome {
+            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700;
+            color: var(--brand-primary); letter-spacing: 0.01em;
+        }
 
         /* ---------- GALERIA ---------- */
         .gallery-section { background: var(--brand-primary); color: white; }
@@ -898,6 +948,7 @@
                 <a href="#lazer">Lazer</a>
                 <a href="#galeria">Galeria</a>
                 <a href="#plantas">Plantas</a>
+                <a href="#decorado">Decorado</a>
                 <a href="#quem-constroi">Quem constrói</a>
                 <a href="#obra">Obra</a>
                 <a href="#como-funciona">Como funciona</a>
@@ -1144,8 +1195,87 @@
         </div>
     </section>
 
+    <!-- ===================== APARTAMENTO DECORADO ===================== -->
+    <section class="section" id="decorado">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="section-eyebrow">Apartamento Decorado</span>
+                <h2>Veja o Madrid decorado, de verdade</h2>
+                <div class="gold-divider"></div>
+                <p style="margin-top:16px;">Estamos preparando um apartamento decorado para você caminhar por dentro do Madrid antes da entrega — sentir os espaços, os acabamentos e como cada ambiente ganha vida.</p>
+            </div>
+            <div class="decorado-cta reveal">
+                <a id="waDecoradoBtn" href="https://wa.me/5577981346775" target="_blank" rel="noopener noreferrer" class="btn btn-solid-primary"><i class="fab fa-whatsapp"></i> Agendar minha visita ao decorado</a>
+                <p style="font-size:13px; color:var(--text-muted); margin-top:16px;">Quer ser um dos primeiros a visitar? Fale com a gente pelo WhatsApp e avisamos assim que o decorado estiver pronto.</p>
+            </div>
+            <div class="section-header decorado-sub reveal">
+                <span class="section-eyebrow">Parceiros do Decorado</span>
+                <h3>As marcas que estão deixando o decorado pronto</h3>
+                <div class="gold-divider"></div>
+            </div>
+            <div class="parceiros-grid">
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Projeto de interiores</span>
+                    <div class="parceiro-logo"><img class="parceiro-logo-img" src="parceiros/flua-arquitetura.png" alt="Flua Arquitetura" loading="lazy"></div>
+                    <span class="parceiro-nome">Flua Arquitetura</span>
+                </div>
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Marcenaria</span>
+                    <div class="parceiro-logo"><img class="parceiro-logo-img" src="parceiros/jm-moveis.png" alt="JM Móveis Planejados" loading="lazy"></div>
+                    <span class="parceiro-nome">JM Móveis Planejados</span>
+                </div>
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Marmoraria</span>
+                    <div class="parceiro-logo"><img class="parceiro-logo-img" src="parceiros/casa-das-pedras.png" alt="Casa das Pedras" loading="lazy"></div>
+                    <span class="parceiro-nome">Casa das Pedras</span>
+                </div>
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Climatização</span>
+                    <div class="parceiro-logo"><img class="parceiro-logo-img" src="parceiros/bom-clima.png" alt="Bom Clima" loading="lazy"></div>
+                    <span class="parceiro-nome">Bom Clima</span>
+                </div>
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Eletros</span>
+                    <div class="parceiro-logo"><img class="parceiro-logo-img" src="parceiros/casas-bahia.png" alt="Casas Bahia" loading="lazy"></div>
+                    <span class="parceiro-nome">Casas Bahia</span>
+                </div>
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Iluminação</span>
+                    <div class="parceiro-logo"><img class="parceiro-logo-img" src="parceiros/new-led.png" alt="New Led" loading="lazy"></div>
+                    <span class="parceiro-nome">New Led</span>
+                </div>
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Móveis soltos</span>
+                    <div class="parceiro-logo"><img class="parceiro-logo-img" src="parceiros/destack.png" alt="Destack" loading="lazy"></div>
+                    <span class="parceiro-nome">Destack</span>
+                </div>
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Decorativos</span>
+                    <div class="parceiro-logo"><img class="parceiro-logo-img" src="parceiros/tche.png" alt="Tchê" loading="lazy"></div>
+                    <span class="parceiro-nome">Tchê</span>
+                </div>
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Cortinas e papéis de parede</span>
+                    <div class="parceiro-logo"><img class="parceiro-logo-img" src="parceiros/art-design.png" alt="Art Design" loading="lazy"></div>
+                    <span class="parceiro-nome">Art Design</span>
+                </div>
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Internet</span>
+                    <div class="parceiro-logo azul"><img class="parceiro-logo-img" src="parceiros/future-tec.png" alt="Future Tec" loading="lazy"></div>
+                    <span class="parceiro-nome">Future Tec</span>
+                </div>
+                <div class="parceiro-card reveal">
+                    <span class="parceiro-cat">Roupa de cama</span>
+                    <div class="parceiro-logo"><img class="parceiro-logo-img" src="parceiros/basaglia.png" alt="Basaglia" loading="lazy"></div>
+                    <span class="parceiro-nome">Basaglia</span>
+                </div>
+            </div>
+            <p class="lazer-dica" style="color:var(--text-muted);">Parceiros do apartamento decorado do Madrid Casa Elevada.</p>
+        </div>
+    </section>
+
     <!-- ===================== CRONOGRAMA DE OBRA ===================== -->
-    
+
     <!-- ===================== QUEM CONSTRÓI =====================
          O card "SPE Dedicada" LEVANTAVA a pergunta ("SPE de quem?") e não
          respondia — chamava atenção para o vazio. Comprar na planta é entregar
@@ -1161,19 +1291,19 @@
             </div>
             <div class="diffs-grid">
                 <div class="diff-card reveal">
-                    <div class="diff-icon"><i class="fas fa-helmet-safety"></i></div>
+                    <div class="quem-logo"><img src="parceiros/loft.png" alt="Loft" loading="lazy"></div>
                     <span class="quem-papel">Construtora</span>
                     <h4>Loft</h4>
                     <p>Responsável pela execução da obra do Madrid Casa Elevada.</p>
                 </div>
                 <div class="diff-card reveal">
-                    <div class="diff-icon"><i class="fas fa-handshake"></i></div>
+                    <div class="quem-logo"><img src="parceiros/baumann.png" alt="Baumann" loading="lazy"></div>
                     <span class="quem-papel">Sócio</span>
                     <h4>Baumann</h4>
                     <p>Sócio do empreendimento, junto com a Bella Vista.</p>
                 </div>
                 <div class="diff-card reveal">
-                    <div class="diff-icon"><i class="fas fa-building-columns"></i></div>
+                    <div class="quem-logo dark"><img src="parceiros/bella-vista.png" alt="Bella Vista" loading="lazy"></div>
                     <span class="quem-papel">Sócio</span>
                     <h4>Bella Vista</h4>
                     <p>Sócio do empreendimento, junto com a Baumann.</p>
@@ -1536,6 +1666,21 @@
         const setWa = (id, msg) => { const el = document.getElementById(id); if (el) el.href = buildWhatsURL(msg); };
         setWa('waGaleriaBtn', 'Olá! Vi a galeria do Madrid Casa Elevada e quero receber mais imagens e vídeos.');
         setWa('waObraBtn', 'Olá! Quero acompanhar de perto o andamento da obra do Madrid Casa Elevada.');
+        setWa('waDecoradoBtn', 'Olá! Quero agendar uma visita ao apartamento decorado do Madrid Casa Elevada.');
+
+        // Logo que falhar (parceiro do decorado OU construtor de "Quem constrói")
+        // some sem ícone de imagem quebrada e a caixa dele COLAPSA. O nome abaixo
+        // continua identificando. Revisão 27/08: antes só o decorado tinha essa
+        // rede — os 3 logos de "Quem constrói" quebravam feios na seção de confiança.
+        document.querySelectorAll('.parceiro-logo-img, .quem-logo img').forEach(img => {
+            const semLogo = () => {
+                img.classList.add('is-missing');
+                const caixa = img.closest('.parceiro-logo, .quem-logo');
+                if (caixa) caixa.classList.add('vazio');
+            };
+            img.addEventListener('error', semLogo);
+            if (img.complete && img.naturalWidth === 0) semLogo();
+        });
         // Barra fixa mobile: entra depois que o hero sai de cena.
         const ctaBar = document.getElementById('mobileCtaBar');
         if (ctaBar) {

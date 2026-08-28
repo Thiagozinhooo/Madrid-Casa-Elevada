@@ -408,8 +408,19 @@ medicao.forEach(m => {
     ['fachada-video.mp4'].forEach(f => refs.add(f));
 
     const fora = [...refs].filter(f => !rastreados.has(f));
-    checar('todo arquivo que a landing usa está versionado', fora.length === 0,
-        fora.length + ' fora do repositório (' + fora.slice(0, 5).join(', ') + ') — existe aqui, mas daria 404 no ar. Rode: git add -A');
+    // Logo de parceiro que a arte AINDA NÃO CHEGOU (nem existe no disco) = AVISO:
+    // o cartão do decorado mostra só o nome e o JS esconde o logo que falta.
+    // MAS logo que EXISTE no disco e está sem `git add` = ERRO que trava — é o
+    // "esqueci de versionar → 404 no ar", o mesmo buraco do fotos-mini (a rede
+    // de segurança deste bloco existe justamente pra isso). Revisão 27/08: a 1ª
+    // versão rebaixava os dois casos a aviso e deixava publicar 14 logos untracked.
+    const parceirosPendentes = fora.filter(f => /^parceiros\//i.test(f) && !fs.existsSync(path.join(DIR, f)));
+    const foraQueTrava = fora.filter(f => !parceirosPendentes.includes(f));
+    checar('todo arquivo que a landing usa está versionado', foraQueTrava.length === 0,
+        foraQueTrava.length + ' fora do repositório (' + foraQueTrava.slice(0, 5).join(', ') + ') — no disco mas sem git add (daria 404 no ar). Rode: git add -A');
+    if (parceirosPendentes.length) {
+        avisos.push('faltam ' + parceirosPendentes.length + ' logo(s) de parceiro (a arte ainda não chegou; o cartão mostra só o nome): ' + parceirosPendentes.join(', '));
+    }
 
     ['gerar-miniaturas.js', 'validar.js', 'privacidade.html'].forEach(f => {
         if (fs.existsSync(path.join(DIR, f))) {
