@@ -440,15 +440,14 @@
             display: block; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
             color: var(--brand-gold-text); margin-bottom: 6px; font-weight: 700;
         }
-        /* Tile de logo dos construtores. Loft e Baumann são escuros sobre claro →
-           tile branco; Bella Vista é branco sobre preto → tile escuro (.dark). */
+        /* Tile de logo dos construtores — os 3 logos (Loft, Baumann, Bella Vista)
+           são escuros/coloridos sobre claro, então todos usam o mesmo tile branco. */
         .quem-logo {
             height: 82px; width: 100%; max-width: 190px; margin: 0 auto 18px;
             display: flex; align-items: center; justify-content: center;
             border-radius: 12px; padding: 14px 20px;
             background: #fff; border: 1px solid var(--border-soft); box-shadow: var(--shadow-sm);
         }
-        .quem-logo.dark { background: #0d0d0d; border-color: #0d0d0d; }
         .quem-logo.vazio { display: none; }
         .quem-logo img { max-height: 100%; max-width: 100%; width: auto; object-fit: contain; }
         .lazer-dica { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 28px; text-align: center; }
@@ -1303,7 +1302,7 @@
                     <p>Sócio do empreendimento, junto com a Bella Vista.</p>
                 </div>
                 <div class="diff-card reveal">
-                    <div class="quem-logo dark"><img src="parceiros/bella-vista.png" alt="Bella Vista" loading="lazy"></div>
+                    <div class="quem-logo"><img src="parceiros/bella-vista.png" alt="Bella Vista" loading="lazy"></div>
                     <span class="quem-papel">Sócio</span>
                     <h4>Bella Vista</h4>
                     <p>Sócio do empreendimento, junto com a Baumann.</p>
