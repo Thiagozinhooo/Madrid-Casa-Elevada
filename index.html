@@ -34,7 +34,7 @@
         <meta name="referrer" content="strict-origin-when-cross-origin">
 
         <!-- Cache gerido pelo parâmetro ?v=353 no URL -->
-        <title>Madrid Casa Elevada | Premium V400</title>
+        <title>Madrid Casa Elevada | Premium V402</title>
 
         <!-- Hint para indexadores: o app interno NÃO deve ser indexado.
              A landing pública (landing.html) é quem fica nas buscas. -->
@@ -1063,7 +1063,7 @@
             catch (e) { document.documentElement.innerHTML = ''; /* bloqueia tela */ }
         }
 
-        const CURRENT_APP_VERSION = "400";
+        const CURRENT_APP_VERSION = "402";
         const urlParams = new URLSearchParams(window.location.search);
 
         // O desvio do visitante para a landing acontece lá no <head>, antes dos
@@ -2198,7 +2198,7 @@
         </div>
 
     <script>
-        console.log("LOG: Versão Premium V400");
+        console.log("LOG: Versão Premium V402");
 
         // V371: dicas de toque — clique num ".help-tip" abre o balão com o texto
         // do data-tip; clique em qualquer outro lugar fecha. (title= só existe
@@ -3469,7 +3469,35 @@
             renderTable: () => {
                 const tb = document.getElementById('usersTable');
                 if(!tb) return;
-                
+
+                // V402 (bug do gestor 31/08): o listener de /permissions redesenha
+                // ESTA TABELA INTEIRA a cada gravação, e os nomes/e-mails são
+                // <input> dentro dela. Resultado: salvar UMA linha apagava o que já
+                // estava digitado nas OUTRAS (o banco nunca perdeu nada — o que
+                // sumia era a digitação na tela).
+                // Guardamos só o que está SUJO (valor != data-original) mais o foco
+                // e a posição do cursor. Campo intocado NÃO é preservado de propósito:
+                // assim ele recebe o valor novo se outro gestor mexer nele.
+                // A comparação normaliza IGUAL ao que o updateEmail grava (nome:
+                // trim+80; e-mail: trim+minúsculas). Sem isso, digitar "ANA " e
+                // salvar gravava "ANA", o campo voltava a "ANA " na restauração e
+                // ficava eternamente "sujo": nunca mais receberia alteração feita
+                // por outro gestor. (revisão 31/08)
+                const _normal = (el, txt) => (el.id.indexOf('edit_email_') === 0
+                    ? String(txt).trim().toLowerCase()
+                    : String(txt).trim().slice(0, 80));
+                const digitado = {};
+                tb.querySelectorAll('input[data-original]').forEach(i => {
+                    if (!i.id) return;
+                    if (_normal(i, i.value) !== _normal(i, i.getAttribute('data-original') || '')) {
+                        digitado[i.id] = i.value;
+                    }
+                });
+                const ativo = document.activeElement;
+                const focoId = (ativo && ativo.id && /^edit_/.test(ativo.id)) ? ativo.id : null;
+                const selIni = focoId ? ativo.selectionStart : 0;
+                const selFim = focoId ? ativo.selectionEnd : 0;
+
                 let html = `<thead>
                     <tr>
                         <th style="padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-secondary);">E-mail Cadastrado</th>
@@ -3507,8 +3535,8 @@
 
                         html += `<tr>
                             <td style="padding:12px; border-bottom:1px solid var(--bg-hover);">
-                                <input type="text" id="edit_nome_${safeKey}" value="${safeNome}" placeholder="Nome (quem usa esta conta)" maxlength="80" class="control-input" style="height:32px; padding:0 10px; font-size:12px; width: 100%; min-width: 180px; font-weight:700; margin-bottom:6px;">
-                                <input type="email" id="edit_email_${safeKey}" value="${safeEmail}" class="control-input" style="height:32px; padding:0 10px; font-size:12px; width: 100%; min-width: 180px; font-weight:600;">
+                                <input type="text" id="edit_nome_${safeKey}" value="${safeNome}" data-original="${safeNome}" placeholder="Nome (quem usa esta conta)" maxlength="80" class="control-input" style="height:32px; padding:0 10px; font-size:12px; width: 100%; min-width: 180px; font-weight:700; margin-bottom:6px;">
+                                <input type="email" id="edit_email_${safeKey}" value="${safeEmail}" data-original="${safeEmail}" class="control-input" style="height:32px; padding:0 10px; font-size:12px; width: 100%; min-width: 180px; font-weight:600;">
                             </td>
                             <td style="padding:12px; border-bottom:1px solid var(--bg-hover);">
                                 <select onchange="AppAuthManager.changeRole('${jsKey}', '${jsEmail}', this.value)" class="control-input" style="height: 32px; padding: 0 10px; font-size: 11px; width: 120px; font-weight: 700;">
@@ -3526,6 +3554,19 @@
                 }
                 html += `</tbody>`;
                 tb.innerHTML = html;
+                // V402: devolve as edições em curso e o cursor (ver comentário no
+                // topo da função) — sem isto, salvar uma linha limpava as outras.
+                Object.keys(digitado).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = digitado[id];
+                });
+                if (focoId) {
+                    const el = document.getElementById(focoId);
+                    if (el) {
+                        el.focus();
+                        try { el.setSelectionRange(selIni, selFim); } catch (e) {}
+                    }
+                }
                 // V388: aprovar alguém muda /permissions → a fila de solicitações
                 // precisa re-filtrar junto (o pedido aprovado some sozinho).
                 AppAuthManager.renderSolicitacoes();
