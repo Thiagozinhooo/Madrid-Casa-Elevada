@@ -34,11 +34,31 @@
         <meta name="referrer" content="strict-origin-when-cross-origin">
 
         <!-- Cache gerido pelo parâmetro ?v=353 no URL -->
-        <title>Madrid Casa Elevada | Premium V402</title>
+        <title>Madrid Casa Elevada | Premium V403</title>
 
         <!-- Hint para indexadores: o app interno NÃO deve ser indexado.
              A landing pública (landing.html) é quem fica nas buscas. -->
         <meta name="robots" content="noindex, nofollow">
+
+        <!-- V403 (auditoria): quem compartilha o endereço curto (a raiz do domínio)
+             cai AQUI, e os robôs de preview (WhatsApp/Instagram/Facebook) não executam
+             o desvio JS para a landing — sem estas metas o cartão do link saía sem foto
+             e com "Premium V###" no título. Espelha as metas da landing. -->
+        <meta name="description" content="Madrid Casa Elevada — Apartamentos premium de 1 e 3 suítes no Jardim Sol Nascente, Luís Eduardo Magalhães — BA. Vagas duplas, escaninho privativo, lazer completo. Entrega julho/2027.">
+        <meta property="og:type" content="website">
+        <meta property="og:locale" content="pt_BR">
+        <meta property="og:site_name" content="Madrid Casa Elevada">
+        <meta property="og:title" content="Madrid Casa Elevada — Alto Padrão | Luís Eduardo Magalhães">
+        <meta property="og:description" content="Apartamentos premium de 1 e 3 suítes. Vagas duplas, escaninho privativo, lazer completo. Entrega julho/2027.">
+        <meta property="og:image" content="https://www.madridcasaelevada.com/fachada-dia.jpg">
+        <meta property="og:image:width" content="1600">
+        <meta property="og:image:height" content="1600">
+        <meta property="og:image:alt" content="Fachada da torre Madrid Casa Elevada — 14 andares em Luís Eduardo Magalhães">
+        <meta property="og:url" content="https://www.madridcasaelevada.com/landing.html">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Madrid Casa Elevada — Alto Padrão">
+        <meta name="twitter:description" content="Lançamento de alto padrão em Luís Eduardo Magalhães — BA. Entrega julho/2027.">
+        <meta name="twitter:image" content="https://www.madridcasaelevada.com/fachada-dia.jpg">
 
         <!-- ===========================================================
              GA4 / Meta Pixel placeholders (V333)
@@ -159,7 +179,7 @@
                    No dark mode ficam claras pra manter contraste WCAG AA (>4.5:1)
                    sem precisar trocar os usos de BACKGROUND var(--brand-primary). */
                 --brand-primary-text: #1F3324;
-                --brand-gold-text: #A68550;
+                --brand-gold-text: #856A34;   /* V403: 5,1:1 no branco (era #A68550 = 3,45:1, reprovava) */
 
                 --bg-body: #F8F9F8;
                 --bg-card: #FFFFFF;
@@ -189,7 +209,15 @@
                 --brand-gold-text: #D9BE7A;      /* dourado mais claro pra contraste */
             }
 
-            * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+            * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+            /* V403 (auditoria): o outline:none global apagava o foco do teclado em
+               TUDO (WCAG 2.4.7) — quem navega por Tab não sabia onde estava.
+               :focus-visible mostra o contorno só na navegação por teclado. */
+            :focus-visible { outline: 2px solid var(--brand-gold-dark); outline-offset: 2px; }
+            :focus:not(:focus-visible) { outline: none; }
+            /* Campos de texto já têm indicador próprio (borda + halo) — sem o anel
+               global por cima, senão vira anel triplo a cada clique (revisão V403). */
+            .inp-login:focus-visible, .control-input:focus-visible, .admin-reajuste input:focus-visible { outline: none; }
             
             body { 
                 font-family: 'Plus Jakarta Sans', sans-serif; 
@@ -242,7 +270,7 @@
             .forgot-pass { color: var(--brand-gold); font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; transition: 0.2s; }
             .forgot-pass:hover { color: white; text-decoration: underline; }
 
-            .btn-login { width: 100%; height: 48px; border-radius: var(--radius-btn); background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: #fff; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.2); }
+            .btn-login { width: 100%; height: 48px; border-radius: var(--radius-btn); background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: #1F3324; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.2); }
             .btn-login:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4); }
             .btn-login:disabled { opacity: 0.7; cursor: not-allowed; }
 
@@ -421,7 +449,7 @@
             .admin-reajuste { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
             .admin-reajuste input { width: 75px; height: 40px; background: rgba(255,255,255,0.05); border: 1px solid rgba(197, 160, 101, 0.3); border-radius: 6px; color: white; text-align: center; font-weight: 700; font-size: 14px; font-family: inherit; }
             .admin-reajuste input:focus { border-color: var(--brand-gold); outline: none; background: rgba(255,255,255,0.1); }
-            .admin-reajuste .btn-apply { flex: 1; height: 40px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: white; border: none; border-radius: 6px; font-weight: 800; font-size: 11px; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
+            .admin-reajuste .btn-apply { flex: 1; height: 40px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: #1F3324; border: none; border-radius: 6px; font-weight: 800; font-size: 11px; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 0.5px; }
             .admin-reajuste .btn-undo { width: 40px; height: 40px; background: rgba(255,255,255,0.05); color: var(--brand-gold); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
             
             .btn-reset { width: 100%; height: 36px; margin-top: 15px; background: transparent; color: #D98888; border: 1px dashed rgba(217, 136, 136, 0.3); border-radius: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.2s; letter-spacing: 1px; }
@@ -431,7 +459,7 @@
             .simulator-container { max-width: 700px; margin: 0 auto; }
             .control-label { display: block; font-size: 10px; font-weight: 800; color: var(--text-secondary); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
             .control-input { width: 100%; height: 46px; padding: 0 15px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font-weight: 600; font-size: 13px; font-family: inherit; transition: 0.3s; appearance: none; }
-            .control-input:focus { border-color: var(--brand-gold); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(197, 160, 101, 0.1); }
+            .control-input:focus { border-color: var(--brand-gold-text); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(197, 160, 101, 0.1); }   /* V403: borda de foco a 5:1 (era 2,4:1) */
             .control-input:disabled { opacity: 0.5; cursor: not-allowed; background: var(--bg-hover); }
             /* V393 (auditoria): em tela de toque a fonte dos campos vai a 16px.
                O Safari do iPhone dá ZOOM automático em qualquer campo abaixo disso —
@@ -493,7 +521,7 @@
             .schedule-date:disabled { background: transparent; border-color: transparent; color: var(--text-main); cursor: not-allowed; }
             .schedule-label { font-size: 12px; color: var(--text-main); font-weight: 600; }
             .schedule-label .sub { color: var(--text-muted); font-weight: 500; margin-left: 4px; font-size: 11px; }
-            .schedule-value { font-size: 13px; font-weight: 800; color: var(--brand-gold-dark); text-align: right; }
+            .schedule-value { font-size: 13px; font-weight: 800; color: var(--brand-gold-text); text-align: right; }
             @media (max-width: 768px) {
                 .schedule-row { grid-template-columns: 1fr auto; grid-template-areas: "label value" "date date"; gap: 6px 10px; padding: 10px 12px; }
                 .schedule-label { grid-area: label; font-size: 13px; }
@@ -530,7 +558,9 @@
             .res-row { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
             .res-total { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); align-items: center; }
 
-            .btn-primary { height: 50px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); }
+            /* V403 (auditoria): texto branco sobre dourado dava 2,4:1 — escuro dá 4,8–5,5:1
+               (mesma solução que a landing já usa no .btn-primary dela). */
+            .btn-primary { height: 50px; background: linear-gradient(135deg, var(--brand-gold) 0%, var(--brand-gold-dark) 100%); color: #1F3324; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(197, 160, 101, 0.3); }
             .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(197, 160, 101, 0.4); }
             .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
             
@@ -538,7 +568,7 @@
             .btn-secondary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(31, 51, 36, 0.4); }
             .btn-secondary:disabled { opacity: 0.7; cursor: not-allowed; }
 
-            .btn-whatsapp { height: 50px; background: #10B981; color: white; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+            .btn-whatsapp { height: 50px; background: #047857; color: white;   /* V403: branco sobre #047857 = 5,5:1 (era #10B981 = 2,5:1) */ border: none; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
             .btn-whatsapp:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); filter: brightness(1.05); }
             .btn-whatsapp:disabled { opacity: 0.7; cursor: not-allowed; }
             
@@ -1016,11 +1046,11 @@
             .agenda-cell .ac-day { font-size: 13px; font-weight: 700; color: var(--text-main); }
             .agenda-cell.past .ac-day { color: var(--text-muted); }
             .agenda-cell .ac-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand-gold); }
-            .agenda-cell .ac-count { font-size: 10px; font-weight: 800; color: var(--brand-gold-dark); line-height: 1; }
+            .agenda-cell .ac-count { font-size: 10px; font-weight: 800; color: var(--brand-gold-text); line-height: 1; }
             .agenda-day-detail { margin-top: 18px; }
-            .agenda-day-title { font-size: 13px; font-weight: 800; color: var(--brand-gold-dark); margin-bottom: 10px; text-transform: capitalize; }
+            .agenda-day-title { font-size: 13px; font-weight: 800; color: var(--brand-gold-text); margin-bottom: 10px; text-transform: capitalize; }
             .agenda-visit-row { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border: 1px solid var(--border-color); border-radius: 10px; margin-bottom: 8px; background: var(--bg-card); }
-            .agenda-visit-row .av-time { font-size: 15px; font-weight: 800; color: var(--brand-gold-dark); min-width: 52px; text-align: center; }
+            .agenda-visit-row .av-time { font-size: 15px; font-weight: 800; color: var(--brand-gold-text); min-width: 52px; text-align: center; }
             .agenda-visit-row .av-info { flex: 1; min-width: 0; }
             .agenda-visit-row .av-main { font-size: 13px; font-weight: 700; color: var(--text-main); }
             .agenda-visit-row .av-sub { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
@@ -1063,7 +1093,7 @@
             catch (e) { document.documentElement.innerHTML = ''; /* bloqueia tela */ }
         }
 
-        const CURRENT_APP_VERSION = "402";
+        const CURRENT_APP_VERSION = "403";
         const urlParams = new URLSearchParams(window.location.search);
 
         // O desvio do visitante para a landing acontece lá no <head>, antes dos
@@ -1127,7 +1157,7 @@
                 <h3 class="modal-title" style="margin:0;"><i class="fas fa-users" style="color: var(--brand-gold); margin-right: 8px;"></i> Acessos de Hoje</h3>
                 <button onclick="document.getElementById('logsModal').classList.add('hidden')" style="background:transparent; border:none; font-size:18px; cursor:pointer; color:var(--text-secondary);">&times;</button>
             </div>
-            <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 15px;">Último acesso registado por utilizador no dia de hoje.</p>
+            <p style="font-size: 11px; color: var(--text-secondary); margin-bottom: 15px;">Último acesso registrado por usuário no dia de hoje.</p>
             <div id="logsContent" style="max-height: 300px; overflow-y: auto; text-align: left; margin-top:15px; font-size:12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-body);"></div>
         </div>
     </div>
@@ -1349,7 +1379,7 @@
             <p style="font-size:13px; line-height:1.6; color:rgba(255,255,255,0.82); margin-bottom:8px;">Seu login (<strong id="pendingEmail"></strong>) está pronto, mas o acesso à tabela precisa ser <strong>liberado pelo gestor</strong>.</p>
             <p style="font-size:12px; line-height:1.6; color:rgba(255,255,255,0.6); margin-bottom:24px;">Assim que o gestor aprovar, esta tela destrava sozinha — pode deixá-la aberta ou voltar mais tarde. Se estiver demorando, fale com seu contato na Madrid pra agilizar.</p>
             <button class="btn-login" style="max-width:280px; margin:0 auto 12px;" onclick="AppAuth.reenviarSolicitacao()"><i class="fas fa-paper-plane" style="margin-right:8px;"></i>Reenviar solicitação</button>
-            <button class="btn-login" style="max-width:280px; margin:0 auto; background:rgba(255,255,255,0.12);" onclick="AppAuth.logout()">Sair</button>
+            <button class="btn-login" style="max-width:280px; margin:0 auto; background:rgba(255,255,255,0.12); color:#fff;" onclick="AppAuth.logout()">Sair</button>
         </div>
     </div>
 
@@ -1414,7 +1444,7 @@
         <!-- V357: Countdown do reajuste mensal pelo INCC -->
         <div id="inccCountdown" class="no-print" style="display:none; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 8px; padding:10px 18px; background:rgba(197,160,101,0.10); border:1px solid rgba(197,160,101,0.35); border-radius:10px;">
             <i class="fas fa-hourglass-half" style="color:var(--brand-gold); font-size:15px;"></i>
-            <span style="font-size:13px; color:var(--text-main); font-weight:800;">Tabela corrigida pelo INCC em <span id="inccCountdownTime" style="color:var(--brand-gold-dark);">—</span></span><span class="help-tip" data-tip="INCC-DI: índice nacional do custo da construção civil. A tabela é corrigida por ele todo mês até a entrega das chaves — por isso o preço de hoje é o menor.">?</span>
+            <span style="font-size:13px; color:var(--text-main); font-weight:800;">Tabela corrigida pelo INCC em <span id="inccCountdownTime" style="color:var(--brand-gold-text);">—</span></span><span class="help-tip" data-tip="INCC-DI: Índice Nacional de Custo da Construção (FGV). A tabela é corrigida por ele todo mês até a entrega das chaves — por isso o preço de hoje é o menor.">?</span>
             <span style="font-size:11px; color:var(--text-secondary);">Feche agora e garanta a condição da tabela atual.</span>
         </div>
 
@@ -1725,7 +1755,7 @@
                         
                         <div id="calcResults" class="calc-results-box hidden">
                             <div class="res-row">
-                                <span id="lblSinal">Ato/Sinal (3x)</span>
+                                <span id="lblSinal">Sinal/Ato (3x)</span>
                                 <strong id="resSinal">...</strong>
                             </div>
                             <div id="rowMensal" class="res-row">
@@ -1737,7 +1767,7 @@
                                 <strong id="resBalao">...</strong>
                             </div>
                             <div class="res-total">
-                                <span>Entrega da Chave</span>
+                                <span>Entrega das Chaves</span>
                                 <strong id="resChaves">...</strong>
                             </div>
                         </div>
@@ -1983,7 +2013,7 @@
                 <!-- V371: filtros de corretor/status + export CSV — responder "quantas
                      propostas o corretor X tem em negociação?" era ler card por card. -->
                 <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0;">
-                    <select id="crmCorretorFilter" onchange="AppCore.filterProposals()" class="control-input" style="width:auto; min-width:170px; height:38px; font-size:11px; font-weight:800;">
+                    <select id="crmCorretorFilter" onchange="this.blur(); AppCore.filterProposals()" class="control-input" style="width:auto; min-width:170px; height:38px; font-size:11px; font-weight:800;">
                         <option value="todos">Todos os corretores</option>
                     </select>
                     <div id="crmStatusChips" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
@@ -2198,7 +2228,7 @@
         </div>
 
     <script>
-        console.log("LOG: Versão Premium V402");
+        console.log("LOG: Versão Premium V403");
 
         // V371: dicas de toque — clique num ".help-tip" abre o balão com o texto
         // do data-tip; clique em qualquer outro lugar fecha. (title= só existe
@@ -3200,7 +3230,7 @@
                 // o login — o bloqueio logo abaixo é só pra troca de e-mail).
                 if (oldKey === newKey) {
                     const nomeAntes = (state.permissions && state.permissions[oldKey] && state.permissions[oldKey].nome) || '';
-                    if (novoNome === nomeAntes) { AppUI.showToast("Nenhuma alteração de texto detetada.", "success"); return; }
+                    if (novoNome === nomeAntes) { AppUI.showToast("Nenhuma alteração de texto detectada.", "success"); return; }
                     database.ref('madrid_data/permissions/' + oldKey + '/nome').set(novoNome || null).then(() => {
                         AppUI.showToast("Nome atualizado com sucesso!", "success");
                         if (oldKey === AppUtils.chaveEmail(state.user)) { state.userNome = novoNome; AppAuth._pintaBadge(); }
@@ -3239,7 +3269,7 @@
             },
             sendPasswordReset: (email) => {
                 if (!AppAuthManager._exigeAdmin()) return;
-                if(confirm(`Tem a certeza que deseja enviar um link de redefinição de senha para ${email}?`)) {
+                if(confirm(`Tem certeza de que deseja enviar um link de redefinição de senha para ${email}?`)) {
                     firebase.auth().sendPasswordResetEmail(email).then(() => {
                         AppUI.showToast(`Link de recuperação enviado para ${email}.`, "success");
                     }).catch(err => { AppUI.showError("Erro ao enviar e-mail: " + err.message); });
@@ -3314,6 +3344,16 @@
             _msgLidas: () => {
                 try { return JSON.parse(localStorage.getItem('madrid_msgs_lidas') || '[]'); } catch (e) { return []; }
             },
+            // V403 (auditoria): o gestor não tinha como APAGAR mensagem — só "marcar
+            // como lida" (local). Sem isto, spam ou teste ficava no painel para sempre.
+            // A rule de leads_inbox já autoriza gestor/master a remover.
+            apagarMsg: (id) => {
+                if (!AppAuthManager._exigeAdmin()) return;
+                if (!confirm('Apagar esta mensagem definitivamente? (some para todos os gestores)')) return;
+                database.ref('madrid_data/leads_inbox/' + id).remove()
+                    .then(() => AppUI.showToast('Mensagem apagada.', 'success'))
+                    .catch(e => AppUI.showError('Não foi possível apagar: ' + e.message));
+            },
             marcarMsgLida: (id) => {
                 const lidas = AppAuthManager._msgLidas();
                 if (lidas.indexOf(id) < 0) lidas.push(id);
@@ -3358,6 +3398,7 @@
                             ${(!wa && m.email) ? `<a href="mailto:${AppUtils.escapeHTML(m.email)}" class="btn-outline" style="height:32px; padding:0 12px; font-size:11px; display:inline-flex; align-items:center; gap:6px; text-decoration:none;"><i class="fas fa-envelope"></i> Responder por e-mail</a>` : ''}
                             ${(!wa && !m.email) ? `<span style="font-size:11px; color:#ef4444;">Telefone inválido — sem caminho de resposta.</span>` : ''}
                             ${nova ? `<button onclick="AppAuthManager.marcarMsgLida('${AppUtils.escapeJSAttr(m._id)}')" class="btn-outline" style="height:32px; padding:0 12px; font-size:11px;" title="Marca como lida NESTE aparelho (não sincroniza com outros gestores)"><i class="fas fa-check"></i> Marcar como lida</button>` : ''}
+                            <button onclick="AppAuthManager.apagarMsg('${AppUtils.escapeJSAttr(m._id)}')" class="btn-outline" style="height:32px; padding:0 12px; font-size:11px; color:#ef4444; border-color:rgba(239,68,68,0.4);" title="Apaga a mensagem para todos os gestores"><i class="fas fa-trash"></i> Apagar</button>
                         </div>
                     </div>`;
                 }).join('') + (msgs.length > vis.length
@@ -4517,8 +4558,15 @@
                 }
 
                 AppSim.closeSpecialPaymentModal();
+                // V403 (auditoria): faltava RECALCULAR — a tela ficava com as parcelas
+                // do saldo antigo enquanto o PDF já saía com o saldo novo.
+                // Revisão: render + saveState continuam ANTES do calculate(), porque
+                // calculate() sai cedo quando a unidade está sem preço — e aí a
+                // proposta especial sumia da tela e do rascunho. Chamar os dois é
+                // idempotente (calculate re-renderiza por cima).
                 AppSim.renderSpecialPayments();
                 AppUI.saveState();
+                AppSim.calculate();
                 AppUI.showToast("Proposta especial salva.", "success");
             },
 
@@ -4527,6 +4575,7 @@
                 state.specialPayments = (state.specialPayments || []).filter(x => x.id !== id);
                 AppSim.renderSpecialPayments();
                 AppUI.saveState();
+                AppSim.calculate();   // V403: idem ao salvar — recalcula o saldo na tela
                 AppUI.showToast("Proposta especial removida.", "success");
             },
 
@@ -4549,7 +4598,7 @@
                         <div>
                             <div class="sp-card-header">
                                 <span class="sp-type-badge">${safeType}</span>
-                                <strong style="color:var(--brand-gold-dark); font-size:13px;">${AppCore.formatMoney(sp.value)}</strong>
+                                <strong style="color:var(--brand-gold-text); font-size:13px;">${AppCore.formatMoney(sp.value)}</strong>
                             </div>
                             <div class="sp-card-desc">${safeDesc}</div>
                             <div class="sp-card-meta"><i class="fas fa-arrow-right"></i> Destino pretendido: <strong>${safeApplies}</strong></div>
@@ -4813,7 +4862,7 @@
                 let parcelasSinal = AppSim.getSinalQtd();
                 let m = AppSim.getMensalQtd(); let b = AppSim.getBalaoQtd() || 1;
 
-                document.getElementById('lblSinal').innerText = `Ato/Sinal (${parcelasSinal}x)`;
+                document.getElementById('lblSinal').innerText = `Sinal/Ato (${parcelasSinal}x)`;
                 document.getElementById('resSinal').innerText = AppCore.formatMoney((saldo * pSinal/100)/parcelasSinal);
 
                 if(pMensal > 0) {
@@ -4967,7 +5016,7 @@
                 doc.setFont("helvetica", "normal");
                 doc.text(`Plano: ${d.plano}`, 14, y); y += 6;
                 // V332: formatPct exibe % sempre com 2 casas decimais (ex: "25,00", "8,33").
-                doc.text(`Ato/Sinal (${d.parcelasSinal}x): ${AppCore.formatMoney(d.vSinal)} (${AppCore.formatPct(d.pSinal)}%)`, 14, y); y += 6;
+                doc.text(`Sinal/Ato (${d.parcelasSinal}x): ${AppCore.formatMoney(d.vSinal)} (${AppCore.formatPct(d.pSinal)}%)`, 14, y); y += 6;
                 if (d.pMensal > 0) { doc.text(`Mensais (${d.meses}x): ${AppCore.formatMoney(d.vMensal)} (${AppCore.formatPct(d.pMensal)}%)`, 14, y); y += 6; }
                 if (d.pBalao > 0) { doc.text(`Balões (${d.baloes}x): ${AppCore.formatMoney(d.vBalao)} (${AppCore.formatPct(d.pBalao)}%)`, 14, y); y += 6; }
                 doc.text(`Chaves: ${AppCore.formatMoney(d.vChaves)} (${AppCore.formatPct(d.pChaves)}%)`, 14, y); y += 12;
@@ -5052,7 +5101,7 @@
                 doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...brandGold);
                 doc.text(`VALIDADE DA PROPOSTA: ${proximaAtualizacaoIncc().toLocaleDateString('pt-BR')} — data da próxima atualização do INCC-DI`, 14, y); y += 7;
                 doc.setFont("helvetica", "normal"); doc.setFontSize(7); doc.setTextColor(120,120,120);
-                const clause = "Correção de INCC até a entrega das chaves. As parcelas serão reajustadas mensalmente pelo INCC (Indice Nacional da Construção Civil) até a data prevista de entrega do empreendimento; após a entrega da obra, parcelas não pagas serão reajustadas pelo IPCA + 1% a.m. As despesas para financiamento do imóvel são de responsabilidade do Adquirente. " +
+                const clause = "Correção de INCC até a entrega das chaves. As parcelas serão reajustadas mensalmente pelo INCC-DI (Índice Nacional de Custo da Construção – Disponibilidade Interna, apurado pela FGV) até a data prevista de entrega do empreendimento; após a entrega da obra, parcelas não pagas serão reajustadas pelo IPCA + 1% a.m. As despesas para financiamento do imóvel são de responsabilidade do Adquirente. " +
                     // V392 (auditoria): o "destino pretendido" é intenção do cliente; o
                     // cálculo desta proposta abate o total sobre o SALDO inteiro. Sem
                     // esta frase, o documento prometia algo que a conta não fazia.
@@ -5150,7 +5199,7 @@
                 csv += 'CONDIÇÕES DE PAGAMENTO\n';
                 csv += `Plano;${S(d.plano)}\n`;
                 // V332: %s com 2 casas decimais e vírgula.
-                csv += `Sinal (${d.parcelasSinal}x);${S(AppCore.formatMoney(d.vSinal))};${S(AppCore.formatPct(d.pSinal) + '%')}\n`;
+                csv += `Sinal/Ato (${d.parcelasSinal}x);${S(AppCore.formatMoney(d.vSinal))};${S(AppCore.formatPct(d.pSinal) + '%')}\n`;
                 if (d.pMensal > 0) csv += `Mensais (${d.meses}x);${S(AppCore.formatMoney(d.vMensal))};${S(AppCore.formatPct(d.pMensal) + '%')}\n`;
                 if (d.pBalao > 0) csv += `Balões (${d.baloes}x);${S(AppCore.formatMoney(d.vBalao))};${S(AppCore.formatPct(d.pBalao) + '%')}\n`;
                 csv += `Chaves;${S(AppCore.formatMoney(d.vChaves))};${S(AppCore.formatPct(d.pChaves) + '%')}\n\n`;
@@ -5198,7 +5247,7 @@
                 }
                 msg += `\n`;
                 msg += `*Plano:* ${d.plano}\n`;
-                msg += `*Sinal (${d.parcelasSinal}x):* ${AppCore.formatMoney(d.vSinal)}\n`;
+                msg += `*Sinal/Ato (${d.parcelasSinal}x):* ${AppCore.formatMoney(d.vSinal)}\n`;
                 if (d.pMensal > 0) msg += `*Mensais (${d.meses}x):* ${AppCore.formatMoney(d.vMensal)}\n`;
                 if (d.pBalao > 0) msg += `*Balões (${d.baloes}x):* ${AppCore.formatMoney(d.vBalao)}\n`;
                 msg += `*Chaves:* ${AppCore.formatMoney(d.vChaves)}\n\n`;
@@ -5424,7 +5473,10 @@
                     nome: String(nome).slice(0, 80), telefone: String(fone).slice(0, 25),
                     email: String(email).slice(0, 120),
                     mensagem: 'Criou login no aplicativo e aguarda liberação de acesso.',
-                    interesse: 'ACESSO_APP', status: 'novo', origem: 'landing', ts: Date.now()
+                    // V403: hora do SERVIDOR — a rule de leads_inbox agora exige
+                    // ts === now (fecha o flood com chave forjada); Date.now() do
+                    // cliente seria recusado e o pedido de acesso nunca chegaria.
+                    interesse: 'ACESSO_APP', status: 'novo', origem: 'landing', ts: firebase.database.ServerValue.TIMESTAMP
                 }).then(() => {
                     try { localStorage.setItem('madrid_acesso_solicitado_' + AppUtils.chaveEmail(email), '1'); } catch (e) {}
                     return true;
@@ -6161,6 +6213,9 @@
                 // V371 (fix da revisão): se o gestor está com um select da lista
                 // aberto/focado, adia o re-render — o snapshot do Firebase chegava
                 // e fechava o dropdown no meio da escolha. O próximo evento renderiza.
+                // V403 (auditoria): esta guarda engolia o PRÓPRIO onchange do filtro
+                // por corretor (o select ainda é o activeElement durante o change) —
+                // as chips mudavam e a lista não. O onchange agora faz this.blur() antes.
                 const ativoEl = document.activeElement;
                 if (ativoEl && ativoEl.tagName === 'SELECT' && (container.contains(ativoEl) || ativoEl.id === 'crmCorretorFilter')) return;
                 const emptyMsg = isAdmin ? 'As simulações da equipe aparecerão aqui.' : 'As propostas que você gerar aparecerão aqui.';
@@ -6274,7 +6329,7 @@
                         </div>
                         <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap; background:var(--bg-input); border:1px solid rgba(197, 160, 101, 0.2); border-radius:6px; padding:10px 12px; margin-bottom:10px;">
                             <span style="font-size:12px; color:var(--text-secondary);"><i class="fas fa-home" style="color:var(--text-muted);"></i> Apto <strong style="color:var(--text-main); font-size:14px;">${safeUnit}</strong></span>
-                            <strong style="color:var(--brand-gold-dark); font-size:15px;">${AppCore.formatMoney(safeValue)}</strong>
+                            <strong style="color:var(--brand-gold-text); font-size:15px;">${AppCore.formatMoney(safeValue)}</strong>
                         </div>
                         <details style="margin-bottom:12px;" ${AppCore._contatosAbertos.has(String(p.id)) ? 'open' : ''} ontoggle="AppCore.contatoToggle('${jsPropId}', this.open)">
                             <summary style="font-size:11px; color:var(--text-muted); cursor:pointer; font-weight:700;"><i class="fas fa-address-card"></i> Contato do cliente</summary>
@@ -6509,7 +6564,7 @@
                     let bruto;
                     try { bruto = JSON.parse(leitor.result); }
                     catch (e) { AppUI.showError("O arquivo não é um JSON válido.", "Enviar tabela de preços"); return; }
-                    if (!bruto || typeof bruto !== 'object' || Array.isArray(bruto)) { AppUI.showError("Formato inesperado: esperado uma lista de unidade e preço, como { \"101\": 987654.32, ... }.", "Enviar tabela de preços"); return; }
+                    if (!bruto || typeof bruto !== 'object' || Array.isArray(bruto)) { AppUI.showError("Formato inesperado: era esperada uma lista de unidade e preço, como { \"101\": 987654.32, ... }.", "Enviar tabela de preços"); return; }
                     const precos = {}; const problemas = [];
                     Object.keys(bruto).forEach(k => {
                         const rot = String(k).slice(0, 12);
@@ -6580,7 +6635,14 @@
                         // número errado derrubava a gravação inteira lá no fim.
                         if (!isFinite(valor) || valor <= 0 || valor >= 100000000000) { problemas.push(`${rot}: valor inválido`); return; }
                         if (!c.date) { problemas.push(`${rot}: sem data de contrato`); return; }
-                        const reg = { client: String(c.client).slice(0, 200), unit: String(c.unit || k), value: valor, date: String(c.date).slice(0, 20) };
+                        // V403 (revisão): as rules ganharam teto em unit (40) e cpf (60) —
+                        // o cofre cai no mesmo wildcard das propostas. Um registro fora
+                        // do teto derrubava a importação INTEIRA (update atômico) com
+                        // erro genérico. Barra aqui, com o motivo — nunca truncar CPF.
+                        const unitStr = String(c.unit || k);
+                        if (unitStr.length > 40) { problemas.push(`${rot}: unidade com mais de 40 caracteres`); return; }
+                        if (c.cpf !== undefined && c.cpf !== null && String(c.cpf).length > 60) { problemas.push(`${rot}: CPF com mais de 60 caracteres`); return; }
+                        const reg = { client: String(c.client).slice(0, 200), unit: unitStr, value: valor, date: String(c.date).slice(0, 20) };
                         AppCore._CAMPOS_CONTRATO.forEach(campo => {
                             if (reg[campo] !== undefined || c[campo] === undefined || c[campo] === null) return;
                             reg[campo] = (campo === 'recebido') ? Number(c[campo]) || 0 : String(c[campo]).slice(0, 200);
@@ -6705,14 +6767,14 @@
                         <td style="padding:8px 10px;"><strong>${AppUtils.escapeHTML(rotulo)}</strong></td>
                         <td style="padding:8px 10px;">${AppUtils.escapeHTML(v.cliente || '—')}${v.cpf ? `<br><span style="font-size:9px; color:var(--text-muted);">${AppUtils.escapeHTML(v.cpf)}</span>` : ''}</td>
                         <td style="padding:8px 10px; white-space:nowrap;">${AppUtils.escapeHTML(v.dataContrato || '—')}</td>
-                        <td style="padding:8px 10px; text-align:right; font-weight:700; white-space:nowrap; ${ativo ? 'color:var(--brand-gold-dark);' : 'color:var(--text-muted); text-decoration:line-through;'}">${AppCore.formatMoney(valor)}</td>
+                        <td style="padding:8px 10px; text-align:right; font-weight:700; white-space:nowrap; ${ativo ? 'color:var(--brand-gold-text);' : 'color:var(--text-muted); text-decoration:line-through;'}">${AppCore.formatMoney(valor)}</td>
                         <td style="padding:8px 10px; text-align:right; white-space:nowrap;${ativo ? '' : ' color:var(--text-muted);'}">${AppCore.formatMoney(receb)}</td>
                         <td style="padding:8px 10px; text-align:center;"><span style="background:${cor}1A; color:${cor}; border:1px solid ${cor}55; padding:2px 8px; border-radius:10px; font-size:9px; font-weight:800;"${ativo ? '' : ` title="${AppUtils.escapeHTML(dica)}"`}>${AppUtils.escapeHTML(situacao)}</span></td>
                     </tr>`;
                 });
                 html += `<tr style="border-top:2px solid var(--border-color); background:var(--bg-hover); font-weight:800;">
                     <td style="padding:8px 10px;" colspan="3">Total (${nAtivos} contrato${nAtivos === 1 ? '' : 's'} ativo${nAtivos === 1 ? '' : 's'})</td>
-                    <td style="padding:8px 10px; text-align:right; color:var(--brand-gold-dark); white-space:nowrap;">${AppCore.formatMoney(totV)}</td>
+                    <td style="padding:8px 10px; text-align:right; color:var(--brand-gold-text); white-space:nowrap;">${AppCore.formatMoney(totV)}</td>
                     <td style="padding:8px 10px; text-align:right; white-space:nowrap;">${AppCore.formatMoney(totR)}</td>
                     <td></td>
                 </tr>`;
@@ -7136,7 +7198,7 @@
                             html += `<li style="padding: 10px; border-bottom: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;"><span style="font-weight:700; color:var(--text-main); font-size: 13px;">${safeLogEmail}</span><span style="font-size:11px; color:var(--text-secondary); background:var(--bg-hover); padding: 4px 8px; border-radius:4px;"><i class="far fa-clock"></i> ${safeLogTime}</span></li>`;
                         });
                         html += '</ul>';
-                    } else { html = '<p style="text-align:center; color:var(--text-muted); font-weight:600; padding: 20px 0;">Nenhum acesso registado hoje.</p>'; }
+                    } else { html = '<p style="text-align:center; color:var(--text-muted); font-weight:600; padding: 20px 0;">Nenhum acesso registrado hoje.</p>'; }
                     document.getElementById('logsContent').innerHTML = html; document.getElementById('logsModal').classList.remove('hidden');
                 }).catch(err => {
                     // V399-fix (auditoria): sem o catch, falha de rede/permissão
@@ -7553,7 +7615,7 @@
                     <th>Sinal/Ato (${parcelasSinal}x)<br><span style="color:var(--brand-gold); font-size:11px;">${AppCore.formatPct(pSinal)}%</span></th>
                     ${showM ? `<th>Mensais (${m}x)<br><span style="color:var(--brand-gold); font-size:11px;">${AppCore.formatPct(pMensal)}%</span></th>` : ''}
                     ${showB ? `<th>Balões (${b}x)<br><span style="color:var(--brand-gold); font-size:11px;">${AppCore.formatPct(pBalao)}%</span></th>` : ''}
-                    <th>Entrega da Chave<br><span style="color:var(--brand-gold); font-size:11px;">${AppCore.formatPct(pChaves)}%</span></th>
+                    <th>Entrega das Chaves<br><span style="color:var(--brand-gold); font-size:11px;">${AppCore.formatPct(pChaves)}%</span></th>
                 </tr></thead><tbody>`;
 
                 let totalVGV = 0, totalVend = 0, totalLivre = 0, totalRes = 0, cLivre = 0, cRes = 0, cVend = 0;
@@ -7635,7 +7697,7 @@
 
                         html += `<tr class="${safeSt}" onclick="AppCore.openUnitDetails('${jsU}')" title="Clique para ver os detalhes da unidade">
                             <td><strong style="color:var(--brand-primary-text);">${safeU}</strong> <span style="font-size:10px; color:var(--text-muted); margin-left:4px;">${safeTipo}</span></td>
-                            <td><strong style="color:var(--brand-gold-dark);">${AppCore.precoTexto(finalPrice)}</strong></td>
+                            <td><strong style="color:var(--brand-gold-text);">${AppCore.precoTexto(finalPrice)}</strong></td>
                             <td>${safeArea}m²</td>
                             <td>${safeAreaTotal}m²</td>
                             <td>${AppCore.precoTexto(vSinal)}</td>
@@ -7975,7 +8037,7 @@
             undoGlobalAdjustment: () => {
                 if (!AppAuthManager._exigeAdmin()) return;
                 if (state.previousMultiplier && state.previousMultiplier !== state.globalMultiplier) {
-                    if(confirm(`Tem a certeza que quer desfazer o último reajuste?`)) {
+                    if(confirm(`Tem certeza de que quer desfazer o último reajuste?`)) {
                         // V332: encadeia escritas (igual ao apply). Antes saíam em paralelo,
                         // permitindo que o listener disparasse renderAll() com estado misto
                         // (globalMultiplier antigo + previousMultiplier novo, ou vice-versa).
@@ -8030,7 +8092,7 @@
                     doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(...brandPrimary); doc.text("TABELA DE REFERÊNCIA", 282, 18, { align: 'right' });
                     doc.setFont("helvetica", "normal"); doc.text(mesReferenciaTabela().replace('_', '/'), 282, 23, { align: 'right' });
                     doc.setFontSize(7); doc.setTextColor(100, 100, 100);
-                    const text = "Tabela de Vendas - Madrid Casa Elevada - Correção de INCC até a entrega das chaves. As parcelas serão reajustadas mensalmente pelo INCC (Índice Nacional da Construção Civil) até a data prevista de entrega do empreendimento; após a entrega da obra, parcelas não pagas serão reajustadas pelo IPCA + 1% a.m. As despesas para financiamento do imóvel são de responsabilidade do Adquirente. As condições acima e demais condições de venda estão explicitadas no Contrato de Compromisso de Compra e Venda. * A razão social da Vendedora: TORRE MADRID EMPREENDIMENTOS IMOBILIARIOS SPE LTDA (CNPJ: 51.114.117/0001-37).";
+                    const text = "Tabela de Vendas - Madrid Casa Elevada - Correção de INCC até a entrega das chaves. As parcelas serão reajustadas mensalmente pelo INCC-DI (Índice Nacional de Custo da Construção – Disponibilidade Interna, apurado pela FGV) até a data prevista de entrega do empreendimento; após a entrega da obra, parcelas não pagas serão reajustadas pelo IPCA + 1% a.m. As despesas para financiamento do imóvel são de responsabilidade do Adquirente. As condições acima e demais condições de venda estão explicitadas no Contrato de Compromisso de Compra e Venda. * A razão social da Vendedora: TORRE MADRID EMPREENDIMENTOS IMOBILIARIOS SPE LTDA (CNPJ: 51.114.117/0001-37).";
                     doc.text(doc.splitTextToSize(text, 268), 14, 32); doc.setFont("helvetica", "bold");
                     // V378: validade dinâmica — mesma fonte única da proposta (proximaAtualizacaoIncc, V377);
                     // o texto fixo "a partir de 01/01/2026" ficava desatualizado a cada reajuste.

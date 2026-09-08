@@ -47,7 +47,7 @@
 
     <!-- SEO / Open Graph / Schema.org -->
     <title>Madrid Casa Elevada — Apartamentos de Alto Padrão em Luís Eduardo Magalhães | Entrega Jul/2027</title>
-    <meta name="description" content="Madrid Casa Elevada — Apartamentos premium de 1 e 3 suítes no Jardim Sol Nascente, Luís Eduardo Magalhães — BA. Vagas duplas, escaninho privativo, lazer completo. Entrega Julho/2027. Conheça as plantas e simule sua proposta.">
+    <meta name="description" content="Madrid Casa Elevada — Apartamentos premium de 1 e 3 suítes no Jardim Sol Nascente, Luís Eduardo Magalhães — BA. Vagas duplas, escaninho privativo, lazer completo. Entrega julho/2027. Conheça as plantas e simule sua proposta.">
     <meta name="keywords" content="Madrid Casa Elevada, apartamentos Luís Eduardo Magalhães, Jardim Sol Nascente, lançamento imobiliário LEM, apartamentos 1 suíte, apartamentos 3 suítes, alto padrão Bahia, Torre Madrid SPE">
     <meta name="author" content="Torre Madrid Empreendimentos Imobiliários SPE Ltda">
     <meta name="robots" content="index, follow">
@@ -59,7 +59,7 @@
     <meta property="og:locale" content="pt_BR">
     <meta property="og:site_name" content="Madrid Casa Elevada">
     <meta property="og:title" content="Madrid Casa Elevada — Alto Padrão | Luís Eduardo Magalhães">
-    <meta property="og:description" content="Apartamentos premium de 1 e 3 suítes. Vagas duplas, escaninho privativo, lazer completo. Entrega Julho/2027.">
+    <meta property="og:description" content="Apartamentos premium de 1 e 3 suítes. Vagas duplas, escaninho privativo, lazer completo. Entrega julho/2027.">
     <meta property="og:image" content="https://www.madridcasaelevada.com/fachada-dia.jpg">
     <meta property="og:image:width" content="1600">
     <meta property="og:image:height" content="1600">
@@ -68,7 +68,7 @@
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Madrid Casa Elevada — Alto Padrão">
-    <meta name="twitter:description" content="Lançamento de alto padrão em Luís Eduardo Magalhães — BA. Entrega Julho/2027.">
+    <meta name="twitter:description" content="Lançamento de alto padrão em Luís Eduardo Magalhães — BA. Entrega julho/2027.">
     <meta name="twitter:image" content="https://madridcasaelevada.com/fachada-dia.jpg">
 
     <meta name="theme-color" content="#1F3324">
@@ -80,7 +80,7 @@
         "@context": "https://schema.org",
         "@type": "ApartmentComplex",
         "name": "Madrid Casa Elevada",
-        "description": "Torre residencial de alto padrão com 50 apartamentos de 1 e 3 suítes no bairro Jardim Sol Nascente, Luís Eduardo Magalhães — BA. Entrega prevista para Julho/2027.",
+        "description": "Torre residencial de alto padrão com 50 apartamentos de 1 e 3 suítes no bairro Jardim Sol Nascente, Luís Eduardo Magalhães — BA. Entrega prevista para julho/2027.",
         "url": "https://madridcasaelevada.com/",
         "image": "https://madridcasaelevada.com/fachada-dia.jpg",
         "numberOfAccommodationUnits": 50,
@@ -218,6 +218,18 @@
             background: var(--brand-primary); color: white; border-color: var(--brand-primary);
         }
         nav.top-nav .btn-corretor:hover { background: var(--brand-gold); border-color: var(--brand-gold); color: white; }
+        /* V403 (auditoria, confirmado no ar): a regra genérica dos links
+           (`.scrolled .nav-links a` e `.nav-links.open a`, especificidade 0,3,2)
+           vencia a do botão (0,3,1) e pintava o texto de escuro sobre o fundo
+           escuro — o "Sou corretor" ficava INVISÍVEL ao rolar e no menu mobile.
+           Seletores com a.btn-corretor (0,4,2) ganham dos dois. */
+        nav.top-nav.scrolled .nav-links a.btn-corretor,
+        nav.top-nav .nav-links.open a.btn-corretor {
+            background: var(--brand-primary); border-color: var(--brand-primary); color: #fff;
+        }
+        nav.top-nav .nav-links a.btn-corretor:hover {
+            background: var(--brand-gold); border-color: var(--brand-gold); color: var(--brand-primary);
+        }
 
         .mobile-menu-btn { display: none; background: none; border: none; color: white; font-size: 22px; cursor: pointer; }
         nav.top-nav.scrolled .mobile-menu-btn { color: var(--text-main); }
@@ -973,7 +985,7 @@
         <div class="hero-content">
             <span class="eyebrow">Lançamento Premium</span>
             <h1>Madrid <em>Casa Elevada</em></h1>
-            <p class="lead">14 andares de acabamento de alto padrão no Jardim Sol Nascente, em Luís Eduardo Magalhães. Apartamentos de 1 e 3 suítes com vagas duplas e escaninho privativo. Entrega Julho/2027.</p>
+            <p class="lead">14 andares de acabamento de alto padrão no Jardim Sol Nascente, em Luís Eduardo Magalhães. Apartamentos de 1 e 3 suítes com vagas duplas e escaninho privativo. Entrega julho/2027.</p>
             <div class="cta-row">
                 <a href="#contato" class="btn btn-primary"><i class="fas fa-envelope-open-text"></i> Quero uma proposta</a>
                 <a id="waHeroBtn" href="https://wa.me/5577981346775" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fab fa-whatsapp"></i> WhatsApp</a>
@@ -1379,7 +1391,7 @@
                 </div>
                 <div class="passo-card">
                     <div style="font-family:'Cormorant Garamond', serif; font-size:34px; font-weight:600; color:var(--brand-gold); line-height:1;">5</div>
-                    <h4 style="margin:10px 0 8px; font-size:15px;">Chaves em Julho/2027</h4>
+                    <h4 style="margin:10px 0 8px; font-size:15px;">Chaves em julho/2027</h4>
                     <p style="font-size:13px; color:var(--text-secondary); line-height:1.6; margin:0;">Vistoria e entrega das chaves. Até lá, a tabela é corrigida todo mês pelo INCC (o índice do custo da construção) — por isso, quanto antes, melhor.</p>
                 </div>
             </div>
@@ -1393,7 +1405,7 @@
                 <span class="section-eyebrow">Localização</span>
                 <h2>No coração do Jardim Sol Nascente</h2>
                 <div class="gold-divider"></div>
-                <p>Cercado por restaurantes, comércio, escolas premium e fácil acesso às principais vias da cidade.</p>
+                <p>Cercado por restaurantes, comércio e escolas premium, com fácil acesso às principais vias da cidade.</p>
             </div>
             <!-- Pin OFICIAL do empreendimento no Google Maps (ficha "Madrid Casa
                  Elevada", Rua Quito) em VISÃO DE SATÉLITE (t=k), como o gestor
@@ -1513,7 +1525,7 @@
                          O texto é preenchido pelo JS a partir da constante única. -->
                     <li><a id="footFone" href="tel:+5577981346775"><i class="fas fa-phone"></i> <span id="footFoneNum">(77) 9 8134-6775</span></a></li>
                     <li><i class="fas fa-map-marker-alt"></i> Jardim Sol Nascente — Luís Eduardo Magalhães, BA</li>
-                    <li><i class="fas fa-calendar-alt"></i> Entrega: Julho/2027</li>
+                    <li><i class="fas fa-calendar-alt"></i> Entrega: julho/2027</li>
                 </ul>
                 <h5 style="margin-top: 22px;">Equipe</h5>
                 <ul>
