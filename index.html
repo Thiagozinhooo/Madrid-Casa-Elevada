@@ -33,8 +33,8 @@
         ">
         <meta name="referrer" content="strict-origin-when-cross-origin">
 
-        <!-- Cache gerido pelo parâmetro ?v=353 no URL -->
-        <title>Madrid Casa Elevada | Premium V403</title>
+        <!-- Cache gerido pelo parâmetro ?v= no URL (valor = CURRENT_APP_VERSION, mais abaixo) -->
+        <title>Madrid Casa Elevada | Premium V404</title>
 
         <!-- Hint para indexadores: o app interno NÃO deve ser indexado.
              A landing pública (landing.html) é quem fica nas buscas. -->
@@ -1093,7 +1093,7 @@
             catch (e) { document.documentElement.innerHTML = ''; /* bloqueia tela */ }
         }
 
-        const CURRENT_APP_VERSION = "403";
+        const CURRENT_APP_VERSION = "404";
         const urlParams = new URLSearchParams(window.location.search);
 
         // O desvio do visitante para a landing acontece lá no <head>, antes dos
@@ -1475,6 +1475,17 @@
                             <option value="3">3º Andar</option>
                             <option value="2">2º Andar</option>
                             <option value="1">1º Andar</option>
+                        </select>
+
+                        <!-- V404: filtro pelo FINAL da unidade (os dois últimos dígitos =
+                             posição na torre: 01/02/03/04). Pedido do gestor — o cliente
+                             costuma querer "o final 02 em qualquer andar". -->
+                        <select id="filterFinal" onchange="AppCore.renderTable()" class="control-input" title="Final = os dois últimos dígitos da unidade (posição na torre)" style="width:auto; height:40px; padding: 0 15px; font-size: 11px; font-weight: 800;">
+                            <option value="todos" selected>Todos os Finais</option>
+                            <option value="01">Final 01</option>
+                            <option value="02">Final 02</option>
+                            <option value="03">Final 03</option>
+                            <option value="04">Final 04</option>
                         </select>
 
                         <!-- V342: Filtro de plano de pagamento direto na tabela.
@@ -2228,7 +2239,7 @@
         </div>
 
     <script>
-        console.log("LOG: Versão Premium V403");
+        console.log("LOG: Versão Premium V404");
 
         // V371: dicas de toque — clique num ".help-tip" abre o balão com o texto
         // do data-tip; clique em qualquer outro lugar fecha. (title= só existe
@@ -2982,7 +2993,8 @@
                     activeLeadId: state.activeLeadId || null,
                     tableFilter: document.getElementById('tableFilter') ? document.getElementById('tableFilter').value : 'livre',
                     filterTypology: document.getElementById('filterTypology') ? document.getElementById('filterTypology').value : 'todos',
-                    filterFloor: document.getElementById('filterFloor') ? document.getElementById('filterFloor').value : 'todos'
+                    filterFloor: document.getElementById('filterFloor') ? document.getElementById('filterFloor').value : 'todos',
+                    filterFinal: document.getElementById('filterFinal') ? document.getElementById('filterFinal').value : 'todos'   // V404
                 };
                 sessionStorage.setItem('madrid_app_state', JSON.stringify(stateObj));
             },
@@ -2996,9 +3008,19 @@
                         if (st.inpClientPhone) document.getElementById('inpClientPhone').value = st.inpClientPhone;
                         if (st.selPlano) document.getElementById('selPlano').value = st.selPlano;
                         if (st.selSinalParcelas) document.getElementById('selSinalParcelas').value = st.selSinalParcelas;
-                        if (st.tableFilter && document.getElementById('tableFilter')) document.getElementById('tableFilter').value = st.tableFilter;
-                        if (st.filterTypology && document.getElementById('filterTypology')) document.getElementById('filterTypology').value = st.filterTypology;
-                        if (st.filterFloor && document.getElementById('filterFloor')) document.getElementById('filterFloor').value = st.filterFloor;
+                        // V404 (revisão): só restaura valor que EXISTE nas options. O sessionStorage
+                        // sobrevive ao reload de versão — se uma versão futura trocar os valores de
+                        // um select, o valor antigo cairia em selectedIndex -1 (value '') e o
+                        // predicado dos filtros esvaziaria tabela e PDF sem nenhum filtro visível.
+                        const restauraSelect = (id, v) => {
+                            const el = document.getElementById(id);
+                            if (!el || typeof v !== 'string' || !v) return;
+                            if (Array.from(el.options).some(o => o.value === v)) el.value = v;
+                        };
+                        restauraSelect('tableFilter', st.tableFilter);
+                        restauraSelect('filterTypology', st.filterTypology);
+                        restauraSelect('filterFloor', st.filterFloor);
+                        restauraSelect('filterFinal', st.filterFinal);
 
                         // V353: restaura o vínculo lead↔proposta (só string curta válida).
                         if (typeof st.activeLeadId === 'string' && st.activeLeadId.length && st.activeLeadId.length <= 200) {
@@ -7576,7 +7598,8 @@
                 const filterStatus = state.isAdmin ? document.getElementById('tableFilter').value : 'livre';
                 const filterTypology = document.getElementById('filterTypology').value;
                 const filterFloor = document.getElementById('filterFloor').value;
-                
+                const filterFinal = document.getElementById('filterFinal').value;   // V404
+
                 // V332: usa a QUANTIDADE escolhida pelo user (não mais sempre o máximo).
                 const parcelasSinal = AppSim.getSinalQtd();
                 const m = AppSim.getMensalQtd(); const b = AppSim.getBalaoQtd() || 1;
@@ -7645,6 +7668,8 @@
                 
                 let filteredKeys = keysArray.filter(u => {
                     let d = state.units[u]; let st = state.statusMap[u] || 'livre'; let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte'); let floor = Math.floor(u / 100).toString();
+                    // V404: final = dois últimos dígitos ("1404" → "04", "101" → "01").
+                    let finalUnid = String(Number(u) % 100).padStart(2, '0');
                     if (!state.isAdmin && st !== 'livre') return false;
                     // V332: filtro "disponiveis_reservados" mostra livre + reservado (oculta vendido).
                     if (state.isAdmin) {
@@ -7656,6 +7681,7 @@
                     }
                     if (filterTypology !== 'todos' && tipo !== filterTypology) return false;
                     if (filterFloor !== 'todos' && floor !== filterFloor) return false;
+                    if (filterFinal !== 'todos' && finalUnid !== filterFinal) return false;   // V404
                     return true;
                 });
 
@@ -7745,11 +7771,12 @@
                 }
                 AppUI.saveState();
             },
-            // V371: saída do empty state da tabela — zera os 3 filtros e re-renderiza.
+            // V371: saída do empty state da tabela — zera os filtros e re-renderiza.
             limparFiltrosTabela: () => {
                 const f1 = document.getElementById('filterTypology'); if (f1) f1.value = 'todos';
                 const f2 = document.getElementById('filterFloor'); if (f2) f2.value = 'todos';
                 const f3 = document.getElementById('tableFilter'); if (f3) f3.value = 'livre';
+                const f4 = document.getElementById('filterFinal'); if (f4) f4.value = 'todos';   // V404
                 AppCore.renderTable();
             },
 
@@ -8100,6 +8127,7 @@
 
                     let tableBody = [];
                     const filterStatus = state.isAdmin ? document.getElementById('tableFilter').value : 'livre'; const filterTypology = document.getElementById('filterTypology').value; const filterFloor = document.getElementById('filterFloor').value;
+                    const filterFinal = document.getElementById('filterFinal').value;   // V404: o PDF segue a tela
                     const elSinalParcelas = document.getElementById('selSinalParcelas'); const parcelasSinal = elSinalParcelas ? (parseInt(elSinalParcelas.value) || 3) : 3;
                     // V332: lê do estado canônico do plano.
                     let rawSinalP = state.planPercents.pSinal; if (!isFinite(rawSinalP)) rawSinalP = 10;
@@ -8124,6 +8152,7 @@
 
                     Object.keys(state.units).sort((a,b)=>b-a).forEach(u => {
                         let d = state.units[u]; let st = state.statusMap[u] || 'livre'; let tipo = d.tipo || ((d.area > 120 || u==102) ? '3 Suítes' : '1 Suíte'); let floor = Math.floor(u / 100).toString();
+                        let finalUnid = String(Number(u) % 100).padStart(2, '0');   // V404
                         if (!state.isAdmin && st !== 'livre') return;
                         // V332: filtro "disponiveis_reservados" mostra livre + reservado.
                         if (state.isAdmin) {
@@ -8135,6 +8164,7 @@
                         }
                         if (filterTypology !== 'todos' && tipo !== filterTypology) return;
                         if (filterFloor !== 'todos' && floor !== filterFloor) return;
+                        if (filterFinal !== 'todos' && finalUnid !== filterFinal) return;   // V404
                         let price = d.valor * state.globalMultiplier; let vEntrada = (price * (pSinal/100)) / parcelasSinal; let vMensal = (price * (pMensal/100)) / m; let vBalao = (price * (pBalao/100)) / b; let vChavesRS = price * (pChaves/100);
                         let row = [u, tipo, d.area.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²', d.areaTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²', d.esc, d.areaEsc.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + ' m²', d.vagas, d.pav, AppCore.formatMoney(vEntrada)];
                         if (showM) row.push(AppCore.formatMoney(vMensal)); if (showB) row.push(AppCore.formatMoney(vBalao));

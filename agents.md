@@ -1,7 +1,7 @@
 # 🏗️ AGENTS.MD — Diretrizes do Sistema Tabela Madrid
 
 > **Documento de referência obrigatória para qualquer agente IA ou desenvolvedor.**
-> Última atualização: 2026-09-08 | Versão do sistema: V403
+> Última atualização: 2026-09-10 | Versão do sistema: V404
 
 ## 🔴 ANTES DE PUBLICAR QUALQUER MUDANÇA
 
@@ -9,7 +9,7 @@
 node validar.js
 ```
 
-São 57 verificações do que já quebrou neste projeto (versão nos 3 lugares, sintaxe,
+São 104 verificações do que já quebrou neste projeto (versão nos 3 lugares, sintaxe,
 sigilo, regras de dinheiro, "não perder trabalho", acesso, contato, medição,
 App Check, fotos da galeria, versionamento dos arquivos e sintaxe das rules do
 Firebase). Ele responde **"Pode publicar"** ou lista exatamente o que impede.
@@ -41,6 +41,7 @@ As correções abaixo VALEM sobre qualquer texto mais antigo neste documento:
 | **Comparador "vs aluguel"** | **Removido** da landing por ordem do gestor. Não recolocar. |
 | **Cadastro de corretor** | Existe **auto-cadastro com aprovação** (V388): a pessoa cria a conta na tela de login, cai em "Acesso aguardando liberação" e o gestor libera na aba EQUIPE ("Solicitações de acesso"). Aprovar dá papel de **corretor**; gestor só por promoção manual. O texto antigo ("o sistema NÃO faz auto-registro / signOut imediato") está ERRADO. |
 | **V403 — auditoria geral (08/09/2026)** | **Permuta/proposta especial** chama `AppSim.calculate()` ao salvar e ao remover — antes a tela ficava com as parcelas do saldo antigo enquanto o PDF já saía com o saldo novo (só a vaga extra recalculava). **Regra de `leads_inbox`** exige chave de push (`$leadId.matches(/^-[A-Za-z0-9_-]{19}$/)`) **e** `ts === now`: fechou o flood anônimo com chave forjada ("zzz…" ordena depois de toda push key e o `limitToLast(200)` do painel só via o lixo — leads reais e a fila de acesso sumiam). Por isso `_registrarSolicitacao` grava `ServerValue.TIMESTAMP`, **nunca** `Date.now()` (seria recusado). Gestor ganhou **Apagar** mensagem (`apagarMsg`). `visitas` e `logs` fecharam campos (`$other:false`); `proposals` só ganhou **tetos** — o cofre `zz_vendas_reais` cai no mesmo wildcard `$emailKey/$propId` e `$other:false` quebraria o registro de contratos (pendência: regra própria para o cofre). Filtro do CRM por corretor faz `this.blur()` no `onchange` — a guarda de foco (V371) engolia o próprio evento. Acessibilidade: `outline:none` global removido, `:focus-visible` com contorno dourado; botões dourados com texto escuro `#1F3324`; `--brand-gold-text` = `#856A34` (5,1:1) e todo dourado **em texto** usa esse token (o `--brand-gold-dark` fica para fundo/borda). Português: pt-BR (nada de "registado/utilizador/detetada/Tem a certeza"), rótulo único **"Sinal/Ato"**, "Entrega das Chaves", "julho/2027" minúsculo. Cláusula INCC dos PDFs: **INCC-DI (Índice Nacional de Custo da Construção – Disponibilidade Interna, FGV)** — o nome antigo estava errado. `index.html` ganhou metas OG (a raiz do domínio compartilhada no WhatsApp saía sem foto e com "Premium V###"). Botão "Sou corretor" da landing: seletores `a.btn-corretor` (0,4,2) vencem os genéricos dos links que o deixavam invisível ao rolar. **Revisão adversarial (pós-diff):** o botão "Sair" da tela de espera herdava o texto escuro novo sobre o fundo verde — `color:#fff` inline; tetos de `proposals` subiram (`cpf` 60, `unit` 40) porque o importador de contratos aceitava "vagas_52_53_54_55_56_57" e CPF longo e o `update()` multi-caminho inteiro caía com PERMISSION_DENIED — o importador agora barra esses dois casos com motivo, em vez de truncar; `saveSpecialPayment`/`removeSpecialPayment` mantêm `renderSpecialPayments()+saveState()` **antes** de `calculate()` (que retorna cedo sem preço da unidade — só chamar `calculate()` perdia a permuta na tela); campos de texto (`.inp-login`, `.control-input`, reajuste) ficam fora do anel global de `:focus-visible` (têm borda própria; senão anel triplo a cada clique) e a borda de foco do `.control-input` usa `--brand-gold-text` (5:1, era 2,4:1). |
+| **V404 — filtro por final (10/09/2026)** | A aba TABELA ganhou o select `#filterFinal` (Todos / 01 / 02 / 03 / 04) ao lado de tipologia e andar. Final = dois últimos dígitos da unidade (`String(Number(u) % 100).padStart(2, "0")` — "1404" → "04", "101" → "01"). Segue o MESMO contrato dos outros filtros: aplicado em `renderTable` **e** no PDF da tabela (`downloadTablePDF` — os filtros do PDF espelham a tela; a ordenação não: o PDF sai sempre por unidade decrescente, comportamento antigo), persistido no `saveState`/`loadState` (sessionStorage), zerado por `limparFiltrosTabela`. **Revisão:** `loadState` passou a restaurar os 4 selects de filtro só quando o valor existe nas options (`restauraSelect`) — o sessionStorage sobrevive ao reload de versão, e um valor órfão deixava o select em branco e a tabela/PDF vazios sem filtro visível. Corretor e gestor veem o filtro (não é `admin-only`). |
 | **Endereço curto** | `madridcasaelevada.com` manda **todo mundo** para a **landing**, inclusive quem já entrou no app neste aparelho. O app só abre com passe explícito: `?app=1` (link "Sou corretor") ou **exatamente** `#agenda` (deep-link do push). Qualquer outra âncora (`/#galeria`) vai para a landing COM a âncora — antes jogava o cliente na tela de login. (V397) A marca `madrid_equipe` **foi removida** em 18/08/2026 — o gestor pediu que o endereço sempre caia na landing, e ela era o caminho pelo qual um estranho no computador do plantão caía dentro do sistema sem digitar nada (achado 3 da auditoria de segurança). O portão agora **apaga** a marca dos navegadores que já a tinham. Os 4 caminhos foram testados no navegador. (V390, revisto em 18/08/2026) |
 | **Contratos/VGV** | Fonte é o **cofre** `proposals/zz_vendas_reais` (o nó `madrid_data/vendas` é legado e perde a prioridade). Importação: GESTÃO → "Importar/atualizar contratos". Distrato (unidade que deixou de estar vendida) sai dos KPIs e fica marcado na lista. (V389/V392) |
 | **Permuta/FGTS** | **Sem trava**, por decisão do gestor — pode passar do valor do imóvel. O campo "Destino pretendido" é ANOTAÇÃO: o abatimento é sempre sobre o saldo total. Lembrar o gestor a cada atualização. |
@@ -527,7 +528,7 @@ Cada unidade tem exatamente 3 estados possíveis:
 ### 9.1 — PDF da Tabela (`downloadTablePDF`)
 - Biblioteca: jsPDF + AutoTable
 - Orientação: Paisagem A4
-- Respeita todos os filtros ativos (tipologia, andar, status)
+- Respeita todos os filtros ativos (tipologia, andar, final, status) — os FILTROS do PDF sempre espelham a tela (V404). A ORDENAÇÃO não: o PDF sai sempre por unidade decrescente (`Object.keys(state.units).sort((a,b)=>b-a)`), ignorando `state.tableSort` da tela.
 - Inclui logo da Madrid, texto contratual, e validade da tabela
 - Colunas dinâmicas baseadas no plano de pagamento selecionado
 

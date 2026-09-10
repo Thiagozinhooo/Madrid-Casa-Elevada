@@ -675,6 +675,20 @@ checar('salvar visita tem trava de voo com feedback',
     /btnSalvarVisita/.test(idx),
     'toque duplo no 4G gravava a visita em dobro — e trava sem aviso engole cliques');
 
+// V404: um filtro da tabela vive em 6 lugares (select, renderTable, PDF da
+// tabela, saveState, loadState, limparFiltrosTabela). Esquecer um deles = tela e
+// PDF discordam, o filtro some no F5 ou "Limpar filtros" não limpa. A revisão da
+// V404 conferiu os três à mão; aqui fica pinado pra próxima vez.
+['filterTypology', 'filterFloor', 'filterFinal'].forEach(f => {
+    const temSelect = idx.includes(`id="${f}"`);
+    const usos = idx.split(`getElementById('${f}')`).length - 1;          // renderTable, PDF, saveState (2), limpar
+    const predicados = idx.split(`${f} !== 'todos'`).length - 1;                 // tela + PDF
+    const restaura = idx.includes(`restauraSelect('${f}'`);                                        // loadState
+    checar(`filtro ${f} pareado em tela, PDF, estado e "limpar"`,
+        temSelect && predicados === 2 && usos >= 5 && restaura,
+        `select=${temSelect} predicados=${predicados}/2 getElementById=${usos}/5 loadState=${restaura}`);
+});
+
 // ─────────────────────────────────────────────────────────────
 // 9. AVISOS (não impedem publicar)
 // ─────────────────────────────────────────────────────────────

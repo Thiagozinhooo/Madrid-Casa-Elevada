@@ -30,6 +30,7 @@ Espelho_Vendas_Madrid.pdf
 
 # Ferramentas locais (nunca foram versionadas)
 .vscode/
+.claude/
 _propostas/
 
 # Sistema
